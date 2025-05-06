@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Home: React.FC = () => {
-	return <div className="home-contain h-20">home</div>;
+	return <div className="home-contain p-8">home</div>;
 };
 
 export default Home;

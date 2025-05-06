@@ -2,10 +2,12 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BugerMenuStyles } from './BugerMenuStyles';
 import type { BurgerMenuProps } from '../../types/BurgerMenuProps';
+import { useTranslation } from '../../context/TranslationContext';
 
 const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 	const location = useLocation();
 	const currentPath = location.pathname;
+	const { t } = useTranslation();
 
 	const isActive = (path: string) => {
 		return currentPath === path;
@@ -66,7 +68,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 								/>
 							</svg>
 							<span className={isActive('/') ? 'text-gray-900 font-medium' : 'text-gray-500'}>
-								Home
+								{t('menu.home')}
 							</span>
 						</Link>
 					</li>
@@ -102,7 +104,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 							<span
 								className={isActive('/profile') ? 'text-gray-900 font-medium' : 'text-gray-500'}
 							>
-								Profile
+								{t('menu.profile')}
 							</span>
 						</Link>
 					</li>
@@ -143,7 +145,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 								/>
 							</svg>
 							<span className={isActive('/game') ? 'text-gray-900 font-medium' : 'text-gray-500'}>
-								Game
+								{t('menu.game')}
 							</span>
 						</Link>
 					</li>
@@ -175,7 +177,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 									filter="url(#logoutShadow)"
 								/>
 							</svg>
-							<span>Logout</span>
+							<span>{t('menu.logout')}</span>
 						</Link>
 					</li>
 				</ul>
