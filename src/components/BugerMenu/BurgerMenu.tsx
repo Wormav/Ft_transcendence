@@ -3,8 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { BugerMenuStyles } from './BugerMenuStyles';
 import type { BurgerMenuProps } from '../../types/BurgerMenuProps';
 
-// TODO: Flouter arriere plan quand open
-
 const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 	const location = useLocation();
 	const currentPath = location.pathname;
@@ -17,11 +15,11 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 		<div
 			className={`${BugerMenuStyles.menu} ${isOpen ? BugerMenuStyles.menuOpen : BugerMenuStyles.menuClosed}`}
 		>
-			<div className={`${BugerMenuStyles.div}`}>
+			<div className={BugerMenuStyles.div}>
 				<button onClick={onClose} className={BugerMenuStyles.closeButton}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
-						className="h-6 w-6"
+						className={BugerMenuStyles.closeButton}
 						fill="none"
 						viewBox="0 0 24 24"
 						stroke="#00BABC"
@@ -154,7 +152,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 							</span>
 						</Link>
 					</li>
-					<li className="relative text-red-500">
+					<li className="relative">
 						<Link to="/logout" className={`${BugerMenuStyles.logoutButton} pl-4`}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
