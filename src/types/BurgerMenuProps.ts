@@ -1,6 +1,4 @@
 export type BurgerMenuProps = {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-
+	isOpen: boolean;
+	onClose: () => void;
+};

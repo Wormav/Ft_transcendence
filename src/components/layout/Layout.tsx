@@ -13,15 +13,15 @@ const Layout: React.FC = () => {
 
 	return (
 		<div className={`layout ${LayoutStyles.container}`}>
-  			<NavBar onMenuClick={handleOpenMenu} />
-  			<main className={LayoutStyles.contentWrapper}>
-    			<BurgerMenu isOpen={bugerOpen} onClose={() => setBugerOpen(false)} />
-    			{bugerOpen && <div className={LayoutStyles.overlay}></div>}
-    		<div>
-      			<Outlet />
-    		</div>
- 		 </main>
-</div>
+			<NavBar onMenuClick={handleOpenMenu} />
+			<main className={LayoutStyles.contentWrapper}>
+				<BurgerMenu isOpen={bugerOpen} onClose={() => setBugerOpen(false)} />
+				{bugerOpen && <div className={LayoutStyles.overlay}></div>}
+				<div>
+					<Outlet />
+				</div>
+			</main>
+		</div>
 	);
 };
 
