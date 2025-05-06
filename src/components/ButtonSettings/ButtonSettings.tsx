@@ -1,8 +1,5 @@
+import type { ButtonSettingsProps } from '../../types/ButtonSettingsProps';
 import ButtonSettingsStyle from './ButtonSettingsStyle';
-
-interface ButtonSettingsProps {
-	onClick?: () => void;
-}
 
 export default function ButtonSettings({ onClick }: ButtonSettingsProps) {
 	return (

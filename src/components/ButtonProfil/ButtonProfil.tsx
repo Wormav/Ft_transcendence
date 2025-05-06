@@ -1,9 +1,5 @@
+import type { ButtonProfilProps } from '../../types/ButtonProfilProps';
 import ButtonProfilStyle from './ButtonProfilStyle';
-
-interface ButtonProfilProps {
-	onClick?: () => void;
-	img: string;
-}
 
 export default function ButtonProfil({ onClick, img }: ButtonProfilProps) {
 	return (

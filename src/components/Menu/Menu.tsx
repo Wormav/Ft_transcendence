@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BugerMenuStyles } from './BugerMenuStyles';
-import type { BurgerMenuProps } from '../../types/BurgerMenuProps';
+import MenuStyles from './MenuStyles';
 
-const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
+const Menu: React.FC = () => {
 	const location = useLocation();
 	const currentPath = location.pathname;
 
@@ -12,36 +11,15 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 	};
 
 	return (
-		<div
-			className={`${BugerMenuStyles.menu} ${isOpen ? BugerMenuStyles.menuOpen : BugerMenuStyles.menuClosed}`}
-		>
-			<div className={BugerMenuStyles.div}>
-				<button onClick={onClose} className={BugerMenuStyles.closeButton}>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className={BugerMenuStyles.closeButton}
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="#00BABC"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={3}
-							d="M6 18L18 6M6 6l12 12"
-							filter="url(#closeShadow)"
-						/>
-					</svg>
-				</button>
-			</div>
-			<nav className={BugerMenuStyles.navigation}>
-				<ul className={BugerMenuStyles.navList}>
-					<li className={`${BugerMenuStyles.li}`}>
-						{isActive('/') && <div className={`${BugerMenuStyles.indicator}`}></div>}
-						<Link to="/" className={`${BugerMenuStyles.navItem} pl-4`}>
+		<div className={MenuStyles.menu}>
+			<nav className={MenuStyles.navigation}>
+				<ul className={MenuStyles.navList}>
+					<li className={`${MenuStyles.li}`}>
+						{isActive('/') && <div className={`${MenuStyles.indicator}`}></div>}
+						<Link to="/" className={`${MenuStyles.navItem} pl-4`}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
-								className={BugerMenuStyles.navIcon}
+								className={MenuStyles.navIcon}
 								fill="none"
 								viewBox="0 0 24 24"
 								stroke={isActive('/') ? '#00BABC' : '#9CA3AF'}
@@ -70,12 +48,12 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 							</span>
 						</Link>
 					</li>
-					<li className={`${BugerMenuStyles.li}`}>
-						{isActive('/profile') && <div className={`${BugerMenuStyles.indicator}`}></div>}
-						<Link to="/profile" className={`${BugerMenuStyles.navItem} pl-4`}>
+					<li className={`${MenuStyles.li}`}>
+						{isActive('/profile') && <div className={`${MenuStyles.indicator}`}></div>}
+						<Link to="/profile" className={`${MenuStyles.navItem} pl-4`}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
-								className={BugerMenuStyles.navIcon}
+								className={MenuStyles.navIcon}
 								fill="none"
 								viewBox="0 0 24 24"
 								stroke={isActive('/profile') ? '#00BABC' : '#9CA3AF'}
@@ -106,12 +84,12 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 							</span>
 						</Link>
 					</li>
-					<li className={`${BugerMenuStyles.li}`}>
-						{isActive('/game') && <div className={`${BugerMenuStyles.indicator}`}></div>}
-						<Link to="/game" className={`${BugerMenuStyles.navItem} pl-4`}>
+					<li className={`${MenuStyles.li}`}>
+						{isActive('/game') && <div className={`${MenuStyles.indicator}`}></div>}
+						<Link to="/game" className={`${MenuStyles.navItem} pl-4`}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
-								className={BugerMenuStyles.navIcon}
+								className={MenuStyles.navIcon}
 								fill="none"
 								viewBox="0 0 24 24"
 								stroke={isActive('/game') ? '#00BABC' : '#9CA3AF'}
@@ -148,10 +126,10 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 						</Link>
 					</li>
 					<li className="relative">
-						<Link to="/logout" className={`${BugerMenuStyles.logoutButton} pl-4`}>
+						<Link to="/logout" className={`${MenuStyles.logoutButton} pl-4`}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
-								className={BugerMenuStyles.navIcon}
+								className={MenuStyles.navIcon}
 								fill="none"
 								viewBox="0 0 24 24"
 								stroke="#FF0000"
@@ -184,4 +162,4 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 	);
 };
 
-export default BurgerMenu;
+export default Menu;
