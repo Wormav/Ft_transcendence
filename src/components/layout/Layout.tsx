@@ -1,14 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import LayoutStyles from './LayoutStyles';
+import BurgerMenu from '../BugerMenu/BurgerMenu';
+import NavBar from '../NavBar/NavBar';
 
 const Layout: React.FC = () => {
+	const [bugerOpen, setBugerOpen] = useState(false);
+
+	const handleOpenMenu = () => {
+		setBugerOpen(true);
+	};
+
 	return (
 		<div className={`layout ${LayoutStyles.container}`}>
-			<main>
-				<Outlet />
-			</main>
-		</div>
+  			<NavBar onMenuClick={handleOpenMenu} />
+  			<main className={LayoutStyles.contentWrapper}>
+    			<BurgerMenu isOpen={bugerOpen} onClose={() => setBugerOpen(false)} />
+    			{bugerOpen && <div className={LayoutStyles.overlay}></div>}
+    		<div>
+      			<Outlet />
+    		</div>
+ 		 </main>
+</div>
 	);
 };
 

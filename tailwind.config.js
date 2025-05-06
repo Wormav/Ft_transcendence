@@ -13,14 +13,14 @@ export default {
 			  background: {
 				DEFAULT: "#F3F4F6"
 			  },
-			  white: {
+			  whiteCustom: {
 				DEFAULT: "#FBFBFD"
 			  },
 			  gray: {
 				DEFAULT: "#B8B8BA"
 			  },
-			  red: {
-				DEFAULT: "#FF0000"
+			  danger: {
+				500: "#FF0000"
 			  },
 		  },
 		  fontFamily: {
