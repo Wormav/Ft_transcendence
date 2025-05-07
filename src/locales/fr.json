@@ -4,5 +4,17 @@
 		"profile": "Profil",
 		"game": "jeu",
 		"logout": "Déconnexion"
+	},
+	"home": {
+		"welcom": "Bienvenue sur",
+		"your": "Ton",
+		"profile": "profil",
+		"lastGame": "Dernière partie:",
+		"lose": "Perdu",
+		"win": "Gagner",
+		"newGame": "Nouvelle partie",
+		"ai": "VS IA",
+		"player": "VS joueur",
+		"start": "Lancer"
 	}
 }

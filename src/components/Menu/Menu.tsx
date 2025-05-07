@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import MenuStyles from './MenuStyles';
+import { useTranslation } from '../../context/TranslationContext';
 
 const Menu: React.FC = () => {
 	const location = useLocation();
 	const currentPath = location.pathname;
+	const { t } = useTranslation();
 
 	const isActive = (path: string) => {
 		return currentPath === path;
@@ -12,6 +14,9 @@ const Menu: React.FC = () => {
 
 	return (
 		<div className={MenuStyles.menu}>
+			<div className={MenuStyles.logoContainer}>
+				<img src="/42_Logo.svg.png" alt="42 Logo" className={MenuStyles.logo} />
+			</div>
 			<nav className={MenuStyles.navigation}>
 				<ul className={MenuStyles.navList}>
 					<li className={`${MenuStyles.li}`}>
@@ -43,8 +48,14 @@ const Menu: React.FC = () => {
 									filter="url(#homeShadow)"
 								/>
 							</svg>
-							<span className={isActive('/') ? 'text-gray-900 font-medium' : 'text-gray-500'}>
-								Home
+							<span
+								className={
+									isActive('/')
+										? 'text-gray-900 font-medium 3xl:text-2xl'
+										: 'text-gray-500 3xl:text-2xl'
+								}
+							>
+								{t('menu.home')}
 							</span>
 						</Link>
 					</li>
@@ -78,9 +89,13 @@ const Menu: React.FC = () => {
 								/>
 							</svg>
 							<span
-								className={isActive('/profile') ? 'text-gray-900 font-medium' : 'text-gray-500'}
+								className={
+									isActive('/profile')
+										? 'text-gray-900 font-medium 3xl:text-2xl'
+										: 'text-gray-500 3xl:text-2xl'
+								}
 							>
-								Profile
+								{t('menu.profile')}
 							</span>
 						</Link>
 					</li>
@@ -120,8 +135,14 @@ const Menu: React.FC = () => {
 									filter="url(#gameShadow)"
 								/>
 							</svg>
-							<span className={isActive('/game') ? 'text-gray-900 font-medium' : 'text-gray-500'}>
-								Game
+							<span
+								className={
+									isActive('/game')
+										? 'text-gray-900 font-medium 3xl:text-2xl'
+										: 'text-gray-500 3xl:text-2xl'
+								}
+							>
+								{t('menu.game')}
 							</span>
 						</Link>
 					</li>
@@ -153,7 +174,7 @@ const Menu: React.FC = () => {
 									filter="url(#logoutShadow)"
 								/>
 							</svg>
-							<span>Logout</span>
+							<span className="3xl:text-2xl">{t('menu.logout')}</span>
 						</Link>
 					</li>
 				</ul>
