@@ -33,7 +33,7 @@ const getNestedTranslation = (obj: Translations, path: string): string => {
 
 export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const savedLocale = localStorage.getItem('locale') as Locale;
-	const [locale, setLocale] = useState<Locale>(savedLocale || 'fr');
+	const [locale, setLocale] = useState<Locale>(savedLocale || 'en');
 	const [translations, setTranslations] = useState<Translations>(
 		locale === 'fr' ? frTranslations : enTranslations
 	);

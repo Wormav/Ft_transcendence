@@ -10,4 +10,6 @@
 	--color-red-custom: #ff0000;
 
 	--font-primary: 'Open Sans', '';
+	--breakpoint-3xl: 140rem;
+	--breakpoint-4xl: 160rem;
 }
