@@ -6,6 +6,15 @@
 		"logout": "Logout"
 	},
 	"home": {
-		"welcom": "Welcom to Ft_transcendence"
+		"welcom": "Welcom to",
+		"your": "Your",
+		"profile": "profile",
+		"lastGame": "Last game:",
+		"lose": "Lose",
+		"win": "Win",
+		"newGame": "New game",
+		"ai": "VS AI",
+		"player": "VS player",
+		"start": "Start"
 	}
 }
