@@ -4,5 +4,8 @@
 		"profile": "Profile",
 		"game": "Game",
 		"logout": "Logout"
+	},
+	"home": {
+		"welcom": "Welcom to Ft_transcendence"
 	}
 }
