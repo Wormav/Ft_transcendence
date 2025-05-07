@@ -1,11 +1,6 @@
-import { type ReactNode } from 'react';
+import type { CardProps } from '../../types/CardProps';
 import CardStyle from './CardStyle';
 
-interface CardProps {
-	children: ReactNode;
-}
-
-// Composant d'espace qui ne sera pas supprimé par le formatage
 export const Space = () => <span className="whitespace-pre">&nbsp;</span>;
 
 export default function Card({ children }: CardProps) {

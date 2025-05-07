@@ -1,4 +1,4 @@
-export interface CustomBtnProps {
+export type CustomBtnProps = {
 	text: string;
 	onClick: () => void;
-}
+};

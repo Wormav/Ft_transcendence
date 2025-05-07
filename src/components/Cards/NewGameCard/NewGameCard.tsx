@@ -4,10 +4,7 @@ import { FaGamepad } from 'react-icons/fa6';
 import globalStyle from '../../../globalStyle';
 import CustomBtn from '../../CustomBtn/CustomBtn';
 import { MdSupervisorAccount } from 'react-icons/md';
-
-interface NewGameCardProps {
-	ai?: boolean;
-}
+import type { NewGameCardProps } from '../../../types/NewGameCardProps';
 
 export default function NewGameCard({ ai = false }: NewGameCardProps) {
 	const { t } = useTranslation();
