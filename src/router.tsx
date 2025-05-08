@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Layout from './components/Layout/Layout.tsx';
+import Profile from './pages/Profile/Profile.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
 			},
 			{
 				path: '/profile',
-				element: <div>Profile Page</div>,
+				element: <Profile />,
 				children: [],
 			},
 			{

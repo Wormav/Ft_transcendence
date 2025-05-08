@@ -4,6 +4,7 @@ import LayoutStyles from './LayoutStyles';
 import BurgerMenu from '../BugerMenu/BurgerMenu';
 import NavBar from '../NavBar/NavBar';
 import Menu from '../Menu/Menu';
+import globalStyle from '../../globalStyle';
 
 const Layout: React.FC = () => {
 	const [bugerOpen, setBugerOpen] = useState(false);
@@ -22,6 +23,11 @@ const Layout: React.FC = () => {
 				<div className={LayoutStyles.outletDiv}>
 					<Outlet />
 				</div>
+				<footer className="flex items-center justify-center my-6 lg:ml-60 3xl:ml-80">
+					<p className={`${globalStyle.span} `}>
+						ft_transcendence | ©2025 | aauberti | ebervas | jlorette | thomarna{' '}
+					</p>
+				</footer>
 			</main>
 		</div>
 	);

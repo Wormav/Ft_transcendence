@@ -6,7 +6,7 @@
 		"logout": "Logout"
 	},
 	"home": {
-		"welcom": "Welcom to",
+		"welcom": "Welcome to",
 		"your": "Your",
 		"profile": "profile",
 		"lastGame": "Last game:",
@@ -15,6 +15,19 @@
 		"newGame": "New game",
 		"ai": "VS AI",
 		"player": "VS player",
-		"start": "Start"
+		"start": "Start",
+		"history": "History"
+	},
+	"profile": {
+		"account": "Account",
+		"logout": "Logout",
+		"delete": "Delete",
+		"settings": "Settings",
+		"pseudo": "Pseudo",
+		"edit_pseudo": "Edit pseudo",
+		"email": "Email",
+		"password": "Password",
+		"changePassword": "Change password",
+		"language": "Language"
 	}
 }

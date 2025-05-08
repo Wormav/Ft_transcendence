@@ -2,7 +2,7 @@
 	"menu": {
 		"home": "Accueil",
 		"profile": "Profil",
-		"game": "jeu",
+		"game": "Jeu",
 		"logout": "Déconnexion"
 	},
 	"home": {
@@ -11,10 +11,23 @@
 		"profile": "profil",
 		"lastGame": "Dernière partie:",
 		"lose": "Perdu",
-		"win": "Gagner",
+		"win": "Gagné",
 		"newGame": "Nouvelle partie",
 		"ai": "VS IA",
 		"player": "VS joueur",
-		"start": "Lancer"
+		"start": "Lancer",
+		"history": "Historique"
+	},
+	"profile": {
+		"account": "Compte",
+		"logout": "Déconnexion",
+		"delete": "Supprimer",
+		"settings": "Paramètres",
+		"pseudo": "Pseudo",
+		"edit_pseudo": "Modifier le pseudo",
+		"email": "Email",
+		"password": "Mot de passe",
+		"changePassword": "Changer le mot de passe",
+		"language": "Langue"
 	}
 }
