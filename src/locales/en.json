@@ -16,7 +16,9 @@
 		"ai": "VS AI",
 		"player": "VS player",
 		"start": "Start",
-		"history": "History"
+		"history": "History",
+		"gameSettings": "Game settings",
+		"custom": "Custom"
 	},
 	"profile": {
 		"account": "Account",
@@ -29,5 +31,8 @@
 		"password": "Password",
 		"changePassword": "Change password",
 		"language": "Language"
+	},
+	"game": {
+		"gameCustom": "Custom game"
 	}
 }
