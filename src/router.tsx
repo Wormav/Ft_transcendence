@@ -1,7 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Home from './pages/Home/Home';
-import Layout from './components/Layout/Layout.tsx';
+import Layout from './components/layout/Layout.tsx';
 import Profile from './pages/Profile/Profile.tsx';
+import Game from './pages/Game/Game.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -20,7 +21,7 @@ const router = createBrowserRouter([
 			},
 			{
 				path: '/game',
-				element: <div>Game Page</div>,
+				element: <Game/>,
 				children: [],
 			},
 			{

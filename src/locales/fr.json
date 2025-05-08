@@ -16,7 +16,9 @@
 		"ai": "VS IA",
 		"player": "VS joueur",
 		"start": "Lancer",
-		"history": "Historique"
+		"history": "Historique",
+		"gameSettings": "Paramètres de jeu",
+		"custom": "Personnaliser"
 	},
 	"profile": {
 		"account": "Compte",
@@ -29,5 +31,8 @@
 		"password": "Mot de passe",
 		"changePassword": "Changer le mot de passe",
 		"language": "Langue"
+	},
+	"game": {
+		"gameCustom": "Jeu personnalisé"
 	}
 }
