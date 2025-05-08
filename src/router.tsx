@@ -3,6 +3,7 @@ import Home from './pages/Home/Home';
 import Layout from './components/layout/Layout.tsx';
 import Profile from './pages/Profile/Profile.tsx';
 import Game from './pages/Game/Game.tsx';
+import Pong from './components/Pong/Pong.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -25,8 +26,8 @@ const router = createBrowserRouter([
 				children: [],
 			},
 			{
-				path: '/logout',
-				element: <div>Logout Page</div>,
+				path: '/pong',
+				element: <Pong/>,
 				children: [],
 			},
 		],
