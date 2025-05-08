@@ -17,7 +17,7 @@ export default function NewGameCard({ ai = false }: NewGameCardProps) {
 				<MdSupervisorAccount size={100} color="#00babc" />
 			)}
 			<p>{t('home.newGame')}</p>
-			<span className={globalStyle.span}>{t(ai ? 'home.ai' : 'home.player')}</span>
+			<span className={globalStyle.span}>{t(ai ? 'home.aivs' : 'home.player')}</span>
 			<CustomBtn text={t('home.start')} onClick={() => console.log('cc')} />
 		</Card>
 	);

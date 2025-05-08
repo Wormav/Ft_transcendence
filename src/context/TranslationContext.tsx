@@ -1,7 +1,8 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 
 import frTranslations from '../locales/fr.json';
 import enTranslations from '../locales/en.json';
+import esTranslations from '../locales/es.json';
 import type { Locale, TranslationContextType, Translations } from '../types/TranslationTypes';
 
 const TranslationContext = createContext<TranslationContextType>({
@@ -35,11 +36,13 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 	const savedLocale = localStorage.getItem('locale') as Locale;
 	const [locale, setLocale] = useState<Locale>(savedLocale || 'en');
 	const [translations, setTranslations] = useState<Translations>(
-		locale === 'fr' ? frTranslations : enTranslations
+		locale === 'fr' ? frTranslations : locale === 'es' ? esTranslations : enTranslations
 	);
 
 	useEffect(() => {
-		setTranslations(locale === 'fr' ? frTranslations : enTranslations);
+		setTranslations(
+			locale === 'fr' ? frTranslations : locale === 'es' ? esTranslations : enTranslations
+		);
 		localStorage.setItem('locale', locale);
 	}, [locale]);
 

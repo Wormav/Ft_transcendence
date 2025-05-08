@@ -1,0 +1,33 @@
+{
+	"menu": {
+		"home": "Inicio",
+		"profile": "Perfil",
+		"game": "Juego",
+		"logout": "Cerrar sesión"
+	},
+	"home": {
+		"welcom": "Bienvenido a",
+		"your": "Tu",
+		"profile": "perfil",
+		"lastGame": "Último juego:",
+		"lose": "Perdido",
+		"win": "Ganado",
+		"newGame": "Nuevo juego",
+		"ai": "VS IA",
+		"player": "VS jugador",
+		"start": "Comenzar",
+		"history": "Historial"
+	},
+	"profile": {
+		"account": "Cuenta",
+		"logout": "Cerrar sesión",
+		"delete": "Eliminar",
+		"settings": "Configuraciones",
+		"pseudo": "Apodo",
+		"edit_pseudo": "Editar apodo",
+		"email": "Correo electrónico",
+		"password": "Contraseña",
+		"changePassword": "Cambiar contraseña",
+		"language": "Idioma"
+	}
+}

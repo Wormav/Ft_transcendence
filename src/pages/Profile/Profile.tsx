@@ -3,10 +3,10 @@ import Card, { Space } from '../../components/Card/Card';
 import { useTranslation } from '../../context/TranslationContext';
 import globalStyle from '../../globalStyle';
 import ProfilHomeCard from '../../components/Cards/ProfilHomeCard/ProfilHomeCard';
-import NewGameCard from '../../components/Cards/NewGameCard/NewGameCard';
-import ResultsCard from '../../components/Cards/ResultsCard/ResultsCard';
+import AccountCard from '../../components/Cards/AccountCard/AccountCard';
+import SettingsCard from '../../components/Cards/SettingsCard/SettingsCard';
 
-const Home: React.FC = () => {
+const Profile: React.FC = () => {
 	const { t } = useTranslation();
 
 	return (
@@ -19,13 +19,12 @@ const Home: React.FC = () => {
 				</div>
 			</Card>
 			<div className={globalStyle.cardContainer}>
-				<ProfilHomeCard home={true} />
-				<NewGameCard ai={true} />
-				<ResultsCard />
-				<NewGameCard ai={false} />
+				<ProfilHomeCard />
+				<AccountCard />
+				<SettingsCard />
 			</div>
 		</>
 	);
 };
 
-export default Home;
+export default Profile;
