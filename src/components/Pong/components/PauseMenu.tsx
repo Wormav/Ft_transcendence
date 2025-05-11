@@ -1,5 +1,6 @@
 import React from 'react';
 import PongStyle from '../PongStyle';
+import { useTranslation } from '../../../context/TranslationContext';
 
 interface PauseMenuProps {
   gameStarted: boolean;
@@ -24,22 +25,24 @@ export const PauseMenu: React.FC<PauseMenuProps> = ({
   currentView,
   getViewName
 }) => {
+  const { t } = useTranslation();
+
   if (!gameStarted || !gamePaused || showMenu) return null;
 
   return (
     <div className={PongStyle.overlay}>
-      <h1 className={PongStyle.title}>Pause</h1>
+      <h1 className={PongStyle.title}>{t('pong.pause')}</h1>
       <button className={PongStyle.button} onClick={togglePause}>
-        Reprendre
+        {t('pong.resumeGame')}
       </button>
       <button className={PongStyle.button} onClick={changeView}>
-        Vue: {getViewName(currentView)}
+        {t('pong.changeView')}: {getViewName(currentView)}
       </button>
       <button className={PongStyle.button} onClick={backToMenu}>
-        Menu Principal
+        {t('pong.backToMenu')}
       </button>
       <button className={PongStyle.buttonDanger} onClick={quitGame}>
-        Quitter
+        {t('pong.quitGame')}
       </button>
     </div>
   );

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import PongStyle from './PongStyle';
 import type { BallDirection, GameField, ScoreState } from '../../types/Pong';
 import { ScoreOverlay, GameMenu, PauseMenu, Countdown, TouchControls } from './components';
+import { useTranslation } from '../../context/TranslationContext';
 
 const SCALE_FACTOR = 10;
 const BALL_SPEED_INCREASE = 1.05;
@@ -14,6 +15,7 @@ const FIELD_MARGIN = 0.05;
 
 export default function Pong() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<BABYLON.Engine | null>(null);
@@ -262,30 +264,28 @@ export default function Pong() {
   const updatePaddlePositions = useCallback(() => {
     if (!paddleLeftRef.current || !paddleRightRef.current || editViewMode) return;
 
-    // N'utiliser les commandes clavier que si nous ne sommes pas en mode mobile
-    if (!isMobileView) {
-      const paddleSpeed = gameFieldRef.current.height * 0.01;
-      const paddleLimit = gameFieldRef.current.height * 0.45;
+    // Permettre l'utilisation du clavier même en mode mobile
+    const paddleSpeed = gameFieldRef.current.height * 0.01;
+    const paddleLimit = gameFieldRef.current.height * 0.45;
 
-      if (keysPressed.current['w'] || keysPressed.current['W']) {
-        paddleRightRef.current.position.z -= paddleSpeed;
-      }
-      if (keysPressed.current['s'] || keysPressed.current['S']) {
-        paddleRightRef.current.position.z += paddleSpeed;
-      }
-
-      if (keysPressed.current['ArrowUp']) {
-        paddleLeftRef.current.position.z -= paddleSpeed;
-      }
-      if (keysPressed.current['ArrowDown']) {
-        paddleLeftRef.current.position.z += paddleSpeed;
-      }
-
-      const clampPosition = (pos: number) => Math.max(-paddleLimit, Math.min(pos, paddleLimit));
-      paddleLeftRef.current.position.z = clampPosition(paddleLeftRef.current.position.z);
-      paddleRightRef.current.position.z = clampPosition(paddleRightRef.current.position.z);
+    if (keysPressed.current['w'] || keysPressed.current['W']) {
+      paddleRightRef.current.position.z -= paddleSpeed;
     }
-  }, [editViewMode, isMobileView]);
+    if (keysPressed.current['s'] || keysPressed.current['S']) {
+      paddleRightRef.current.position.z += paddleSpeed;
+    }
+
+    if (keysPressed.current['ArrowUp']) {
+      paddleLeftRef.current.position.z -= paddleSpeed;
+    }
+    if (keysPressed.current['ArrowDown']) {
+      paddleLeftRef.current.position.z += paddleSpeed;
+    }
+
+    const clampPosition = (pos: number) => Math.max(-paddleLimit, Math.min(pos, paddleLimit));
+    paddleLeftRef.current.position.z = clampPosition(paddleLeftRef.current.position.z);
+    paddleRightRef.current.position.z = clampPosition(paddleRightRef.current.position.z);
+  }, [editViewMode]);
 
   const checkCollisions = useCallback(() => {
     if (!ballRef.current || !paddleLeftRef.current || !paddleRightRef.current) return;
@@ -617,10 +617,8 @@ export default function Pong() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // N'activer les commandes clavier que si nous ne sommes pas en mode mobile
-      if (!isMobileView) {
-        keysPressed.current[e.key] = true;
-      }
+      // Permettre les commandes clavier même en mode mobile
+      keysPressed.current[e.key] = true;
 
       const keyActions: Record<string, () => void> = {
         'p': () => {
@@ -654,7 +652,7 @@ export default function Pong() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [gameStarted, gamePaused, showMenu, editViewMode, changeView, toggleFullscreen, toggleEditViewMode, togglePause, quitGame, isMobileView]);
+  }, [gameStarted, gamePaused, showMenu, editViewMode, changeView, toggleFullscreen, toggleEditViewMode, togglePause, quitGame]);
 
   useEffect(() => {
     if (gameStarted && !gamePaused) {
@@ -672,7 +670,7 @@ export default function Pong() {
   }, [gameStarted, gamePaused, startGameLoop, stopGameLoop]);
 
   const getViewName = (viewIdx: number) => {
-    return viewIdx === 0 ? "Face" : viewIdx === 1 ? "Dessus" : "Côté";
+    return viewIdx === 0 ? t('pong.viewFront') : viewIdx === 1 ? t('pong.viewTop') : t('pong.viewSide');
   };
 
   // Gestionnaires pour les contrôles tactiles

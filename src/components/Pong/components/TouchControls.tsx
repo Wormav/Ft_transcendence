@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import PongStyle from '../PongStyle';
+import { useTranslation } from '../../../context/TranslationContext';
 
 interface TouchControlsProps {
   gameStarted: boolean;
@@ -22,6 +23,7 @@ const TouchControls: React.FC<TouchControlsProps> = ({
   onRightDown,
   onPauseClick,
 }) => {
+  const { t } = useTranslation();
   // Références pour suivre si les boutons sont enfoncés
   const leftUpPressed = useRef(false);
   const leftDownPressed = useRef(false);
@@ -71,7 +73,7 @@ const TouchControls: React.FC<TouchControlsProps> = ({
           onTouchStart={() => { leftUpPressed.current = true; }}
           onTouchEnd={() => { leftUpPressed.current = false; }}
           onTouchCancel={() => { leftUpPressed.current = false; }}
-          aria-label="Gauche haut"
+          aria-label={`${t('pong.player1')} ${t('pong.up')}`}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" width="10" height="10">
             <path d="M12 19V5M5 12l7-7 7 7"/>
@@ -82,7 +84,7 @@ const TouchControls: React.FC<TouchControlsProps> = ({
           onTouchStart={() => { leftDownPressed.current = true; }}
           onTouchEnd={() => { leftDownPressed.current = false; }}
           onTouchCancel={() => { leftDownPressed.current = false; }}
-          aria-label="Gauche bas"
+          aria-label={`${t('pong.player1')} ${t('pong.down')}`}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" width="10" height="10">
             <path d="M12 5v14M5 12l7 7 7-7"/>
@@ -95,7 +97,7 @@ const TouchControls: React.FC<TouchControlsProps> = ({
         <button
           className={PongStyle.touchButtonPause}
           onClick={onPauseClick}
-          aria-label="Pause"
+          aria-label={t('pong.pause')}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" width="8" height="8">
             <path d="M10 4H6v16h4V4zM18 4h-4v16h4V4z"/>
@@ -110,7 +112,7 @@ const TouchControls: React.FC<TouchControlsProps> = ({
           onTouchStart={() => { rightUpPressed.current = true; }}
           onTouchEnd={() => { rightUpPressed.current = false; }}
           onTouchCancel={() => { rightUpPressed.current = false; }}
-          aria-label="Droite haut"
+          aria-label={`${t('pong.player2')} ${t('pong.up')}`}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" width="10" height="10">
             <path d="M12 19V5M5 12l7-7 7 7"/>
@@ -121,7 +123,7 @@ const TouchControls: React.FC<TouchControlsProps> = ({
           onTouchStart={() => { rightDownPressed.current = true; }}
           onTouchEnd={() => { rightDownPressed.current = false; }}
           onTouchCancel={() => { rightDownPressed.current = false; }}
-          aria-label="Droite bas"
+          aria-label={`${t('pong.player2')} ${t('pong.down')}`}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" width="10" height="10">
             <path d="M12 5v14M5 12l7 7 7-7"/>
