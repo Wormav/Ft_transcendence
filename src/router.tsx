@@ -25,12 +25,13 @@ const router = createBrowserRouter([
 				element: <Game/>,
 				children: [],
 			},
-			{
-				path: '/pong',
-				element: <Pong/>,
-				children: [],
-			},
 		],
+
+	},
+	{
+		path: '/pong',
+		element: <Pong/>,
+		children: [],
 	},
 ]);
 
