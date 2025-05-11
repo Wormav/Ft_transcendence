@@ -331,7 +331,18 @@ export default function Pong() {
 
   const quitGame = () => {
     stopGameLoop();
-    navigate('/game');
+
+    // Quitter le mode plein écran avant de naviguer
+    if (document.fullscreenElement) {
+      document.exitFullscreen().then(() => {
+        navigate('/game');
+      }).catch(err => {
+        console.error('Erreur lors de la sortie du mode plein écran:', err);
+        navigate('/game'); // Naviguer même en cas d'erreur
+      });
+    } else {
+      navigate('/game');
+    }
   };
 
   const toggleFullscreen = () => {
