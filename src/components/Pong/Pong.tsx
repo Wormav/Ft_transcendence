@@ -4,7 +4,7 @@ import 'babylonjs-loaders';
 import { useNavigate } from 'react-router-dom';
 import PongStyle from './PongStyle';
 import type { BallDirection, GameField, ScoreState } from '../../types/Pong';
-import { ScoreOverlay, GameMenu, PauseMenu, Countdown } from './components';
+import { ScoreOverlay, GameMenu, PauseMenu, Countdown, TouchControls } from './components';
 
 const SCALE_FACTOR = 10;
 const BALL_SPEED_INCREASE = 1.05;
@@ -36,12 +36,22 @@ export default function Pong() {
   const [countdown, setCountdown] = useState(0);
   const [editViewMode, setEditViewMode] = useState(false);
   const [currentView, setCurrentView] = useState(0);
+  const [isMobileView, setIsMobileView] = useState(false);
 
   const calculateFieldDimensions = useCallback(() => {
     const aspectRatio = window.innerWidth / window.innerHeight;
     const fieldWidth = SCALE_FACTOR * 2;
     const fieldHeight = fieldWidth / aspectRatio;
-    return { fieldWidth, fieldHeight, aspectRatio };
+
+    // Ajustements pour l'écran mobile
+    const isMobile = window.innerWidth <= 1023;
+    const mobileScaleFactor = isMobile ? 0.9 : 1.0; // Réduire légèrement la taille du terrain sur mobile
+
+    return {
+      fieldWidth: fieldWidth * mobileScaleFactor,
+      fieldHeight: fieldHeight * mobileScaleFactor,
+      aspectRatio
+    };
   }, []);
 
   const getMaxFieldDimension = useCallback(() => {
@@ -234,17 +244,17 @@ export default function Pong() {
       case 0:
         camera.alpha = Math.PI / 2;
         camera.beta = Math.PI / 4;
-        camera.radius = maxDimension * 2;
+        camera.radius = maxDimension * 3; // Dezoom plus important (de 2 à 3)
         break;
       case 1:
         camera.alpha = Math.PI / 2;
         camera.beta = Math.PI / 16;
-        camera.radius = maxDimension * 1.0;
+        camera.radius = maxDimension * 1.5; // Dezoom plus important (de 1.0 à 1.5)
         break;
       case 2:
         camera.alpha = 0;
         camera.beta = Math.PI / 4;
-        camera.radius = maxDimension * 2;
+        camera.radius = maxDimension * 3; // Dezoom plus important (de 2 à 3)
         break;
     }
   }, [currentView, getMaxFieldDimension]);
@@ -252,27 +262,30 @@ export default function Pong() {
   const updatePaddlePositions = useCallback(() => {
     if (!paddleLeftRef.current || !paddleRightRef.current || editViewMode) return;
 
-    const paddleSpeed = gameFieldRef.current.height * 0.01;
-    const paddleLimit = gameFieldRef.current.height * 0.45;
+    // N'utiliser les commandes clavier que si nous ne sommes pas en mode mobile
+    if (!isMobileView) {
+      const paddleSpeed = gameFieldRef.current.height * 0.01;
+      const paddleLimit = gameFieldRef.current.height * 0.45;
 
-    if (keysPressed.current['w'] || keysPressed.current['W']) {
-      paddleRightRef.current.position.z -= paddleSpeed;
-    }
-    if (keysPressed.current['s'] || keysPressed.current['S']) {
-      paddleRightRef.current.position.z += paddleSpeed;
-    }
+      if (keysPressed.current['w'] || keysPressed.current['W']) {
+        paddleRightRef.current.position.z -= paddleSpeed;
+      }
+      if (keysPressed.current['s'] || keysPressed.current['S']) {
+        paddleRightRef.current.position.z += paddleSpeed;
+      }
 
-    if (keysPressed.current['ArrowUp']) {
-      paddleLeftRef.current.position.z -= paddleSpeed;
-    }
-    if (keysPressed.current['ArrowDown']) {
-      paddleLeftRef.current.position.z += paddleSpeed;
-    }
+      if (keysPressed.current['ArrowUp']) {
+        paddleLeftRef.current.position.z -= paddleSpeed;
+      }
+      if (keysPressed.current['ArrowDown']) {
+        paddleLeftRef.current.position.z += paddleSpeed;
+      }
 
-    const clampPosition = (pos: number) => Math.max(-paddleLimit, Math.min(pos, paddleLimit));
-    paddleLeftRef.current.position.z = clampPosition(paddleLeftRef.current.position.z);
-    paddleRightRef.current.position.z = clampPosition(paddleRightRef.current.position.z);
-  }, [editViewMode]);
+      const clampPosition = (pos: number) => Math.max(-paddleLimit, Math.min(pos, paddleLimit));
+      paddleLeftRef.current.position.z = clampPosition(paddleLeftRef.current.position.z);
+      paddleRightRef.current.position.z = clampPosition(paddleRightRef.current.position.z);
+    }
+  }, [editViewMode, isMobileView]);
 
   const checkCollisions = useCallback(() => {
     if (!ballRef.current || !paddleLeftRef.current || !paddleRightRef.current) return;
@@ -486,7 +499,7 @@ export default function Pong() {
     scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
 
     const { fieldWidth, fieldHeight } = calculateFieldDimensions();
-    const cameraHeight = Math.max(fieldWidth, fieldHeight) * 0.75;
+    const cameraHeight = Math.max(fieldWidth, fieldHeight) * 1.2; // Augmenté de 0.75 à 1.2 pour un dezoom plus important
 
     const camera = new BABYLON.ArcRotateCamera(
       "camera",
@@ -502,7 +515,7 @@ export default function Pong() {
     camera.lowerAlphaLimit = 0;
     camera.upperAlphaLimit = Math.PI;
     camera.lowerRadiusLimit = 5;
-    camera.upperRadiusLimit = cameraHeight * 1.5;
+    camera.upperRadiusLimit = cameraHeight * 3.0; // Augmentation de la limite de dezoom de 1.5 à 3.0
     camera.attachControl(canvasRef.current, true);
     camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput");
     cameraRef.current = camera;
@@ -550,6 +563,24 @@ export default function Pong() {
     };
   }, []);
 
+  // Détection de la vue mobile
+  useEffect(() => {
+    const checkMobileView = () => {
+      setIsMobileView(window.innerWidth <= 1023);
+    };
+
+    // Vérifier immédiatement
+    checkMobileView();
+
+    // Ajouter un écouteur d'événement pour les changements de taille d'écran
+    window.addEventListener('resize', checkMobileView);
+
+    // Nettoyage
+    return () => {
+      window.removeEventListener('resize', checkMobileView);
+    };
+  }, []);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       if (!document.fullscreenElement) {
@@ -569,7 +600,7 @@ export default function Pong() {
     const handleResize = () => {
       if (engineRef.current && cameraRef.current) {
         const { fieldWidth, fieldHeight } = calculateFieldDimensions();
-        const cameraHeight = Math.max(fieldWidth, fieldHeight) * 0.75;
+        const cameraHeight = Math.max(fieldWidth, fieldHeight) * 1.2; // Augmenté de 0.75 à 1.2 pour un dezoom plus important
         cameraRef.current.radius = cameraHeight;
         engineRef.current.resize();
       }
@@ -586,7 +617,10 @@ export default function Pong() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      keysPressed.current[e.key] = true;
+      // N'activer les commandes clavier que si nous ne sommes pas en mode mobile
+      if (!isMobileView) {
+        keysPressed.current[e.key] = true;
+      }
 
       const keyActions: Record<string, () => void> = {
         'p': () => {
@@ -620,7 +654,7 @@ export default function Pong() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [gameStarted, gamePaused, showMenu, editViewMode, changeView, toggleFullscreen, toggleEditViewMode, togglePause, quitGame]);
+  }, [gameStarted, gamePaused, showMenu, editViewMode, changeView, toggleFullscreen, toggleEditViewMode, togglePause, quitGame, isMobileView]);
 
   useEffect(() => {
     if (gameStarted && !gamePaused) {
@@ -640,6 +674,59 @@ export default function Pong() {
   const getViewName = (viewIdx: number) => {
     return viewIdx === 0 ? "Face" : viewIdx === 1 ? "Dessus" : "Côté";
   };
+
+  // Gestionnaires pour les contrôles tactiles
+  const handleLeftPaddleUp = useCallback(() => {
+    if (paddleLeftRef.current && !editViewMode) {
+      const paddleSpeed = gameFieldRef.current.height * 0.01;
+      const paddleLimit = gameFieldRef.current.height * 0.45;
+
+      // Déplacer la raquette vers le haut
+      paddleLeftRef.current.position.z -= paddleSpeed;
+
+      // Limiter la position
+      paddleLeftRef.current.position.z = Math.max(-paddleLimit, paddleLeftRef.current.position.z);
+    }
+  }, [editViewMode]);
+
+  const handleLeftPaddleDown = useCallback(() => {
+    if (paddleLeftRef.current && !editViewMode) {
+      const paddleSpeed = gameFieldRef.current.height * 0.01;
+      const paddleLimit = gameFieldRef.current.height * 0.45;
+
+      // Déplacer la raquette vers le bas
+      paddleLeftRef.current.position.z += paddleSpeed;
+
+      // Limiter la position
+      paddleLeftRef.current.position.z = Math.min(paddleLimit, paddleLeftRef.current.position.z);
+    }
+  }, [editViewMode]);
+
+  const handleRightPaddleUp = useCallback(() => {
+    if (paddleRightRef.current && !editViewMode) {
+      const paddleSpeed = gameFieldRef.current.height * 0.01;
+      const paddleLimit = gameFieldRef.current.height * 0.45;
+
+      // Déplacer la raquette vers le haut
+      paddleRightRef.current.position.z -= paddleSpeed;
+
+      // Limiter la position
+      paddleRightRef.current.position.z = Math.max(-paddleLimit, paddleRightRef.current.position.z);
+    }
+  }, [editViewMode]);
+
+  const handleRightPaddleDown = useCallback(() => {
+    if (paddleRightRef.current && !editViewMode) {
+      const paddleSpeed = gameFieldRef.current.height * 0.01;
+      const paddleLimit = gameFieldRef.current.height * 0.45;
+
+      // Déplacer la raquette vers le bas
+      paddleRightRef.current.position.z += paddleSpeed;
+
+      // Limiter la position
+      paddleRightRef.current.position.z = Math.min(paddleLimit, paddleRightRef.current.position.z);
+    }
+  }, [editViewMode]);
 
   return (
     <div className={PongStyle.container}>
@@ -671,6 +758,19 @@ export default function Pong() {
         getViewName={getViewName}
       />
       <Countdown countdown={countdown} />
+      {/* Afficher les contrôles tactiles uniquement sur les appareils mobiles */}
+      {isMobileView && (
+        <TouchControls
+          gameStarted={gameStarted}
+          gamePaused={gamePaused}
+          showMenu={showMenu}
+          onLeftUp={handleLeftPaddleUp}
+          onLeftDown={handleLeftPaddleDown}
+          onRightUp={handleRightPaddleUp}
+          onRightDown={handleRightPaddleDown}
+          onPauseClick={togglePause}
+        />
+      )}
     </div>
   );
 }

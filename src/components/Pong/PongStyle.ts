@@ -23,6 +23,17 @@ const PongStyle = {
     'text-base font-normal opacity-80',
   viewIndicator:
     'text-sm font-normal opacity-70 mt-[5px]',
+  // Styles pour les contrôles tactiles avec taille réduite
+  touchControls:
+    'fixed bottom-1 left-0 w-full flex justify-between items-center px-4 py-1 z-20 bg-transparent touch-manipulation',
+  touchControlLeft:
+    'flex flex-col space-y-2',
+  touchControlRight:
+    'flex flex-col space-y-2',
+  touchButton:
+    'w-12 h-12 bg-black/30 rounded-full flex items-center justify-center text-white touch-manipulation border border-white/30 active:bg-black/50 shadow-md transition-colors duration-200 backdrop-blur-sm',
+  touchButtonPause:
+    'w-10 h-10 bg-red-500/50 rounded-full flex items-center justify-center text-white touch-manipulation border border-white/30 active:bg-red-600/70 shadow-md transition-colors duration-200 backdrop-blur-sm',
 };
 
 export default PongStyle;

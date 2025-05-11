@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PongStyle from '../PongStyle';
 import type { ScoreState } from '../../../types/Pong';
 
@@ -17,6 +17,21 @@ export const GameMenu: React.FC<GameMenuProps> = ({
   startGame,
   quitGame
 }) => {
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  useEffect(() => {
+    const checkMobileView = () => {
+      setIsMobileView(window.innerWidth <= 1023);
+    };
+
+    checkMobileView();
+    window.addEventListener('resize', checkMobileView);
+
+    return () => {
+      window.removeEventListener('resize', checkMobileView);
+    };
+  }, []);
+
   if (!showMenu) return null;
 
   const hasScore = score.player1 > 0 || score.player2 > 0;
@@ -49,7 +64,16 @@ export const GameMenu: React.FC<GameMenuProps> = ({
       </button>
 
       <div className={PongStyle.smallText}>
-        Commandes: W/S et Flèches pour bouger | F: Plein écran | P: Pause
+        {isMobileView ? (
+          <>
+            Commandes tactiles: Utilisez les flèches en bas de l'écran<br />
+            Bouton central pour mettre en pause
+          </>
+        ) : (
+          <>
+            Commandes: W/S et Flèches pour bouger | F: Plein écran | P: Pause
+          </>
+        )}
       </div>
     </div>
   );
