@@ -34,5 +34,30 @@
 	},
 	"game": {
 		"gameCustom": "Juego personalizado"
+	},
+	"pong": {
+		"startGame": "Iniciar Juego",
+		"resumeGame": "Reanudar Juego",
+		"quitGame": "Salir del Juego",
+		"backToMenu": "Volver al Menú",
+		"changeView": "Cambiar Vista",
+		"view": "Vista",
+		"score": "Puntuación",
+		"pause": "Pausa",
+		"youWin": "¡Gana!",
+		"youLose": "¡Pierde!",
+		"player1": "Jugador 1",
+		"player2": "Jugador 2",
+		"viewFront": "Frente",
+		"viewTop": "Arriba",
+		"viewSide": "Lado",
+		"gameOverTitle": "Fin del Juego",
+		"gameOverMessage": "Puntuación Final",
+		"keyboardControls": "Controles: W/S y Flechas para moverse | F: Pantalla completa | P: Pausa",
+		"mobileControls": "Controles táctiles: Use las flechas en la parte inferior de la pantalla | Botón central para pausar",
+		"editViewMode": "Modo de Edición de Vista Activado (V para desactivar)",
+		"up": "Arriba",
+		"down": "Abajo"
 	}
 }
+

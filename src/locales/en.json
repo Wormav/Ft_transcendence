@@ -34,5 +34,30 @@
 	},
 	"game": {
 		"gameCustom": "Custom game"
+	},
+	"pong": {
+		"startGame": "Start Game",
+		"resumeGame": "Resume Game",
+		"quitGame": "Quit Game",
+		"backToMenu": "Back to Menu",
+		"changeView": "Change View",
+		"view": "View",
+		"score": "Score",
+		"pause": "Pause",
+		"youWin": "Wins!",
+		"youLose": "Loses!",
+		"player1": "Player 1",
+		"player2": "Player 2",
+		"viewFront": "Front",
+		"viewTop": "Top",
+		"viewSide": "Side",
+		"gameOverTitle": "Game Over",
+		"gameOverMessage": "Final Score",
+		"keyboardControls": "Controls: W/S and Arrow keys to move | F: Fullscreen | P: Pause",
+		"mobileControls": "Touch controls: Use arrows at bottom of screen | Center button for pause",
+		"editViewMode": "Edit View Mode Enabled (V to disable)",
+		"up": "Up",
+		"down": "Down"
 	}
 }
+

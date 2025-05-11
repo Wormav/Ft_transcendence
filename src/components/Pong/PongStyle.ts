@@ -1,49 +1,38 @@
 const PongStyle = {
-  container: 'relative w-full h-[600px] bg-black rounded-xl flex justify-center items-center overflow-hidden',
-  containerFullscreen: 'fixed inset-0 z-50 bg-black flex justify-center items-center overflow-hidden',
-
-  gameArea: 'relative w-full h-full flex justify-center items-center',
-
-  paddle: {
-    base: 'absolute h-20 w-3 bg-white rounded-md',
-    left: 'left-4',
-    right: 'right-4',
-    // Styles pour mode mobile (rotation 90 degrés)
-    mobile: {
-      base: 'absolute h-3 w-20 bg-white rounded-md',
-      top: 'top-4',
-      bottom: 'bottom-4',
-    },
-  },
-
-  ball: 'absolute h-4 w-4 bg-white rounded-full',
-
-  scoreBoard: 'absolute top-4 text-white text-4xl flex w-full justify-center',
-  scoreLeft: 'mr-12',
-  scoreRight: 'ml-12',
-  // Tableau de score pour mode mobile
-  scoreBoardMobile: 'absolute right-4 text-white text-4xl flex flex-col h-full justify-center',
-  scoreTop: 'mb-12',
-  scoreBottom: 'mt-12',
-
-  centerLine: 'absolute h-full w-0.5 bg-white opacity-40',
-  // Ligne centrale pour mode mobile
-  centerLineMobile: 'absolute w-full h-0.5 bg-white opacity-40',
-
-  menu: {
-    overlay: 'absolute inset-0 bg-black bg-opacity-75 flex flex-col justify-center items-center z-10',
-    title: 'text-white text-5xl mb-8',
-    button: 'bg-white text-black py-3 px-6 rounded-lg text-xl my-2 hover:bg-gray-200 transition-colors',
-  },
-
-  // Style pour le compteur
-  countdown: 'absolute text-white text-8xl z-10 font-bold',
-
-  // Bouton plein écran
-  fullscreenButton: 'absolute top-4 right-4 bg-white bg-opacity-20 text-white py-1 px-2 rounded-lg text-sm hover:bg-opacity-40 transition-colors z-20',
-
-  // Icônes pour le mode plein écran
-  fullscreenIcon: 'w-5 h-5',
+  container:
+    'fixed top-0 left-0 w-full h-full m-0 p-0 overflow-hidden z-[9999]',
+  canvas:
+    'w-full h-full outline-none block',
+  overlay:
+    'absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-black/70 text-white z-10 p-5 box-border overflow-y-auto',
+  score:
+    'absolute top-[10px] left-0 w-full text-center text-white text-lg sm:text-2xl font-bold z-5 px-[10px] box-border',
+  button:
+    'py-2 sm:py-3 px-4 sm:px-6 m-[10px] bg-[#4CAF50] text-white border-none rounded cursor-pointer transition-colors duration-300 max-w-full text-center text-sm sm:text-base',
+  buttonDanger:
+    'py-2 sm:py-3 px-4 sm:px-6 m-[10px] bg-[#d9534f] text-white border-none rounded cursor-pointer transition-colors duration-300 max-w-full text-center text-sm sm:text-base',
+  title:
+    'text-2xl sm:text-4xl text-center',
+  subtitle:
+    'text-xl sm:text-2xl text-center',
+  normalText:
+    'text-sm font-normal opacity-80',
+  smallText:
+    'text-xs sm:text-sm opacity-70 mt-5 text-center max-w-[90%] text-[#ccc]',
+  viewModeText:
+    'text-base font-normal opacity-80',
+  viewIndicator:
+    'text-sm font-normal opacity-70 mt-[5px]',
+  touchControls:
+    'fixed bottom-1 left-0 w-full flex justify-between items-center px-4 py-1 z-20 bg-transparent touch-manipulation',
+  touchControlLeft:
+    'flex flex-col space-y-2',
+  touchControlRight:
+    'flex flex-col space-y-2',
+  touchButton:
+    'w-12 h-12 bg-black/30 rounded-full flex items-center justify-center text-white touch-manipulation border border-white/30 active:bg-black/50 shadow-md transition-colors duration-200 backdrop-blur-sm',
+  touchButtonPause:
+    'w-10 h-10 bg-red-500/50 rounded-full flex items-center justify-center text-white touch-manipulation border border-white/30 active:bg-red-600/70 shadow-md transition-colors duration-200 backdrop-blur-sm',
 };
 
 export default PongStyle;
