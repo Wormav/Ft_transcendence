@@ -23,7 +23,6 @@ const PongStyle = {
     'text-base font-normal opacity-80',
   viewIndicator:
     'text-sm font-normal opacity-70 mt-[5px]',
-  // Styles pour les contrôles tactiles avec taille réduite
   touchControls:
     'fixed bottom-1 left-0 w-full flex justify-between items-center px-4 py-1 z-20 bg-transparent touch-manipulation',
   touchControlLeft:

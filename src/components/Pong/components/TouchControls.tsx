@@ -24,14 +24,12 @@ const TouchControls: React.FC<TouchControlsProps> = ({
   onPauseClick,
 }) => {
   const { t } = useTranslation();
-  // Références pour suivre si les boutons sont enfoncés
   const leftUpPressed = useRef(false);
   const leftDownPressed = useRef(false);
   const rightUpPressed = useRef(false);
   const rightDownPressed = useRef(false);
   const intervalRef = useRef<number | null>(null);
 
-  // Fonction pour gérer le mouvement continu des raquettes
   useEffect(() => {
     const updatePaddles = () => {
       if (leftUpPressed.current) onLeftUp();
@@ -41,7 +39,6 @@ const TouchControls: React.FC<TouchControlsProps> = ({
     };
 
     if (gameStarted && !gamePaused && !showMenu) {
-      // Exécuter à 60 FPS pour une animation fluide
       intervalRef.current = window.setInterval(updatePaddles, 16);
     }
 
@@ -53,7 +50,6 @@ const TouchControls: React.FC<TouchControlsProps> = ({
     };
   }, [gameStarted, gamePaused, showMenu, onLeftUp, onLeftDown, onRightUp, onRightDown]);
 
-  // Nettoyage au démontage
   useEffect(() => {
     return () => {
       if (intervalRef.current) {
@@ -66,7 +62,6 @@ const TouchControls: React.FC<TouchControlsProps> = ({
 
   return (
     <div className={PongStyle.touchControls}>
-      {/* Contrôles du joueur gauche */}
       <div className={PongStyle.touchControlLeft}>
         <button
           className={PongStyle.touchButton}
@@ -92,7 +87,6 @@ const TouchControls: React.FC<TouchControlsProps> = ({
         </button>
       </div>
 
-      {/* Bouton pause au milieu */}
       <div className="flex justify-center items-center">
         <button
           className={PongStyle.touchButtonPause}
@@ -105,7 +99,6 @@ const TouchControls: React.FC<TouchControlsProps> = ({
         </button>
       </div>
 
-      {/* Contrôles du joueur droit */}
       <div className={PongStyle.touchControlRight}>
         <button
           className={PongStyle.touchButton}
