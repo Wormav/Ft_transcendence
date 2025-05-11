@@ -4,50 +4,6 @@ import 'babylonjs-loaders';
 import { useNavigate } from 'react-router-dom';
 
 
-// Style global pour s'assurer que le jeu prend tout l'écran
-const globalStyle = document.createElement('style');
-globalStyle.innerHTML = `
-  body, html {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    width: 100%;
-    height: 100%;
-  }
-  #root {
-    width: 100%;
-    height: 100%;
-    position: relative;
-  }
-  .pong3d-fullscreen .layout {
-    padding: 0 !important;
-    margin: 0 !important;
-    width: 100% !important;
-    height: 100vh !important;
-    overflow: hidden !important;
-  }
-  .pong3d-fullscreen [class*="outletDiv"] {
-    padding: 0 !important;
-    margin: 0 !important;
-    width: 10          <button style={{...styles.button, backgroundColor: '#d9534f'}} onClick={quitGame}>
-            Quitter
-          </button>
-          <div style={{marginTop: '20px', fontSize: '14px', color: '#ccc'}}>
-            Commandes: W/S et Flèches pour bouger | F: Plein écran | ESC: Pause | V: Mode Édition Vue | C: Changer de Vue
-          </div>portant;
-    max-width: 100% !important;
-    height: 100vh !important;
-    margin-left: 0 !important;
-  }
-  .pong3d-fullscreen footer,
-  .pong3d-fullscreen nav,
-  .pong3d-fullscreen aside {
-    display: none !important;
-  }
-`;
-document.head.appendChild(globalStyle);
-
-// Styles pour le conteneur du jeu avec responsive design
 const styles = {
   container: {
     position: 'fixed' as const,
@@ -243,7 +199,6 @@ export default function Pong() {
     return () => {
       // Nettoyer le style global lorsque le composant est démonté
       try {
-        document.head.removeChild(globalStyle);
         document.body.classList.remove('pong3d-fullscreen');
       } catch (e) {
         // Ignorer les erreurs si l'élément a déjà été supprimé
@@ -501,7 +456,7 @@ export default function Pong() {
     stopGameLoop();
     // Ne plus quitter le mode plein écran quand on quitte le jeu
     // Retourner à la page d'accueil
-    navigate('/');
+    navigate('/game');
   };
 
   // Basculer le mode plein écran
