@@ -4,6 +4,7 @@ import 'babylonjs-loaders';
 import { useNavigate } from 'react-router-dom';
 import PongStyle from './PongStyle';
 import type { BallDirection, GameField, ScoreState } from '../../types/Pong';
+import { ScoreOverlay, GameMenu, PauseMenu, Countdown } from './components';
 
 const SCALE_FACTOR = 10;
 const BALL_SPEED_INCREASE = 1.05;
@@ -640,102 +641,36 @@ export default function Pong() {
     return viewIdx === 0 ? "Face" : viewIdx === 1 ? "Dessus" : "Côté";
   };
 
-  const renderScoreOverlay = () => {
-    if (!gameStarted || showMenu) return null;
-
-    return (
-      <div className={PongStyle.score}>
-        {score.player1} - {score.player2}
-        {editViewMode && (
-          <div className={PongStyle.viewModeText}>
-            Mode Édition Vue Activé (V pour désactiver)
-          </div>
-        )}
-        <div className={PongStyle.viewIndicator}>
-          Vue {currentView + 1}: {getViewName(currentView)}
-        </div>
-      </div>
-    );
-  };
-
-  const renderMenu = () => {
-    if (!showMenu) return null;
-
-    const hasScore = score.player1 > 0 || score.player2 > 0;
-    const gameOver = score.player1 >= MAX_SCORE || score.player2 >= MAX_SCORE;
-
-    return (
-      <div className={PongStyle.overlay}>
-        <h1 className={PongStyle.title}>Pong 3D</h1>
-
-        {hasScore && (
-          <h2 className={PongStyle.subtitle}>
-            {gameOver
-              ? (score.player1 >= MAX_SCORE ? "Joueur 1 gagne!" : "Joueur 2 gagne!")
-              : `Score: ${score.player1} - ${score.player2}`}
-          </h2>
-        )}
-
-        <button className={PongStyle.button} onClick={startGame}>
-          {hasScore ? "Nouvelle Partie" : "Commencer"}
-        </button>
-
-        {hasScore && (
-          <button className={PongStyle.button} onClick={startGame}>
-            Revanche
-          </button>
-        )}
-
-        <button className={PongStyle.buttonDanger} onClick={quitGame}>
-          Quitter
-        </button>
-
-        <div className={PongStyle.smallText}>
-          Commandes: W/S et Flèches pour bouger | F: Plein écran | P: Pause
-        </div>
-      </div>
-    );
-  };
-
-  const renderPauseMenu = () => {
-    if (!gameStarted || !gamePaused || showMenu) return null;
-
-    return (
-      <div className={PongStyle.overlay}>
-        <h1 className={PongStyle.title}>Pause</h1>
-        <button className={PongStyle.button} onClick={togglePause}>
-          Reprendre
-        </button>
-        <button className={PongStyle.button} onClick={changeView}>
-          Vue: {getViewName(currentView)}
-        </button>
-        <button className={PongStyle.button} onClick={backToMenu}>
-          Menu Principal
-        </button>
-        <button className={PongStyle.buttonDanger} onClick={quitGame}>
-          Quitter
-        </button>
-      </div>
-    );
-  };
-
-  const renderCountdown = () => {
-    if (countdown <= 0) return null;
-
-    return (
-      <div className={PongStyle.overlay}>
-        <h1>{countdown}</h1>
-      </div>
-    );
-  };
-
   return (
     <div className={PongStyle.container}>
       <canvas ref={canvasRef} className={PongStyle.canvas} />
-      {renderScoreOverlay()}
-      {renderMenu()}
-      {renderPauseMenu()}
-      {renderCountdown()}
+      <ScoreOverlay
+        gameStarted={gameStarted}
+        showMenu={showMenu}
+        score={score}
+        editViewMode={editViewMode}
+        currentView={currentView}
+        getViewName={getViewName}
+      />
+      <GameMenu
+        showMenu={showMenu}
+        score={score}
+        maxScore={MAX_SCORE}
+        startGame={startGame}
+        quitGame={quitGame}
+      />
+      <PauseMenu
+        gameStarted={gameStarted}
+        gamePaused={gamePaused}
+        showMenu={showMenu}
+        togglePause={togglePause}
+        changeView={changeView}
+        backToMenu={backToMenu}
+        quitGame={quitGame}
+        currentView={currentView}
+        getViewName={getViewName}
+      />
+      <Countdown countdown={countdown} />
     </div>
   );
 }
