@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PongStyle from '../PongStyle';
-import type { ScoreState } from '../../../types/Pong';
+import type { GameMenuProps, ScoreState } from '../../../types/Pong';
 import { useTranslation } from '../../../context/TranslationContext';
-
-interface GameMenuProps {
-  showMenu: boolean;
-  score: ScoreState;
-  maxScore: number;
-  startGame: () => void;
-  quitGame: () => void;
-}
 
 export const GameMenu: React.FC<GameMenuProps> = ({
   showMenu,

@@ -1,18 +1,7 @@
 import React from 'react';
 import PongStyle from '../PongStyle';
 import { useTranslation } from '../../../context/TranslationContext';
-
-interface PauseMenuProps {
-  gameStarted: boolean;
-  gamePaused: boolean;
-  showMenu: boolean;
-  togglePause: () => void;
-  changeView: () => void;
-  backToMenu: () => void;
-  quitGame: () => void;
-  currentView: number;
-  getViewName: (viewIdx: number) => string;
-}
+import type { PauseMenuProps } from '../../../types/Pong';
 
 export const PauseMenu: React.FC<PauseMenuProps> = ({
   gameStarted,

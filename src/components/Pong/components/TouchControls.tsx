@@ -1,17 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import PongStyle from '../PongStyle';
 import { useTranslation } from '../../../context/TranslationContext';
-
-interface TouchControlsProps {
-  gameStarted: boolean;
-  gamePaused: boolean;
-  showMenu: boolean;
-  onLeftUp: () => void;
-  onLeftDown: () => void;
-  onRightUp: () => void;
-  onRightDown: () => void;
-  onPauseClick: () => void;
-}
+import type { TouchControlsProps } from '../../../types/Pong';
 
 const TouchControls: React.FC<TouchControlsProps> = ({
   gameStarted,

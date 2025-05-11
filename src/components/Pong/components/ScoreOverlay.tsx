@@ -1,16 +1,7 @@
 import React from 'react';
 import PongStyle from '../PongStyle';
-import type { ScoreState } from '../../../types/Pong';
+import type { ScoreOverlayProps } from '../../../types/Pong';
 import { useTranslation } from '../../../context/TranslationContext';
-
-interface ScoreOverlayProps {
-  gameStarted: boolean;
-  showMenu: boolean;
-  score: ScoreState;
-  editViewMode: boolean;
-  currentView: number;
-  getViewName: (viewIdx: number) => string;
-}
 
 export const ScoreOverlay: React.FC<ScoreOverlayProps> = ({
   gameStarted,

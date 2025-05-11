@@ -1,9 +1,6 @@
 import React from 'react';
 import PongStyle from '../PongStyle';
-
-interface CountdownProps {
-  countdown: number;
-}
+import type { CountdownProps } from '../../../types/Pong';
 
 export const Countdown: React.FC<CountdownProps> = ({ countdown }) => {
   if (countdown <= 0) return null;
