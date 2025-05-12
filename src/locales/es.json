@@ -1,4 +1,32 @@
 {
+	"auth": {
+		"login": {
+			"title": "Iniciar sesión",
+			"email": "Correo electrónico",
+			"password": "Contraseña",
+			"loginButton": "Iniciar sesión",
+			"noAccount": "¿No tienes cuenta?",
+			"googleLogin": "Iniciar sesión con Google",
+			"emailError": "Ingrese una dirección de correo electrónico válida"
+		},
+		"signup": {
+			"title": "Registrarse",
+			"email": "Correo electrónico",
+			"password": "Contraseña",
+			"confirmPassword": "Confirmar contraseña",
+			"signupButton": "Registrarse",
+			"haveAccount": "¿Ya tienes una cuenta?",
+			"googleSignup": "Registrarse con Google",
+			"emailError": "Ingrese una dirección de correo electrónico válida",
+			"passwordRequirements": "La contraseña debe contener al menos 8 caracteres, una letra mayúscula, un carácter especial y un número",
+			"passwordError": "La contraseña debe contener {0}",
+			"passwordErrorUppercase": "una letra mayúscula",
+			"passwordErrorSpecial": "un carácter especial",
+			"passwordErrorNumber": "un número",
+			"passwordErrorLength": "al menos 8 caracteres",
+			"passwordsNotMatch": "Las contraseñas no coinciden"
+		}
+	},
 	"menu": {
 		"home": "Inicio",
 		"profile": "Perfil",

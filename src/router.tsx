@@ -3,7 +3,9 @@ import Home from './pages/Home/Home';
 import Layout from './components/layout/Layout.tsx';
 import Profile from './pages/Profile/Profile.tsx';
 import Game from './pages/Game/Game.tsx';
-import Pong from './components/Pong/Pong.tsx';
+import Pong from './pages/Pong/Pong.tsx';
+import Login from './pages/Login/Login.tsx';
+import Signup from './pages/Signup/Signup.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -31,6 +33,16 @@ const router = createBrowserRouter([
 	{
 		path: '/pong',
 		element: <Pong/>,
+		children: [],
+	},
+	{
+		path: '/login',
+		element: <Login/>,
+		children: [],
+	},
+	{
+		path: '/signup',
+		element: <Signup/>,
 		children: [],
 	},
 ]);

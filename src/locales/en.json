@@ -1,4 +1,32 @@
 {
+	"auth": {
+		"login": {
+			"title": "Login",
+			"email": "Email",
+			"password": "Password",
+			"loginButton": "Login",
+			"noAccount": "Don't have account?",
+			"googleLogin": "Sign in with Google",
+			"emailError": "Please enter a valid email address"
+		},
+		"signup": {
+			"title": "Signup",
+			"email": "Email",
+			"password": "Password",
+			"confirmPassword": "Confirm Password",
+			"signupButton": "Signup",
+			"haveAccount": "Already have an account?",
+			"googleSignup": "Sign up with Google",
+			"emailError": "Please enter a valid email address",
+			"passwordRequirements": "Password must contain at least 8 characters, one uppercase letter, one special character, and one number",
+			"passwordError": "Password must contain {0}",
+			"passwordErrorUppercase": "one uppercase letter",
+			"passwordErrorSpecial": "one special character",
+			"passwordErrorNumber": "one number",
+			"passwordErrorLength": "at least 8 characters",
+			"passwordsNotMatch": "Passwords do not match"
+		}
+	},
 	"menu": {
 		"home": "Home",
 		"profile": "Profile",
