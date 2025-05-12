@@ -1,4 +1,32 @@
 {
+	"auth": {
+		"login": {
+			"title": "Connexion",
+			"email": "Email",
+			"password": "Mot de passe",
+			"loginButton": "Se connecter",
+			"noAccount": "Vous n'avez pas de compte ?",
+			"googleLogin": "Se connecter avec Google",
+			"emailError": "Veuillez entrer une adresse email valide"
+		},
+		"signup": {
+			"title": "Inscription",
+			"email": "Email",
+			"password": "Mot de passe",
+			"confirmPassword": "Confirmer le mot de passe",
+			"signupButton": "S'inscrire",
+			"haveAccount": "Vous avez déjà un compte ?",
+			"googleSignup": "S'inscrire avec Google",
+			"emailError": "Veuillez entrer une adresse email valide",
+			"passwordRequirements": "Le mot de passe doit contenir au moins 8 caractères, une majuscule, un caractère spécial, et un chiffre",
+			"passwordError": "Le mot de passe doit contenir {0}",
+			"passwordErrorUppercase": "une majuscule",
+			"passwordErrorSpecial": "un caractère spécial",
+			"passwordErrorNumber": "un chiffre",
+			"passwordErrorLength": "au moins 8 caractères",
+			"passwordsNotMatch": "Les mots de passe ne correspondent pas"
+		}
+	},
 	"menu": {
 		"home": "Accueil",
 		"profile": "Profil",
