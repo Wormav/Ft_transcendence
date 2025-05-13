@@ -8,6 +8,28 @@
 		"previewText": "Vista previa del texto",
 		"sampleText": "Este es un texto de ejemplo para ver el tamaño seleccionado"
 	},
+	"dashboard": {
+		"title": "Panel de Control",
+		"statistics": "Estadísticas",
+		"scoreEvolution": "Evolución de Puntuación",
+		"winLossRatio": "Ratio de Victorias/Derrotas",
+		"you": "Tú",
+		"opponents": "Oponentes",
+		"total": "Total",
+		"matches": "partidas",
+		"wins": "victorias",
+		"losses": "derrotas",
+		"vsAI": "VS IA",
+		"vsPlayers": "VS Jugadores",
+		"score": "Puntuación",
+		"winRate": "Tasa de Victoria",
+		"lossRate": "Tasa de Derrota",
+		"versus": "contra",
+		"dateRange": "Periodo",
+		"lastWeek": "Últimos 7 días",
+		"lastMonth": "Últimos 30 días",
+		"allTime": "Todo"
+	},
 	"auth": {
 		"login": {
 			"title": "Iniciar sesión",
@@ -39,6 +61,7 @@
 	"menu": {
 		"home": "Inicio",
 		"profile": "Perfil",
+		"dashboard": "Panel de Control",
 		"game": "Juego",
 		"logout": "Cerrar sesión",
 		"settings": "Ajustes",
@@ -54,6 +77,8 @@
 		"newGame": "Nuevo juego",
 		"ai": "VS IA",
 		"player": "VS jugador",
+		"aivs": "VS IA",
+		"playervs": "VS jugador",
 		"start": "Comenzar",
 		"history": "Historial",
 		"gameSettings": "Configuración del juego",

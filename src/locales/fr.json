@@ -8,6 +8,21 @@
 		"previewText": "Aperçu du texte",
 		"sampleText": "Ceci est un exemple de texte pour voir la taille sélectionnée"
 	},
+	"dashboard": {
+		"title": "Tableau de bord",
+		"statistics": "Statistiques",
+		"scoreEvolution": "Évolution des scores",
+		"winLossRatio": "Ratio Victoires/Défaites",
+		"you": "Vous",
+		"opponents": "Adversaires",
+		"total": "Total",
+		"matches": "matchs",
+		"wins": "victoires",
+		"losses": "défaites",
+		"vsAI": "VS IA",
+		"vsPlayers": "VS Joueurs",
+		"score": "Score"
+	},
 	"auth": {
 		"login": {
 			"title": "Connexion",
@@ -39,6 +54,7 @@
 	"menu": {
 		"home": "Accueil",
 		"profile": "Profil",
+		"dashboard": "Tableau de bord",
 		"game": "Jeu",
 		"logout": "Déconnexion",
 		"settings": "Paramètres",
@@ -54,6 +70,8 @@
 		"newGame": "Nouvelle partie",
 		"ai": "VS IA",
 		"player": "VS joueur",
+		"aivs": "VS IA",
+		"playervs": "VS joueur",
 		"start": "Lancer",
 		"history": "Historique",
 		"gameSettings": "Paramètres de jeu",

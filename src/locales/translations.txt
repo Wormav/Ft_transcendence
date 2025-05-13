@@ -1,0 +1,31 @@
+// Mettre à jour les traductions dans les fichiers locales
+
+// fr.json
+{
+    "dashboard": {
+        "title": "Tableau de bord",
+        "statistics": "Statistiques",
+        "scoreEvolution": "Évolution des scores",
+        "winLossRatio": "Ratio Victoires/Défaites"
+    }
+}
+
+// en.json
+{
+    "dashboard": {
+        "title": "Dashboard",
+        "statistics": "Statistics",
+        "scoreEvolution": "Score Evolution",
+        "winLossRatio": "Win/Loss Ratio"
+    }
+}
+
+// es.json
+{
+    "dashboard": {
+        "title": "Panel de control",
+        "statistics": "Estadísticas",
+        "scoreEvolution": "Evolución de puntuaciones",
+        "winLossRatio": "Proporción Victorias/Derrotas"
+    }
+}
