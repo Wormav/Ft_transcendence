@@ -1,4 +1,13 @@
 {
+	"accessibility": {
+		"title": "Accessibility",
+		"text_size": "Text size",
+		"small": "Small",
+		"normal": "Normal",
+		"large": "Large",
+		"previewText": "Text preview",
+		"sampleText": "This is a sample text to see the selected size"
+	},
 	"auth": {
 		"login": {
 			"title": "Login",
@@ -31,7 +40,8 @@
 		"home": "Home",
 		"profile": "Profile",
 		"game": "Game",
-		"logout": "Logout"
+		"logout": "Logout",
+		"test_text_size": "Text Size Test"
 	},
 	"home": {
 		"welcom": "Welcome to",
@@ -58,7 +68,10 @@
 		"email": "Email",
 		"password": "Password",
 		"changePassword": "Change password",
-		"language": "Language"
+		"language": "Language",
+		"accessibility": "Accessibility",
+		"previewText": "Text preview",
+		"sampleText": "This is a sample text to see the selected size"
 	},
 	"game": {
 		"gameCustom": "Custom game"

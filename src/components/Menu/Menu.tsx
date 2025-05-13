@@ -1,7 +1,8 @@
-import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import MenuStyles from './MenuStyles';
 import { useTranslation } from '../../context/TranslationContext';
+import { useSettings } from '../../context/SettingsContext';
+import { getSizeTextStyle } from '../../globalStyle';
 
 const Menu: React.FC = () => {
 	const location = useLocation();
@@ -12,6 +13,8 @@ const Menu: React.FC = () => {
 		return currentPath === path;
 	};
 
+	const { size_text } = useSettings();
+
 	return (
 		<div className={MenuStyles.menu}>
 			<div className={MenuStyles.logoContainer}>
@@ -21,7 +24,7 @@ const Menu: React.FC = () => {
 				<ul className={MenuStyles.navList}>
 					<li className={`${MenuStyles.li}`}>
 						{isActive('/') && <div className={`${MenuStyles.indicator}`}></div>}
-						<Link to="/" className={`${MenuStyles.navItem} pl-4`}>
+						<Link to="/" className={`${MenuStyles.navItem} ${getSizeTextStyle(size_text)}`}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={MenuStyles.navIcon}
@@ -61,7 +64,7 @@ const Menu: React.FC = () => {
 					</li>
 					<li className={`${MenuStyles.li}`}>
 						{isActive('/profile') && <div className={`${MenuStyles.indicator}`}></div>}
-						<Link to="/profile" className={`${MenuStyles.navItem} pl-4`}>
+						<Link to="/profile" className={`${MenuStyles.navItem} pl-4 ${getSizeTextStyle(size_text)}`}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={MenuStyles.navIcon}
@@ -101,7 +104,7 @@ const Menu: React.FC = () => {
 					</li>
 					<li className={`${MenuStyles.li}`}>
 						{isActive('/game') && <div className={`${MenuStyles.indicator}`}></div>}
-						<Link to="/game" className={`${MenuStyles.navItem} pl-4`}>
+						<Link to="/game" className={`${MenuStyles.navItem} ${getSizeTextStyle(size_text)}`}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={MenuStyles.navIcon}
@@ -147,7 +150,7 @@ const Menu: React.FC = () => {
 						</Link>
 					</li>
 					<li className="relative">
-						<Link to="/logout" className={`${MenuStyles.logoutButton} pl-4`}>
+						<Link to="/logout" className={`${MenuStyles.logoutButton} pl-4 ${getSizeTextStyle(size_text)}`}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={MenuStyles.navIcon}
