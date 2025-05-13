@@ -8,6 +8,28 @@
 		"previewText": "Text preview",
 		"sampleText": "This is a sample text to see the selected size"
 	},
+	"dashboard": {
+		"title": "Dashboard",
+		"statistics": "Statistics",
+		"scoreEvolution": "Score Evolution",
+		"winLossRatio": "Win/Loss Ratio",
+		"you": "You",
+		"opponents": "Opponents",
+		"total": "Total",
+		"matches": "matches",
+		"wins": "wins",
+		"losses": "losses",
+		"vsAI": "VS AI",
+		"vsPlayers": "VS Players",
+		"score": "Score",
+		"winRate": "Win Rate",
+		"lossRate": "Loss Rate",
+		"versus": "versus",
+		"dateRange": "Date Range",
+		"lastWeek": "Last 7 days",
+		"lastMonth": "Last 30 days",
+		"allTime": "All Time"
+	},
 	"auth": {
 		"login": {
 			"title": "Login",
@@ -39,6 +61,7 @@
 	"menu": {
 		"home": "Home",
 		"profile": "Profile",
+		"dashboard": "Dashboard",
 		"game": "Game",
 		"logout": "Logout",
 		"settings": "Settings",
@@ -54,6 +77,8 @@
 		"newGame": "New game",
 		"ai": "VS AI",
 		"player": "VS player",
+		"aivs": "VS AI",
+		"playervs": "VS player",
 		"start": "Start",
 		"history": "History",
 		"gameSettings": "Game settings",

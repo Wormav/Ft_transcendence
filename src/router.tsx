@@ -7,6 +7,7 @@ import Signup from './pages/Signup/Signup.tsx';
 import Login from './pages/Login/Login.tsx';
 import Settings from './pages/Settings/Settings.tsx';
 import Profile from './pages/Profile/Profile.tsx';
+import Dashboard from './pages/Dashboard/Dashboard.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -31,6 +32,11 @@ const router = createBrowserRouter([
 			{
 				path: '/profile',
 				element: <Profile/>,
+				children: [],
+			},
+			{
+				path: '/dashboard',
+				element: <Dashboard/>,
 				children: [],
 			},
 		],
