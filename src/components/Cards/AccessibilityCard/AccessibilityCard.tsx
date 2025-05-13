@@ -16,7 +16,7 @@ export default function AccessibilityCard() {
 	}, [size_text]);
 
 	useEffect(() => {
-		const validSizes = [20, 26, 30];
+		const validSizes = [18, 22, 26];
 		if (!validSizes.includes(size_text)) {
 			setSizeText(26);
 		}
@@ -46,9 +46,9 @@ export default function AccessibilityCard() {
 							handleSizeChange(newSize);
 						}}
 					>
-						<option value="20">{t('accessibility.small')}</option>
-						<option value="26">{t('accessibility.normal')}</option>
-						<option value="30">{t('accessibility.large')}</option>
+						<option value="18">{t('accessibility.small')}</option>
+						<option value="22">{t('accessibility.normal')}</option>
+						<option value="26">{t('accessibility.large')}</option>
 					</select>
 					<div className={AccessibilityCardStyle.chevronContainer}>
 						<svg

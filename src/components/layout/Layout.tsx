@@ -29,7 +29,7 @@ const Layout: React.FC = () => {
                     <Outlet />
                 </div>
                 <footer className="flex items-center justify-center my-6 lg:ml-60 3xl:ml-80">
-                    <p className={`${globalStyle.span}  ${getSizeTextStyle(size_text)}`}>
+                    <p className={`${globalStyle.span}  ${getSizeTextStyle(size_text)} text-center`}>
                         ft_transcendence | ©2025 | aauberti | ebervas | jlorette | thomarna{' '}
                     </p>
                 </footer>

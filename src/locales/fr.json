@@ -41,6 +41,7 @@
 		"profile": "Profil",
 		"game": "Jeu",
 		"logout": "Déconnexion",
+		"settings": "Paramètres",
 		"test_text_size": "Test Taille Texte"
 	},
 	"home": {
@@ -56,7 +57,12 @@
 		"start": "Lancer",
 		"history": "Historique",
 		"gameSettings": "Paramètres de jeu",
-		"custom": "Personnaliser"
+		"custom": "Personnaliser",
+		"comingSoon": "Prochainement"
+	},
+	"settings": {
+		"yourPicture": "Votre photo",
+		"uploadNewProfilPicture": "Télécharger une nouvelle photo de profil"
 	},
 	"profile": {
 		"account": "Compte",

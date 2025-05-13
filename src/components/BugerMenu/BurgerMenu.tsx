@@ -22,7 +22,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 			className={`${BugerMenuStyles.menu} ${isOpen ? BugerMenuStyles.menuOpen : BugerMenuStyles.menuClosed}`}
 		>
 			<div className={BugerMenuStyles.div}>
-				<button onClick={onClose} className={BugerMenuStyles.closeButton}>
+				<button onClick={onClose} className={BugerMenuStyles.closeButton} aria-label={t('menu.close')}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						className={BugerMenuStyles.closeButton}
@@ -44,7 +44,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 				<ul className={BugerMenuStyles.navList}>
 					<li className={`${BugerMenuStyles.li}`}>
 						{isActive('/') && <div className={`${BugerMenuStyles.indicator}`}></div>}
-						<Link to="/" className={`${BugerMenuStyles.navItem} ${getSizeTextStyle(size_text)}`}>
+						<Link to="/" className={`${BugerMenuStyles.navItem} ${getSizeTextStyle(size_text)}`} onClick={onClose}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={BugerMenuStyles.navIcon}
@@ -77,44 +77,8 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 						</Link>
 					</li>
 					<li className={`${BugerMenuStyles.li}`}>
-						{isActive('/profile') && <div className={`${BugerMenuStyles.indicator}`}></div>}
-						<Link to="/profile" className={`${BugerMenuStyles.navItem}  ${getSizeTextStyle(size_text)}`}>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								className={BugerMenuStyles.navIcon}
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke={isActive('/profile') ? '#00BABC' : '#9CA3AF'}
-							>
-								<defs>
-									<filter id="profileShadow" x="-20%" y="-20%" width="140%" height="140%">
-										<feDropShadow
-											dx="1"
-											dy="1"
-											stdDeviation="2"
-											floodOpacity="0.3"
-											floodColor="#000"
-										/>
-									</filter>
-								</defs>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-									filter="url(#profileShadow)"
-								/>
-							</svg>
-							<span
-								className={isActive('/profile') ? 'text-gray-900 font-medium' : 'text-gray-500'}
-							>
-								{t('menu.profile')}
-							</span>
-						</Link>
-					</li>
-					<li className={`${BugerMenuStyles.li}`}>
 						{isActive('/game') && <div className={`${BugerMenuStyles.indicator}`}></div>}
-						<Link to="/game" className={`${BugerMenuStyles.navItem}  ${getSizeTextStyle(size_text)}`}>
+						<Link to="/game" className={`${BugerMenuStyles.navItem}  ${getSizeTextStyle(size_text)}`} onClick={onClose}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={BugerMenuStyles.navIcon}
@@ -153,8 +117,51 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 							</span>
 						</Link>
 					</li>
+					<li className={`${BugerMenuStyles.li}`}>
+						{isActive('/settings') && <div className={`${BugerMenuStyles.indicator}`}></div>}
+						<Link to="/settings" className={`${BugerMenuStyles.navItem}  ${getSizeTextStyle(size_text)}`} onClick={onClose}>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								className={BugerMenuStyles.navIcon}
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke={isActive('/settings') ? '#00BABC' : '#9CA3AF'}
+							>
+								<defs>
+									<filter id="settingsShadow" x="-20%" y="-20%" width="140%" height="140%">
+										<feDropShadow
+											dx="1"
+											dy="1"
+											stdDeviation="2"
+											floodOpacity="0.3"
+											floodColor="#000"
+										/>
+									</filter>
+								</defs>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+									d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+									filter="url(#settingsShadow)"
+								/>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+									d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+									filter="url(#settingsShadow)"
+								/>
+							</svg>
+							<span
+								className={isActive('/settings') ? 'text-gray-900 font-medium' : 'text-gray-500'}
+							>
+								{t('menu.settings')}
+							</span>
+						</Link>
+					</li>
 					<li className="relative">
-						<Link to="/logout" className={`${BugerMenuStyles.logoutButton}  ${getSizeTextStyle(size_text)}`}>
+						<Link to="/logout" className={`${BugerMenuStyles.logoutButton}  ${getSizeTextStyle(size_text)}`} onClick={onClose}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={BugerMenuStyles.navIcon}

@@ -41,6 +41,7 @@
 		"profile": "Profile",
 		"game": "Game",
 		"logout": "Logout",
+		"settings": "Settings",
 		"test_text_size": "Text Size Test"
 	},
 	"home": {
@@ -56,7 +57,12 @@
 		"start": "Start",
 		"history": "History",
 		"gameSettings": "Game settings",
-		"custom": "Custom"
+		"custom": "Custom",
+		"comingSoon": "Coming Soon"
+	},
+	"settings": {
+		"yourPicture": "Your picture",
+		"uploadNewProfilPicture": "Upload new profile picture"
 	},
 	"profile": {
 		"account": "Account",
