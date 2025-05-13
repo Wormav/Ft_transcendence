@@ -1,0 +1,56 @@
+/*
+ * Ce fichier définit les styles globaux pour la taille de texte
+ * basés sur la variable CSS --font-size définie dans le SettingsContext
+ */
+
+html {
+  font-size: var(--font-size, 22px);
+}
+
+body {
+  font-size: 1rem;
+}
+
+/* Styles pour les éléments de texte communs */
+p, span, div, button, input, select, textarea, label, a {
+  font-size: 1rem;
+}
+
+/* Styles pour les titres adaptés proportionnellement à la taille de texte de base */
+h1 {
+  font-size: calc(1.5rem);
+}
+
+h2 {
+  font-size: calc(1.3rem);
+}
+
+h3 {
+  font-size: calc(1.15rem);
+}
+
+h4, h5, h6 {
+  font-size: calc(1.05rem);
+}
+
+/* Classes d'utilité pour les tailles de texte */
+.text-small {
+  font-size: calc(0.9rem);
+}
+
+.text-large {
+  font-size: calc(1.2rem);
+}
+
+/* Assure que les composants Tailwind respectent aussi la taille de texte */
+.text-xs, .text-sm, .text-base, .text-lg, .text-xl, .text-2xl, .text-3xl {
+  font-size: var(--font-size, 22px);
+}
+
+/* Adaptation responsive */
+@media (max-width: 768px) {
+  html {
+    /* Légèrement plus petit sur mobile, mais toujours basé sur la variable */
+    font-size: calc(var(--font-size, 22px) * 0.95);
+  }
+}

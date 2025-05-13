@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { BugerMenuStyles } from './BugerMenuStyles';
 import type { BurgerMenuProps } from '../../types/BurgerMenuProps';
 import { useTranslation } from '../../context/TranslationContext';
+import { useSettings } from '../../context/SettingsContext';
+import { getSizeTextStyle } from '../../globalStyle';
 
 const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 	const location = useLocation();
@@ -12,6 +14,8 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 	const isActive = (path: string) => {
 		return currentPath === path;
 	};
+
+	const { size_text } = useSettings();
 
 	return (
 		<div
@@ -40,7 +44,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 				<ul className={BugerMenuStyles.navList}>
 					<li className={`${BugerMenuStyles.li}`}>
 						{isActive('/') && <div className={`${BugerMenuStyles.indicator}`}></div>}
-						<Link to="/" className={`${BugerMenuStyles.navItem} pl-4`}>
+						<Link to="/" className={`${BugerMenuStyles.navItem} ${getSizeTextStyle(size_text)}`}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={BugerMenuStyles.navIcon}
@@ -74,7 +78,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 					</li>
 					<li className={`${BugerMenuStyles.li}`}>
 						{isActive('/profile') && <div className={`${BugerMenuStyles.indicator}`}></div>}
-						<Link to="/profile" className={`${BugerMenuStyles.navItem} pl-4`}>
+						<Link to="/profile" className={`${BugerMenuStyles.navItem}  ${getSizeTextStyle(size_text)}`}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={BugerMenuStyles.navIcon}
@@ -110,7 +114,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 					</li>
 					<li className={`${BugerMenuStyles.li}`}>
 						{isActive('/game') && <div className={`${BugerMenuStyles.indicator}`}></div>}
-						<Link to="/game" className={`${BugerMenuStyles.navItem} pl-4`}>
+						<Link to="/game" className={`${BugerMenuStyles.navItem}  ${getSizeTextStyle(size_text)}`}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={BugerMenuStyles.navIcon}
@@ -150,7 +154,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 						</Link>
 					</li>
 					<li className="relative">
-						<Link to="/logout" className={`${BugerMenuStyles.logoutButton} pl-4`}>
+						<Link to="/logout" className={`${BugerMenuStyles.logoutButton}  ${getSizeTextStyle(size_text)}`}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={BugerMenuStyles.navIcon}

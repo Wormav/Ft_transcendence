@@ -11,12 +11,12 @@ export const ScoreOverlay: React.FC<ScoreOverlayProps> = ({
   currentView,
   getViewName
 }) => {
-  const { t } = useTranslation();
+	const { t } = useTranslation();
 
   if (!gameStarted || showMenu) return null;
 
   return (
-    <div className={PongStyle.score}>
+    <div className={`${PongStyle.score}`}>
       {score.player1} - {score.player2}
       {editViewMode && (
         <div className={PongStyle.viewModeText}>

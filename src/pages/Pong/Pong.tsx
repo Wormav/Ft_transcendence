@@ -15,7 +15,7 @@ const FIELD_MARGIN = 0.05;
 
 export default function Pong() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+	const { t } = useTranslation();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<BABYLON.Engine | null>(null);

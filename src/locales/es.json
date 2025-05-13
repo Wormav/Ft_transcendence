@@ -1,4 +1,13 @@
 {
+	"accessibility": {
+		"title": "Accesibilidad",
+		"text_size": "Tamaño del texto",
+		"small": "Pequeño",
+		"normal": "Normal",
+		"large": "Grande",
+		"previewText": "Vista previa del texto",
+		"sampleText": "Este es un texto de ejemplo para ver el tamaño seleccionado"
+	},
 	"auth": {
 		"login": {
 			"title": "Iniciar sesión",
@@ -31,7 +40,8 @@
 		"home": "Inicio",
 		"profile": "Perfil",
 		"game": "Juego",
-		"logout": "Cerrar sesión"
+		"logout": "Cerrar sesión",
+		"test_text_size": "Prueba Tamaño Texto"
 	},
 	"home": {
 		"welcom": "Bienvenido a",
@@ -58,7 +68,10 @@
 		"email": "Correo electrónico",
 		"password": "Contraseña",
 		"changePassword": "Cambiar contraseña",
-		"language": "Idioma"
+		"language": "Idioma",
+		"accessibility": "Accesibilidad",
+		"previewText": "Vista previa del texto",
+		"sampleText": "Este es un texto de ejemplo para ver el tamaño seleccionado"
 	},
 	"game": {
 		"gameCustom": "Juego personalizado"

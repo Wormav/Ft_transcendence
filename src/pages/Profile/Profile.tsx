@@ -2,6 +2,8 @@ import globalStyle from '../../globalStyle';
 import ProfilHomeCard from '../../components/Cards/ProfilHomeCard/ProfilHomeCard';
 import AccountCard from '../../components/Cards/AccountCard/AccountCard';
 import SettingsCard from '../../components/Cards/SettingsCard/SettingsCard';
+import AccessibilityCard from '../../components/Cards/AccessibilityCard/AccessibilityCard';
+
 
 const Profile: React.FC = () => {
 
@@ -11,6 +13,7 @@ const Profile: React.FC = () => {
 				<ProfilHomeCard />
 				<AccountCard />
 				<SettingsCard />
+				<AccessibilityCard />
 			</div>
 		</>
 	);
