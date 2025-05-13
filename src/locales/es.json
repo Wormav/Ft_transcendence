@@ -41,6 +41,7 @@
 		"profile": "Perfil",
 		"game": "Juego",
 		"logout": "Cerrar sesión",
+		"settings": "Ajustes",
 		"test_text_size": "Prueba Tamaño Texto"
 	},
 	"home": {
@@ -56,7 +57,12 @@
 		"start": "Comenzar",
 		"history": "Historial",
 		"gameSettings": "Configuración del juego",
-		"custom": "Personalizar"
+		"custom": "Personalizar",
+		"comingSoon": "Próximamente"
+	},
+	"settings": {
+		"yourPicture": "Tu foto",
+		"uploadNewProfilPicture": "Subir nueva foto de perfil"
 	},
 	"profile": {
 		"account": "Cuenta",

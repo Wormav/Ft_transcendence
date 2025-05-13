@@ -4,7 +4,7 @@ import type { SettingsContextType } from '../types/SettingsTypes';
 const SettingsContext = createContext<SettingsContextType>({
 	color_items: '#3498db',
 	color_bg: '#f5f5f5',
-	size_text: 25,
+	size_text: 18,
 	speed_moves: 5,
 	setColorItems: () => {},
 	setColorBg: () => {},
@@ -15,7 +15,7 @@ const SettingsContext = createContext<SettingsContextType>({
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const [color_items, setColorItems] = useState<string>('#3498db');
 	const [color_bg, setColorBg] = useState<string>('#f5f5f5');
-	const [size_text, setSizeText] = useState<number>(25);
+	const [size_text, setSizeText] = useState<number>(18);
 	const [speed_moves, setSpeedMoves] = useState<number>(5);
 
 	return (

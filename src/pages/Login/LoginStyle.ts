@@ -1,4 +1,4 @@
-const LoginStyle = {
+const LoginStyles = {
 	container: 'w-full h-screen flex flex-col justify-center items-center bg-gray-50',
 
 	card: 'bg-white shadow-lg rounded-xl p-8 flex flex-col items-center w-72 md:w-80 lg:w-96',
@@ -20,4 +20,4 @@ const LoginStyle = {
 	googleButton: 'mt-4 flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 px-4 text-sm hover:bg-gray-100 cursor-pointer'
 };
 
-export default LoginStyle;
+export default LoginStyles;

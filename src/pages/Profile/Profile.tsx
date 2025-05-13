@@ -1,22 +1,12 @@
-import globalStyle from '../../globalStyle';
-import ProfilHomeCard from '../../components/Cards/ProfilHomeCard/ProfilHomeCard';
-import AccountCard from '../../components/Cards/AccountCard/AccountCard';
-import SettingsCard from '../../components/Cards/SettingsCard/SettingsCard';
-import AccessibilityCard from '../../components/Cards/AccessibilityCard/AccessibilityCard';
+import ProfilHomeCard from "../../components/Cards/ProfilHomeCard/ProfilHomeCard";
+import ResultsCard from "../../components/Cards/ResultsCard/ResultsCard";
+import globalStyle from "../../globalStyle";
 
-
-const Profile: React.FC = () => {
-
-	return (
-		<>
-			<div className={globalStyle.cardContainer}>
-				<ProfilHomeCard />
-				<AccountCard />
-				<SettingsCard />
-				<AccessibilityCard />
-			</div>
-		</>
-	);
-};
-
-export default Profile;
+export default function Profile() {
+  return (
+	  <div className={globalStyle.cardContainer}>
+		  <ProfilHomeCard home={true} />
+		  <ResultsCard />
+	  </div>
+  )
+}

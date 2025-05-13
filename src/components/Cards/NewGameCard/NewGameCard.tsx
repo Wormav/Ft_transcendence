@@ -24,7 +24,15 @@ export default function NewGameCard({ ai = false }: NewGameCardProps) {
 			)}
 			<p>{t('home.newGame')}</p>
 			<span className={globalStyle.span}>{t(ai ? 'home.aivs' : 'home.player')}</span>
-			<CustomBtn text={t('home.start')} onClick={handleGameStart} />
+			{ai ? (
+				<CustomBtn
+					text={t('home.comingSoon')}
+					onClick={() => {}}
+					disabled={true}
+				/>
+			) : (
+				<CustomBtn text={t('home.start')} onClick={handleGameStart} />
+			)}
 		</Card>
 	);
 }
