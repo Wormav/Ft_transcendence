@@ -44,12 +44,9 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        // Stocker le token JWT dans les cookies
         document.cookie = `jwt=${data.token}; path=/; secure; samesite=strict`;
-        // Redirection vers la page d'accueil
         navigate('/');
       } else {
-        // Gestion des erreurs retournées par l'API
         if (data.error === 'Invalid credentials') {
           setLoginError(t('auth.login.invalidCredentials'));
         } else {
