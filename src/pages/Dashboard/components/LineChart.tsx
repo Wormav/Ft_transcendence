@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { useTranslation } from '../../../context/TranslationContext';
+import { useWindowSize } from '../../../hooks/useWindowSize';
 
 // Type for match data
 type GameData = {
@@ -18,6 +19,7 @@ type LineChartProps = {
 const LineChart: React.FC<LineChartProps> = ({ games }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { t } = useTranslation();
+    const windowSize = useWindowSize();
 
     useEffect(() => {
         if (!canvasRef.current || games.length === 0) return;
@@ -26,11 +28,17 @@ const LineChart: React.FC<LineChartProps> = ({ games }) => {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        // Set canvas dimensions
-        const dpr = window.devicePixelRatio || 1;
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
+        // Fonction pour mettre à jour les dimensions du canvas
+        const updateCanvasSize = () => {
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            return { dpr, rect };
+        };
+
+        // Mettre à jour les dimensions initiales
+        const { dpr, rect } = updateCanvasSize();
         ctx.scale(dpr, dpr);
         canvas.style.width = `${rect.width}px`;
         canvas.style.height = `${rect.height}px`;
@@ -173,7 +181,7 @@ const LineChart: React.FC<LineChartProps> = ({ games }) => {
         ctx.textAlign = 'left';
         ctx.fillText(t('dashboard.opponents'), legendX + 90, legendY + 4);
 
-    }, [games, t]);
+    }, [games, t, windowSize]);
 
     return (
         <div className="w-full h-full relative">

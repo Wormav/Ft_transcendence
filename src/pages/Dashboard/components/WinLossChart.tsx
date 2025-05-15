@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { useTranslation } from '../../../context/TranslationContext';
+import { useWindowSize } from '../../../hooks/useWindowSize';
 
 // Type pour les données d'un match
 type GameData = {
@@ -18,6 +19,7 @@ type WinLossChartProps = {
 const WinLossChart: React.FC<WinLossChartProps> = ({ games }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { t } = useTranslation();
+    const windowSize = useWindowSize();
 
     useEffect(() => {
         if (!canvasRef.current || games.length === 0) return;
@@ -26,10 +28,17 @@ const WinLossChart: React.FC<WinLossChartProps> = ({ games }) => {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        // Set canvas dimensions
-        const dpr = window.devicePixelRatio || 1;
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * dpr;
+        // Fonction pour mettre à jour les dimensions du canvas
+        const updateCanvasSize = () => {
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            return { dpr, rect };
+        };
+
+        // Mettre à jour les dimensions initiales
+        const { dpr, rect } = updateCanvasSize();
         canvas.height = rect.height * dpr;
         ctx.scale(dpr, dpr);
         canvas.style.width = `${rect.width}px`;
@@ -147,7 +156,7 @@ const WinLossChart: React.FC<WinLossChartProps> = ({ games }) => {
         ctx.fillStyle = '#000000';
         ctx.fillText(t('dashboard.losses'), legendX2 + 18, legendY + 10);
 
-    }, [games, t]);
+    }, [games, t, windowSize]);
 
     return (
         <div className="w-full h-full relative">

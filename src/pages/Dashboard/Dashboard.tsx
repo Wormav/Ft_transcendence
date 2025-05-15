@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Card from '../../components/Card/Card';
 import globalStyle from '../../globalStyle';
 import { useTranslation } from '../../context/TranslationContext';
-import { Space } from '../../components/Card/Card';
+import { useWindowSize } from '../../hooks/useWindowSize';
 import LineChart from './components/LineChart';
 import WinLossChart from './components/WinLossChart';
 
@@ -27,7 +27,9 @@ const mockGames: GameData[] = [
 
 const Dashboard: React.FC = () => {
     const { t } = useTranslation();
+    const windowSize = useWindowSize();
     const [games, setGames] = useState<GameData[]>(mockGames);
+    const [, setRender] = useState(0);
 
     // In the future, this effect would load data from an API
     useEffect(() => {
@@ -50,15 +52,12 @@ const Dashboard: React.FC = () => {
         loadData();
     }, []);
 
+    // Force re-render when window size changes
+    useEffect(() => {
+        setRender(prev => prev + 1);
+    }, [windowSize]);
+
     return (
-        <>
-            <Card>
-                <div className={globalStyle.row}>
-                    <p>{t('dashboard.title')}</p>
-                    <Space />
-                    <span className={globalStyle.span}>{t('dashboard.statistics')}</span>
-                </div>
-            </Card>
             <div className={globalStyle.cardContainer}>
                 <Card>
                     <div className={globalStyle.row}>
@@ -79,7 +78,6 @@ const Dashboard: React.FC = () => {
                     </div>
                 </Card>
             </div>
-        </>
     );
 };
 
