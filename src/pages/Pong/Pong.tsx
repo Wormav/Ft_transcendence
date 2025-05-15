@@ -6,6 +6,7 @@ import PongStyle from './PongStyle';
 import type { BallDirection, GameField, ScoreState, GameSettings } from '../../types/Pong';
 import { ScoreOverlay, GameMenu, PauseMenu, Countdown, TouchControls } from './components';
 import { useTranslation } from '../../context/TranslationContext';
+import { useSettings } from '../../context/SettingsContext';
 
 const SCALE_FACTOR = 10;
 let BALL_SPEED_INCREASE = 1.05;
@@ -14,8 +15,8 @@ const PADDLE_WIDTH = 0.3;
 const FIELD_MARGIN = 0.05;
 
 export default function Pong() {
-  const navigate = useNavigate();
-	const { t } = useTranslation();
+  const navigate = useNavigate();  const { t } = useTranslation();
+  const { color_items, color_bg, speed_moves, setColorItems, setColorBg, setSpeedMoves } = useSettings();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<BABYLON.Engine | null>(null);
@@ -39,11 +40,38 @@ export default function Pong() {
   const [editViewMode, setEditViewMode] = useState(false);
   const [currentView, setCurrentView] = useState(0);
   const [isMobileView, setIsMobileView] = useState(false);
+  // Convertir les couleurs hexadécimales du contexte en valeurs de couleur pour le jeu
+  const getPaddleColorFromHex = (hex: string): 'default' | 'green' | 'purple' => {
+    switch (hex.toLowerCase()) {
+      case '#33cc33': return 'green';
+      case '#cc33cc': return 'purple';
+      default: return 'default';
+    }
+  };
+
+  const getPlateauColorFromHex = (hex: string): 'default' | 'blue' | 'red' => {
+    switch (hex.toLowerCase()) {
+      case '#1a1a4d': return 'blue';
+      case '#4d1a1a': return 'red';
+      default: return 'default';
+    }
+  };
+
   const [gameSettings, setGameSettings] = useState<GameSettings>({
-    plateauColor: 'default',
-    paddleColor: 'default',
-    ballSpeed: 'normal'
+    plateauColor: getPlateauColorFromHex(color_bg),
+    paddleColor: getPaddleColorFromHex(color_items),
+    ballSpeed: speed_moves
   });
+
+  // Synchroniser les paramètres avec le contexte global
+  useEffect(() => {
+    setGameSettings(prevSettings => ({
+      ...prevSettings,
+      plateauColor: getPlateauColorFromHex(color_bg),
+      paddleColor: getPaddleColorFromHex(color_items),
+      ballSpeed: speed_moves
+    }));
+  }, [color_bg, color_items, speed_moves]);
 
   const calculateFieldDimensions = useCallback(() => {
     const aspectRatio = window.innerWidth / window.innerHeight;
@@ -368,10 +396,11 @@ export default function Pong() {
       return material;
     };
 
+    const initialPaddleColor = getPaddleColor(gameSettings.paddleColor);
     const paddleMaterial = createMaterial(
       "paddleMaterial",
-      new BABYLON.Color3(0.2, 0.4, 0.8),
-      new BABYLON.Color3(0.1, 0.2, 0.4)
+      initialPaddleColor,
+      new BABYLON.Color3(initialPaddleColor.r * 0.5, initialPaddleColor.g * 0.5, initialPaddleColor.b * 0.5)
     );
 
     const ballMaterial = createMaterial(
@@ -387,9 +416,10 @@ export default function Pong() {
       0.5
     );
 
+    const initialGroundColor = getPlateauColor(gameSettings.plateauColor);
     const groundMaterial = createMaterial(
       "groundMaterial",
-      new BABYLON.Color3(0.1, 0.1, 0.1)
+      initialGroundColor
     );
     groundMaterial.specularColor = new BABYLON.Color3(0.1, 0.1, 0.1);
 
@@ -503,6 +533,13 @@ export default function Pong() {
 
   const handleSettingsChange = (newSettings: GameSettings) => {
     setGameSettings(newSettings);
+
+    // Mettre à jour les settings globaux
+    setColorItems(getPaddleColorHex(newSettings.paddleColor));
+    setColorBg(getPlateauColorHex(newSettings.plateauColor));
+    setSpeedMoves(newSettings.ballSpeed);
+
+    // Appliquer les changements visuels
     if (paddleLeftRef.current && paddleRightRef.current) {
       const paddleColor = getPaddleColor(newSettings.paddleColor);
       const paddleMaterial = paddleLeftRef.current.material as BABYLON.StandardMaterial;
@@ -518,6 +555,23 @@ export default function Pong() {
       }
     }
     updateBallSpeed(newSettings.ballSpeed);
+  };
+
+  // Fonctions pour convertir les couleurs en format hexadécimal pour le contexte
+  const getPaddleColorHex = (color: string): string => {
+    switch (color) {
+      case 'green': return '#33cc33';
+      case 'purple': return '#cc33cc';
+      default: return '#3498db';
+    }
+  };
+
+  const getPlateauColorHex = (color: string): string => {
+    switch (color) {
+      case 'blue': return '#1a1a4d';
+      case 'red': return '#4d1a1a';
+      default: return '#1a1a1a';
+    }
   };
 
   const getPaddleColor = (color: string): BABYLON.Color3 => {
