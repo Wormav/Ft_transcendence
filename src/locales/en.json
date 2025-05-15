@@ -129,7 +129,19 @@
 		"mobileControls": "Touch controls: Use arrows at bottom of screen | Center button for pause",
 		"editViewMode": "Edit View Mode Enabled (V to disable)",
 		"up": "Up",
-		"down": "Down"
+		"down": "Down",
+		"gameSettings": "Game Settings",
+		"plateauColor": "Board Color",
+		"paddleColor": "Paddle Color",
+		"ballSpeed": "Ball Speed",
+		"colorDefault": "Default",
+		"colorBlue": "Blue",
+		"colorRed": "Red",
+		"colorGreen": "Green",
+		"colorPurple": "Purple",
+		"speedNormal": "Normal",
+		"speedFast": "Fast",
+		"speedTurbo": "Turbo"
 	}
 }
 
