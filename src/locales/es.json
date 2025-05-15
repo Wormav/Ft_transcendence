@@ -38,7 +38,9 @@
 			"loginButton": "Iniciar sesión",
 			"noAccount": "¿No tienes cuenta?",
 			"googleLogin": "Iniciar sesión con Google",
-			"emailError": "Ingrese una dirección de correo electrónico válida"
+			"emailError": "Ingrese una dirección de correo electrónico válida",
+			"invalidCredentials": "Correo electrónico o contraseña inválidos",
+			"networkError": "Error de conexión con el servidor"
 		},
 		"signup": {
 			"title": "Registrarse",
@@ -55,7 +57,9 @@
 			"passwordErrorSpecial": "un carácter especial",
 			"passwordErrorNumber": "un número",
 			"passwordErrorLength": "al menos 8 caracteres",
-			"passwordsNotMatch": "Las contraseñas no coinciden"
+			"passwordsNotMatch": "Las contraseñas no coinciden",
+			"emailAlreadyUsed": "Este correo electrónico ya está en uso",
+			"networkError": "Error de conexión con el servidor"
 		}
 	},
 	"menu": {

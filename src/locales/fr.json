@@ -31,7 +31,9 @@
 			"loginButton": "Se connecter",
 			"noAccount": "Vous n'avez pas de compte ?",
 			"googleLogin": "Se connecter avec Google",
-			"emailError": "Veuillez entrer une adresse email valide"
+			"emailError": "Veuillez entrer une adresse email valide",
+			"invalidCredentials": "Email ou mot de passe incorrect",
+			"networkError": "Erreur de connexion au serveur"
 		},
 		"signup": {
 			"title": "Inscription",
@@ -48,7 +50,9 @@
 			"passwordErrorSpecial": "un caractère spécial",
 			"passwordErrorNumber": "un chiffre",
 			"passwordErrorLength": "au moins 8 caractères",
-			"passwordsNotMatch": "Les mots de passe ne correspondent pas"
+			"passwordsNotMatch": "Les mots de passe ne correspondent pas",
+			"emailAlreadyUsed": "Cet email est déjà utilisé",
+			"networkError": "Erreur de connexion au serveur"
 		}
 	},
 	"menu": {

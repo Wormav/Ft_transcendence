@@ -3,11 +3,13 @@ import MenuStyles from './MenuStyles';
 import { useTranslation } from '../../context/TranslationContext';
 import { useSettings } from '../../context/SettingsContext';
 import { getSizeTextStyle } from '../../globalStyle';
+import { useLogout } from '../../hooks/useLogout';
 
 const Menu: React.FC = () => {
 	const location = useLocation();
 	const currentPath = location.pathname;
 	const { t } = useTranslation();
+	const handleLogout = useLogout();
 
 	const isActive = (path: string) => {
 		return currentPath === path;
@@ -237,7 +239,7 @@ const Menu: React.FC = () => {
 						</Link>
 					</li>
 					<li className="relative">
-						<Link to="/logout" className={`${MenuStyles.logoutButton} pl-4 ${getSizeTextStyle(size_text)}`}>
+						<button onClick={handleLogout} className={`${MenuStyles.logoutButton} pl-4 ${getSizeTextStyle(size_text)}`}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={MenuStyles.navIcon}
@@ -265,7 +267,7 @@ const Menu: React.FC = () => {
 								/>
 							</svg>
 							<span className="3xl:text-2xl">{t('menu.logout')}</span>
-						</Link>
+						</button>
 					</li>
 				</ul>
 			</nav>
