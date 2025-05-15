@@ -3,12 +3,12 @@ import * as BABYLON from 'babylonjs';
 import 'babylonjs-loaders';
 import { useNavigate } from 'react-router-dom';
 import PongStyle from './PongStyle';
-import type { BallDirection, GameField, ScoreState } from '../../types/Pong';
+import type { BallDirection, GameField, ScoreState, GameSettings } from '../../types/Pong';
 import { ScoreOverlay, GameMenu, PauseMenu, Countdown, TouchControls } from './components';
 import { useTranslation } from '../../context/TranslationContext';
 
 const SCALE_FACTOR = 10;
-const BALL_SPEED_INCREASE = 1.05;
+let BALL_SPEED_INCREASE = 1.05;
 const MAX_SCORE = 10;
 const PADDLE_WIDTH = 0.3;
 const FIELD_MARGIN = 0.05;
@@ -39,6 +39,11 @@ export default function Pong() {
   const [editViewMode, setEditViewMode] = useState(false);
   const [currentView, setCurrentView] = useState(0);
   const [isMobileView, setIsMobileView] = useState(false);
+  const [gameSettings, setGameSettings] = useState<GameSettings>({
+    plateauColor: 'default',
+    paddleColor: 'default',
+    ballSpeed: 'normal'
+  });
 
   const calculateFieldDimensions = useCallback(() => {
     const aspectRatio = window.innerWidth / window.innerHeight;
@@ -104,7 +109,16 @@ export default function Pong() {
     if (!ballRef.current) return;
     const ballRadius = ballRef.current.getBoundingInfo().boundingSphere.radius;
     ballRef.current.position = new BABYLON.Vector3(0, ballRadius, 0);
-    const speedFactor = gameFieldRef.current.width * 0.005;
+
+    // Ajuster la vitesse initiale en fonction du mode
+    let baseFactor = 0.005;
+    switch (gameSettings.ballSpeed) {
+      case 'fast': baseFactor = 0.008; break;
+      case 'turbo': baseFactor = 0.012; break;
+      default: baseFactor = 0.005;
+    }
+
+    const speedFactor = gameFieldRef.current.width * baseFactor;
     const dirX = Math.random() > 0.5 ? speedFactor : -speedFactor;
     const dirZ = (Math.random() - 0.5) * speedFactor * (window.innerWidth < 600 ? 0.7 : 1);
 
@@ -113,7 +127,7 @@ export default function Pong() {
     if (particleSystemRef.current) {
       particleSystemRef.current.reset();
     }
-  }, []);
+  }, [gameSettings.ballSpeed]);
 
   const startCountdown = useCallback(() => {
     setCountdown(3);
@@ -487,6 +501,62 @@ export default function Pong() {
     };
   }, [calculateFieldDimensions]);
 
+  const handleSettingsChange = (newSettings: GameSettings) => {
+    setGameSettings(newSettings);
+    if (paddleLeftRef.current && paddleRightRef.current) {
+      const paddleColor = getPaddleColor(newSettings.paddleColor);
+      const paddleMaterial = paddleLeftRef.current.material as BABYLON.StandardMaterial;
+      const paddleMaterial2 = paddleRightRef.current.material as BABYLON.StandardMaterial;
+      paddleMaterial.diffuseColor = paddleColor;
+      paddleMaterial2.diffuseColor = paddleColor;
+    }
+    if (sceneRef.current) {
+      const ground = sceneRef.current.meshes.find(mesh => mesh.name === 'ground');
+      if (ground) {
+        const groundMaterial = ground.material as BABYLON.StandardMaterial;
+        groundMaterial.diffuseColor = getPlateauColor(newSettings.plateauColor);
+      }
+    }
+    updateBallSpeed(newSettings.ballSpeed);
+  };
+
+  const getPaddleColor = (color: string): BABYLON.Color3 => {
+    switch (color) {
+      case 'green': return new BABYLON.Color3(0.2, 0.8, 0.2);
+      case 'purple': return new BABYLON.Color3(0.8, 0.2, 0.8);
+      default: return new BABYLON.Color3(0.2, 0.4, 0.8);
+    }
+  };
+
+  const getPlateauColor = (color: string): BABYLON.Color3 => {
+    switch (color) {
+      case 'blue': return new BABYLON.Color3(0.1, 0.1, 0.3);
+      case 'red': return new BABYLON.Color3(0.3, 0.1, 0.1);
+      default: return new BABYLON.Color3(0.1, 0.1, 0.1);
+    }
+  };
+
+  const updateBallSpeed = (speed: string) => {
+    let speedFactor = 1;
+    switch (speed) {
+      case 'fast': speedFactor = 2.5; break;
+      case 'turbo': speedFactor = 4; break;
+      default: speedFactor = 1;
+    }
+    if (ballDirectionRef.current) {
+      const currentSpeed = Math.sqrt(
+        Math.pow(ballDirectionRef.current.x, 2) +
+        Math.pow(ballDirectionRef.current.z, 2)
+      );
+      const scale = speedFactor / currentSpeed;
+      ballDirectionRef.current.x *= scale;
+      ballDirectionRef.current.z *= scale;
+
+      // Ajustement de l'augmentation de vitesse après collision
+      BALL_SPEED_INCREASE = speed === 'turbo' ? 1.08 : speed === 'fast' ? 1.06 : 1.05;
+    }
+  };
+
   useEffect(() => {
     if (!canvasRef.current) return;
 
@@ -727,6 +797,8 @@ export default function Pong() {
         maxScore={MAX_SCORE}
         startGame={startGame}
         quitGame={quitGame}
+        settings={gameSettings}
+        onSettingsChange={handleSettingsChange}
       />
       <PauseMenu
         gameStarted={gameStarted}

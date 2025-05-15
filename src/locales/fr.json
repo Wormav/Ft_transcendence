@@ -122,7 +122,19 @@
 		"mobileControls": "Commandes tactiles: Utilisez les flèches en bas de l'écran | Bouton central pour mettre en pause",
 		"editViewMode": "Mode Édition Vue Activé (V pour désactiver)",
 		"up": "Haut",
-		"down": "Bas"
+		"down": "Bas",
+		"gameSettings": "Paramètres du jeu",
+		"plateauColor": "Couleur du plateau",
+		"paddleColor": "Couleur des raquettes",
+		"ballSpeed": "Vitesse de la balle",
+		"colorDefault": "Par défaut",
+		"colorBlue": "Bleu",
+		"colorRed": "Rouge",
+		"colorGreen": "Vert",
+		"colorPurple": "Violet",
+		"speedNormal": "Normale",
+		"speedFast": "Rapide",
+		"speedTurbo": "Turbo"
 	}
 }
 
