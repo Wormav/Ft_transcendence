@@ -38,7 +38,9 @@
 			"loginButton": "Login",
 			"noAccount": "Don't have account?",
 			"googleLogin": "Sign in with Google",
-			"emailError": "Please enter a valid email address"
+			"emailError": "Please enter a valid email address",
+			"invalidCredentials": "Invalid email or password",
+			"networkError": "Server connection error"
 		},
 		"signup": {
 			"title": "Signup",
@@ -55,7 +57,9 @@
 			"passwordErrorSpecial": "one special character",
 			"passwordErrorNumber": "one number",
 			"passwordErrorLength": "at least 8 characters",
-			"passwordsNotMatch": "Passwords do not match"
+			"passwordsNotMatch": "Passwords do not match",
+			"emailAlreadyUsed": "This email is already in use",
+			"networkError": "Server connection error"
 		}
 	},
 	"menu": {

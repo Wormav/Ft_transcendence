@@ -3,15 +3,17 @@ import { useTranslation } from '../../../context/TranslationContext';
 import globalStyle from '../../../globalStyle';
 import { Link } from 'react-router-dom';
 import BugerMenuStyles from '../../BugerMenu/BugerMenuStyles';
+import { useLogout } from '../../../hooks/useLogout';
 
 export default function AccountCard() {
 	const { t } = useTranslation();
+	const handleLogout = useLogout();
 
 	return (
 		<Card>
 			<p className={globalStyle.span}>{t('profile.account')}</p>
 			<div className={globalStyle.separator}></div>
-			<Link to="/logout" className={`${BugerMenuStyles.logoutButton} pl-4`}>
+			<button onClick={handleLogout} className={`${BugerMenuStyles.logoutButton} pl-4`}>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					className={BugerMenuStyles.navIcon}
@@ -33,7 +35,7 @@ export default function AccountCard() {
 					/>
 				</svg>
 				<span className={globalStyle.spanAlert}>{t('profile.logout')}</span>
-			</Link>
+				</button>
 			<Link to="/delete-account" className={`${BugerMenuStyles.logoutButton} pl-4 mt-2`}>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

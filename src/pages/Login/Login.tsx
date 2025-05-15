@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import LoginStyle from './LoginStyle';
@@ -6,18 +6,21 @@ import globalStyle from '../../globalStyle';
 import { useTranslation } from '../../context/TranslationContext';
 
 export default function Login() {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoginError('');
 
     if (!validateEmail(email)) {
       setEmailError(t('auth.login.emailError'));
@@ -26,8 +29,34 @@ export default function Login() {
       setEmailError('');
     }
 
-    //! Pour le moment, on affiche les valeurs dans la console
-    console.log('Formulaire soumis:', { email, password });
+    try {
+	const response = await fetch(`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/auth/login`, {
+	  method: 'POST',
+	  headers: {
+		'Content-Type': 'application/json',
+	  },
+	  body: JSON.stringify({
+		email,
+		password,
+	  }),
+	});
+
+      const data = await response.json();
+
+      if (response.ok) {
+        document.cookie = `jwt=${data.token}; path=/; secure; samesite=strict`;
+        navigate('/');
+      } else {
+        if (data.error === 'Invalid credentials') {
+          setLoginError(t('auth.login.invalidCredentials'));
+        } else {
+          setLoginError(t('auth.login.networkError'));
+        }
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      setLoginError(t('auth.login.networkError'));
+    }
   };
 
   return (
@@ -64,6 +93,7 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+              {loginError && <p className="text-red-500 text-xs mt-1">{loginError}</p>}
             </div>
 
             <button type="submit" className={LoginStyle.loginButton}>

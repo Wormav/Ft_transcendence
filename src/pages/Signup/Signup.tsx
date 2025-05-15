@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import SignupStyle from './SignupStyle';
@@ -6,6 +6,7 @@ import globalStyle from '../../globalStyle';
 import { useTranslation } from '../../context/TranslationContext';
 
 export default function Signup() {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -37,11 +38,10 @@ export default function Signup() {
     };
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let isValid = true;
 
-    // Validation de l'email
     if (!validateEmail(email)) {
       setEmailError(t('auth.signup.emailError'));
       isValid = false;
@@ -51,7 +51,6 @@ export default function Signup() {
 
     const passwordValidation = validatePassword(password);
     if (!passwordValidation.isValid) {
-      // Utilisation du format {0} pour permettre l'insertion des erreurs dans la traduction
       const errorMsg = t('auth.signup.passwordError').replace('{0}', passwordValidation.errors.join(', '));
       setPasswordError(errorMsg);
       isValid = false;
@@ -67,7 +66,31 @@ export default function Signup() {
     }
 
     if (isValid) {
-      console.log('Formulaire soumis:', { email, password });
+      try {
+		const response = await fetch(`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/auth/register`, {
+		  method: 'POST',
+		  headers: {
+			'Content-Type': 'application/json',
+		  },
+		  body: JSON.stringify({
+			email,
+			password,
+		  }),
+		});
+
+        const data = await response.json();
+
+        if (response.ok) {
+          navigate('/login');
+        } else {
+          if (data.error === 'Email already used') {
+            setEmailError(t('auth.signup.emailAlreadyUsed'));
+          }
+        }
+      } catch (error) {
+        console.error('Error during registration:', error);
+        setEmailError(t('auth.signup.networkError'));
+      }
     }
   };
 
