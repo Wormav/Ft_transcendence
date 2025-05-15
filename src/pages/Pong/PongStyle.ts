@@ -33,6 +33,14 @@ const PongStyle = {
     'w-12 h-12 bg-black/30 rounded-full flex items-center justify-center text-white touch-manipulation border border-white/30 active:bg-black/50 shadow-md transition-colors duration-200 backdrop-blur-sm',
   touchButtonPause:
     'w-10 h-10 bg-red-500/50 rounded-full flex items-center justify-center text-white touch-manipulation border border-white/30 active:bg-red-600/70 shadow-md transition-colors duration-200 backdrop-blur-sm',
+  settingsSection:
+    'bg-black/30 rounded-lg p-4 my-4 w-full max-w-md',
+  settingsTitle:
+    'text-xl mb-4 text-center',
+  settingGroup:
+    'mb-4',
+  select:
+    'w-full p-2 bg-black/50 text-white border border-gray-600 rounded focus:outline-none focus:border-blue-500',
 };
 
 export default PongStyle;

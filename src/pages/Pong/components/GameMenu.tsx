@@ -8,7 +8,9 @@ export const GameMenu: React.FC<GameMenuProps> = ({
   score,
   maxScore,
   startGame,
-  quitGame
+  quitGame,
+  settings,
+  onSettingsChange
 }) => {
   const { t } = useTranslation();
   const [isMobileView, setIsMobileView] = useState(false);
@@ -52,6 +54,49 @@ export const GameMenu: React.FC<GameMenuProps> = ({
           {t('pong.startGame')}
         </button>
       )}
+
+      <div className={PongStyle.settingsSection}>
+        <h3 className={PongStyle.settingsTitle}>{t('pong.gameSettings')}</h3>
+
+        <div className={PongStyle.settingGroup}>
+          <label>{t('pong.plateauColor')}</label>
+          <select
+            value={settings.plateauColor}
+            onChange={(e) => onSettingsChange({ ...settings, plateauColor: e.target.value as any })}
+            className={PongStyle.select}
+          >
+            <option value="default">{t('pong.colorDefault')}</option>
+            <option value="blue">{t('pong.colorBlue')}</option>
+            <option value="red">{t('pong.colorRed')}</option>
+          </select>
+        </div>
+
+        <div className={PongStyle.settingGroup}>
+          <label>{t('pong.paddleColor')}</label>
+          <select
+            value={settings.paddleColor}
+            onChange={(e) => onSettingsChange({ ...settings, paddleColor: e.target.value as any })}
+            className={PongStyle.select}
+          >
+            <option value="default">{t('pong.colorDefault')}</option>
+            <option value="green">{t('pong.colorGreen')}</option>
+            <option value="purple">{t('pong.colorPurple')}</option>
+          </select>
+        </div>
+
+        <div className={PongStyle.settingGroup}>
+          <label>{t('pong.ballSpeed')}</label>
+          <select
+            value={settings.ballSpeed}
+            onChange={(e) => onSettingsChange({ ...settings, ballSpeed: e.target.value as any })}
+            className={PongStyle.select}
+          >
+            <option value="normal">{t('pong.speedNormal')}</option>
+            <option value="fast">{t('pong.speedFast')}</option>
+            <option value="turbo">{t('pong.speedTurbo')}</option>
+          </select>
+        </div>
+      </div>
 
       <button className={PongStyle.buttonDanger} onClick={quitGame}>
         {t('pong.quitGame')}

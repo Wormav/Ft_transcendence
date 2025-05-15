@@ -3,19 +3,20 @@ import * as BABYLON from 'babylonjs';
 import 'babylonjs-loaders';
 import { useNavigate } from 'react-router-dom';
 import PongStyle from './PongStyle';
-import type { BallDirection, GameField, ScoreState } from '../../types/Pong';
+import type { BallDirection, GameField, ScoreState, GameSettings } from '../../types/Pong';
 import { ScoreOverlay, GameMenu, PauseMenu, Countdown, TouchControls } from './components';
 import { useTranslation } from '../../context/TranslationContext';
+import { useSettings } from '../../context/SettingsContext';
 
 const SCALE_FACTOR = 10;
-const BALL_SPEED_INCREASE = 1.05;
+let BALL_SPEED_INCREASE = 1.05;
 const MAX_SCORE = 10;
 const PADDLE_WIDTH = 0.3;
 const FIELD_MARGIN = 0.05;
 
 export default function Pong() {
-  const navigate = useNavigate();
-	const { t } = useTranslation();
+  const navigate = useNavigate();  const { t } = useTranslation();
+  const { color_items, color_bg, speed_moves, setColorItems, setColorBg, setSpeedMoves } = useSettings();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<BABYLON.Engine | null>(null);
@@ -39,6 +40,37 @@ export default function Pong() {
   const [editViewMode, setEditViewMode] = useState(false);
   const [currentView, setCurrentView] = useState(0);
   const [isMobileView, setIsMobileView] = useState(false);
+
+  const getPaddleColorFromHex = (hex: string): 'default' | 'green' | 'purple' => {
+    switch (hex.toLowerCase()) {
+      case '#33cc33': return 'green';
+      case '#cc33cc': return 'purple';
+      default: return 'default';
+    }
+  };
+
+  const getPlateauColorFromHex = (hex: string): 'default' | 'blue' | 'red' => {
+    switch (hex.toLowerCase()) {
+      case '#1a1a4d': return 'blue';
+      case '#4d1a1a': return 'red';
+      default: return 'default';
+    }
+  };
+
+  const [gameSettings, setGameSettings] = useState<GameSettings>({
+    plateauColor: getPlateauColorFromHex(color_bg),
+    paddleColor: getPaddleColorFromHex(color_items),
+    ballSpeed: speed_moves
+  });
+
+  useEffect(() => {
+    setGameSettings(prevSettings => ({
+      ...prevSettings,
+      plateauColor: getPlateauColorFromHex(color_bg),
+      paddleColor: getPaddleColorFromHex(color_items),
+      ballSpeed: speed_moves
+    }));
+  }, [color_bg, color_items, speed_moves]);
 
   const calculateFieldDimensions = useCallback(() => {
     const aspectRatio = window.innerWidth / window.innerHeight;
@@ -104,7 +136,15 @@ export default function Pong() {
     if (!ballRef.current) return;
     const ballRadius = ballRef.current.getBoundingInfo().boundingSphere.radius;
     ballRef.current.position = new BABYLON.Vector3(0, ballRadius, 0);
-    const speedFactor = gameFieldRef.current.width * 0.005;
+
+    let baseFactor = 0.005;
+    switch (gameSettings.ballSpeed) {
+      case 'fast': baseFactor = 0.008; break;
+      case 'turbo': baseFactor = 0.012; break;
+      default: baseFactor = 0.005;
+    }
+
+    const speedFactor = gameFieldRef.current.width * baseFactor;
     const dirX = Math.random() > 0.5 ? speedFactor : -speedFactor;
     const dirZ = (Math.random() - 0.5) * speedFactor * (window.innerWidth < 600 ? 0.7 : 1);
 
@@ -113,7 +153,7 @@ export default function Pong() {
     if (particleSystemRef.current) {
       particleSystemRef.current.reset();
     }
-  }, []);
+  }, [gameSettings.ballSpeed]);
 
   const startCountdown = useCallback(() => {
     setCountdown(3);
@@ -354,10 +394,11 @@ export default function Pong() {
       return material;
     };
 
+    const initialPaddleColor = getPaddleColor(gameSettings.paddleColor);
     const paddleMaterial = createMaterial(
       "paddleMaterial",
-      new BABYLON.Color3(0.2, 0.4, 0.8),
-      new BABYLON.Color3(0.1, 0.2, 0.4)
+      initialPaddleColor,
+      new BABYLON.Color3(initialPaddleColor.r * 0.5, initialPaddleColor.g * 0.5, initialPaddleColor.b * 0.5)
     );
 
     const ballMaterial = createMaterial(
@@ -373,9 +414,10 @@ export default function Pong() {
       0.5
     );
 
+    const initialGroundColor = getPlateauColor(gameSettings.plateauColor);
     const groundMaterial = createMaterial(
       "groundMaterial",
-      new BABYLON.Color3(0.1, 0.1, 0.1)
+      initialGroundColor
     );
     groundMaterial.specularColor = new BABYLON.Color3(0.1, 0.1, 0.1);
 
@@ -486,6 +528,84 @@ export default function Pong() {
       paddleXPos: paddleXPosition
     };
   }, [calculateFieldDimensions]);
+
+  const handleSettingsChange = (newSettings: GameSettings) => {
+    setGameSettings(newSettings);
+
+    // Mettre à jour les settings globaux
+    setColorItems(getPaddleColorHex(newSettings.paddleColor));
+    setColorBg(getPlateauColorHex(newSettings.plateauColor));
+    setSpeedMoves(newSettings.ballSpeed);
+
+    // Appliquer les changements visuels
+    if (paddleLeftRef.current && paddleRightRef.current) {
+      const paddleColor = getPaddleColor(newSettings.paddleColor);
+      const paddleMaterial = paddleLeftRef.current.material as BABYLON.StandardMaterial;
+      const paddleMaterial2 = paddleRightRef.current.material as BABYLON.StandardMaterial;
+      paddleMaterial.diffuseColor = paddleColor;
+      paddleMaterial2.diffuseColor = paddleColor;
+    }
+    if (sceneRef.current) {
+      const ground = sceneRef.current.meshes.find(mesh => mesh.name === 'ground');
+      if (ground) {
+        const groundMaterial = ground.material as BABYLON.StandardMaterial;
+        groundMaterial.diffuseColor = getPlateauColor(newSettings.plateauColor);
+      }
+    }
+    updateBallSpeed(newSettings.ballSpeed);
+  };
+
+  const getPaddleColorHex = (color: string): string => {
+    switch (color) {
+      case 'green': return '#33cc33';
+      case 'purple': return '#cc33cc';
+      default: return '#3498db';
+    }
+  };
+
+  const getPlateauColorHex = (color: string): string => {
+    switch (color) {
+      case 'blue': return '#1a1a4d';
+      case 'red': return '#4d1a1a';
+      default: return '#1a1a1a';
+    }
+  };
+
+  const getPaddleColor = (color: string): BABYLON.Color3 => {
+    switch (color) {
+      case 'green': return new BABYLON.Color3(0.2, 0.8, 0.2);
+      case 'purple': return new BABYLON.Color3(0.8, 0.2, 0.8);
+      default: return new BABYLON.Color3(0.2, 0.4, 0.8);
+    }
+  };
+
+  const getPlateauColor = (color: string): BABYLON.Color3 => {
+    switch (color) {
+      case 'blue': return new BABYLON.Color3(0.1, 0.1, 0.3);
+      case 'red': return new BABYLON.Color3(0.3, 0.1, 0.1);
+      default: return new BABYLON.Color3(0.1, 0.1, 0.1);
+    }
+  };
+
+  const updateBallSpeed = (speed: string) => {
+    let speedFactor = 1;
+    switch (speed) {
+      case 'fast': speedFactor = 2.5; break;
+      case 'turbo': speedFactor = 4; break;
+      default: speedFactor = 1;
+    }
+    if (ballDirectionRef.current) {
+      const currentSpeed = Math.sqrt(
+        Math.pow(ballDirectionRef.current.x, 2) +
+        Math.pow(ballDirectionRef.current.z, 2)
+      );
+      const scale = speedFactor / currentSpeed;
+      ballDirectionRef.current.x *= scale;
+      ballDirectionRef.current.z *= scale;
+
+      BALL_SPEED_INCREASE = speed === 'turbo' ? 1.08 : speed === 'fast' ? 1.06 : 1.05;
+    }
+  };
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -727,6 +847,8 @@ export default function Pong() {
         maxScore={MAX_SCORE}
         startGame={startGame}
         quitGame={quitGame}
+        settings={gameSettings}
+        onSettingsChange={handleSettingsChange}
       />
       <PauseMenu
         gameStarted={gameStarted}

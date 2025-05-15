@@ -129,7 +129,19 @@
 		"mobileControls": "Controles táctiles: Use las flechas en la parte inferior de la pantalla | Botón central para pausar",
 		"editViewMode": "Modo de Edición de Vista Activado (V para desactivar)",
 		"up": "Arriba",
-		"down": "Abajo"
+		"down": "Abajo",
+		"gameSettings": "Configuración del Juego",
+		"plateauColor": "Color del Tablero",
+		"paddleColor": "Color de las Paletas",
+		"ballSpeed": "Velocidad de la Bola",
+		"colorDefault": "Por defecto",
+		"colorBlue": "Azul",
+		"colorRed": "Rojo",
+		"colorGreen": "Verde",
+		"colorPurple": "Morado",
+		"speedNormal": "Normal",
+		"speedFast": "Rápida",
+		"speedTurbo": "Turbo"
 	}
 }
 
