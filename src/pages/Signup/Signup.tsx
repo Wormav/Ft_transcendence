@@ -67,16 +67,16 @@ export default function Signup() {
 
     if (isValid) {
       try {
-        const response = await fetch('http://localhost:9443/auth/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        });
+		const response = await fetch(`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/auth/register`, {
+		  method: 'POST',
+		  headers: {
+			'Content-Type': 'application/json',
+		  },
+		  body: JSON.stringify({
+			email,
+			password,
+		  }),
+		});
 
         const data = await response.json();
 
