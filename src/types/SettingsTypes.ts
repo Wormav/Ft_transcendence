@@ -1,6 +1,6 @@
 export type GameSpeedType = 'normal' | 'fast' | 'turbo';
 
-export interface SettingsContextType {
+export type SettingsContextType = {
 	color_items: string;
 	color_bg: string;
 	size_text: number;

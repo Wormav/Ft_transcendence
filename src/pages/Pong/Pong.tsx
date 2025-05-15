@@ -40,7 +40,7 @@ export default function Pong() {
   const [editViewMode, setEditViewMode] = useState(false);
   const [currentView, setCurrentView] = useState(0);
   const [isMobileView, setIsMobileView] = useState(false);
-  // Convertir les couleurs hexadécimales du contexte en valeurs de couleur pour le jeu
+
   const getPaddleColorFromHex = (hex: string): 'default' | 'green' | 'purple' => {
     switch (hex.toLowerCase()) {
       case '#33cc33': return 'green';
@@ -63,7 +63,6 @@ export default function Pong() {
     ballSpeed: speed_moves
   });
 
-  // Synchroniser les paramètres avec le contexte global
   useEffect(() => {
     setGameSettings(prevSettings => ({
       ...prevSettings,
@@ -138,7 +137,6 @@ export default function Pong() {
     const ballRadius = ballRef.current.getBoundingInfo().boundingSphere.radius;
     ballRef.current.position = new BABYLON.Vector3(0, ballRadius, 0);
 
-    // Ajuster la vitesse initiale en fonction du mode
     let baseFactor = 0.005;
     switch (gameSettings.ballSpeed) {
       case 'fast': baseFactor = 0.008; break;
@@ -557,7 +555,6 @@ export default function Pong() {
     updateBallSpeed(newSettings.ballSpeed);
   };
 
-  // Fonctions pour convertir les couleurs en format hexadécimal pour le contexte
   const getPaddleColorHex = (color: string): string => {
     switch (color) {
       case 'green': return '#33cc33';
@@ -606,7 +603,6 @@ export default function Pong() {
       ballDirectionRef.current.x *= scale;
       ballDirectionRef.current.z *= scale;
 
-      // Ajustement de l'augmentation de vitesse après collision
       BALL_SPEED_INCREASE = speed === 'turbo' ? 1.08 : speed === 'fast' ? 1.06 : 1.05;
     }
   };

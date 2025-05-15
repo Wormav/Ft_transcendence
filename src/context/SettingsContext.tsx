@@ -2,10 +2,10 @@ import { createContext, useState, useContext } from 'react';
 import type { SettingsContextType, GameSpeedType } from '../types/SettingsTypes';
 
 const SettingsContext = createContext<SettingsContextType>({
-	color_items: '#3498db', // Couleur par défaut des raquettes
-	color_bg: '#1a1a1a', // Couleur par défaut du plateau
+	color_items: '#3498db',
+	color_bg: '#1a1a1a',
 	size_text: 18,
-	speed_moves: 'normal', // Vitesse par défaut de la balle
+	speed_moves: 'normal',
 	setColorItems: () => {},
 	setColorBg: () => {},
 	setSizeText: () => {},
