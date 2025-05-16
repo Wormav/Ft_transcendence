@@ -4,12 +4,15 @@ import { useTranslation } from '../../context/TranslationContext';
 import { useSettings } from '../../context/SettingsContext';
 import { getSizeTextStyle } from '../../globalStyle';
 import { useLogout } from '../../hooks/useLogout';
+import { useState } from 'react';
+import AddFriendModal from '../AddFriendModal/AddFriendModal';
 
 const Menu: React.FC = () => {
 	const location = useLocation();
 	const currentPath = location.pathname;
 	const { t } = useTranslation();
 	const handleLogout = useLogout();
+	const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
 
 	const isActive = (path: string) => {
 		return currentPath === path;
@@ -24,6 +27,43 @@ const Menu: React.FC = () => {
 			</div>
 			<nav className={MenuStyles.navigation}>
 				<ul className={MenuStyles.navList}>
+					{/* Ajouter un ami */}
+					<li className={`${MenuStyles.li}`}>
+						<button
+							onClick={() => setIsAddFriendModalOpen(true)}
+							className={`${MenuStyles.navItem} ${getSizeTextStyle(size_text)}`}
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								className={MenuStyles.navIcon}
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="#9CA3AF"
+							>
+								<defs>
+									<filter id="addFriendShadow" x="-20%" y="-20%" width="140%" height="140%">
+										<feDropShadow
+											dx="1"
+											dy="1"
+											stdDeviation="2"
+											floodOpacity="0.3"
+											floodColor="#000"
+										/>
+									</filter>
+								</defs>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+									d="M12 4v16m8-8H4"
+									filter="url(#addFriendShadow)"
+								/>
+							</svg>
+							<span className="text-gray-500 3xl:text-2xl">
+								{t('menu.addFriend')}
+							</span>
+						</button>
+					</li>
 					<li className={`${MenuStyles.li}`}>
 						{isActive('/') && <div className={`${MenuStyles.indicator}`} tabIndex={-1} aria-hidden="true"></div>}
 						<Link to="/" className={`${MenuStyles.navItem} ${getSizeTextStyle(size_text)}`}>
@@ -311,6 +351,10 @@ const Menu: React.FC = () => {
 					</li>
 				</ul>
 			</nav>
+			<AddFriendModal
+				isOpen={isAddFriendModalOpen}
+				onClose={() => setIsAddFriendModalOpen(false)}
+			/>
 		</div>
 	);
 };

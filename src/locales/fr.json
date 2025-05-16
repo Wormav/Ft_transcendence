@@ -63,7 +63,8 @@
 		"tournaments": "Tournois",
 		"logout": "Déconnexion",
 		"settings": "Paramètres",
-		"test_text_size": "Test Taille Texte"
+		"test_text_size": "Test Taille Texte",
+		"addFriend": "Ajouter un ami"
 	},
 	"home": {
 		"welcom": "Bienvenue sur",

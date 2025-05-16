@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BugerMenuStyles } from './BugerMenuStyles';
 import type { BurgerMenuProps } from '../../types/BurgerMenuProps';
 import { useTranslation } from '../../context/TranslationContext';
 import { useSettings } from '../../context/SettingsContext';
 import { getSizeTextStyle } from '../../globalStyle';
+import AddFriendModal from '../AddFriendModal/AddFriendModal';
 
 const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 	const location = useLocation();
 	const currentPath = location.pathname;
 	const { t } = useTranslation();
+	const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
 
 	const isActive = (path: string) => {
 		return currentPath === path;
@@ -42,6 +44,42 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 			</div>
 			<nav className={BugerMenuStyles.navigation}>
 				<ul className={BugerMenuStyles.navList}>
+					<li className={`${BugerMenuStyles.li}`}>
+						<button
+							onClick={() => setIsAddFriendModalOpen(true)}
+							className={`${BugerMenuStyles.navItem} ${getSizeTextStyle(size_text)}`}
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								className={BugerMenuStyles.navIcon}
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="#9CA3AF"
+							>
+								<defs>
+									<filter id="addFriendShadowBurger" x="-20%" y="-20%" width="140%" height="140%">
+										<feDropShadow
+											dx="1"
+											dy="1"
+											stdDeviation="2"
+											floodOpacity="0.3"
+											floodColor="#000"
+										/>
+									</filter>
+								</defs>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+									d="M12 4v16m8-8H4"
+									filter="url(#addFriendShadowBurger)"
+								/>
+							</svg>
+							<span className="text-gray-500">
+								{t('menu.addFriend')}
+							</span>
+						</button>
+					</li>
 					<li className={`${BugerMenuStyles.li}`}>
 						{isActive('/') && <div className={`${BugerMenuStyles.indicator}`}></div>}
 						<Link to="/" className={`${BugerMenuStyles.navItem} ${getSizeTextStyle(size_text)}`} onClick={onClose}>
@@ -295,6 +333,10 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 					</li>
 				</ul>
 			</nav>
+			<AddFriendModal
+				isOpen={isAddFriendModalOpen}
+				onClose={() => setIsAddFriendModalOpen(false)}
+			/>
 		</div>
 	);
 };
