@@ -157,7 +157,12 @@
 		"colorPurple": "Purple",
 		"speedNormal": "Normal",
 		"speedFast": "Fast",
-		"speedTurbo": "Turbo"
+		"speedTurbo": "Turbo",
+		"tournamentMatch": "Tournament Match",
+		"matchId": "Match ID",
+		"enterMatchId": "Enter Match ID",
+		"startTournamentMatch": "Start Match",
+		"cancel": "Cancel"
 	}
 }
 

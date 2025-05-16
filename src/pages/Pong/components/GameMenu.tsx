@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PongStyle from '../PongStyle';
 import type { GameMenuProps } from '../../../types/Pong';
 import { useTranslation } from '../../../context/TranslationContext';
+import { TournamentMatchDialog } from './TournamentMatchDialog';
 
 export const GameMenu: React.FC<GameMenuProps> = ({
   showMenu,
@@ -10,10 +11,12 @@ export const GameMenu: React.FC<GameMenuProps> = ({
   startGame,
   quitGame,
   settings,
-  onSettingsChange
+  onSettingsChange,
+  onStartTournamentMatch
 }) => {
   const { t } = useTranslation();
   const [isMobileView, setIsMobileView] = useState(false);
+  const [showTournamentDialog, setShowTournamentDialog] = useState(false);
 
   useEffect(() => {
     const checkMobileView = () => {
@@ -46,14 +49,12 @@ export const GameMenu: React.FC<GameMenuProps> = ({
       )}
 
       <button className={PongStyle.button} onClick={startGame}>
-        {hasScore ? t('pong.startGame') : t('pong.startGame')}
+        {hasScore ? t('pong.playAgain') : t('pong.startGame')}
       </button>
 
-      {hasScore && (
-        <button className={PongStyle.button} onClick={startGame}>
-          {t('pong.startGame')}
-        </button>
-      )}
+      <button className={PongStyle.button} onClick={() => setShowTournamentDialog(true)}>
+        {t('pong.tournamentMatch')}
+      </button>
 
       <div className={PongStyle.settingsSection}>
         <h3 className={PongStyle.settingsTitle}>{t('pong.gameSettings')}</h3>
@@ -113,6 +114,15 @@ export const GameMenu: React.FC<GameMenuProps> = ({
           </>
         )}
       </div>
+
+      <TournamentMatchDialog
+        isOpen={showTournamentDialog}
+        onClose={() => setShowTournamentDialog(false)}
+        onStartMatch={(matchId) => {
+          setShowTournamentDialog(false);
+          if (onStartTournamentMatch) onStartTournamentMatch(matchId);
+        }}
+      />
     </div>
   );
 };

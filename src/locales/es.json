@@ -157,7 +157,13 @@
 		"colorPurple": "Morado",
 		"speedNormal": "Normal",
 		"speedFast": "Rápida",
-		"speedTurbo": "Turbo"
+		"speedTurbo": "Turbo",
+		"playAgain": "Jugar de Nuevo",
+		"tournamentMatch": "Partido del Torneo",
+		"matchId": "ID del Partido",
+		"enterMatchId": "Introducir ID del Partido",
+		"startTournamentMatch": "Empezar Partido",
+		"cancel": "Cancelar"
 	}
 }
 

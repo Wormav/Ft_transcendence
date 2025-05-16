@@ -9,9 +9,9 @@ const TournamentsStyle = {
     tournament: {
         container: 'mt-8 bg-white p-6 rounded-xl shadow-lg',
         roundTitle: 'text-xl font-semibold mb-4 text-primary',
-        bracket: 'flex justify-center gap-8 mt-4',
-        round: 'flex flex-col justify-around h-full',
-        match: 'relative border border-gray p-4 rounded-xl mb-4 flex flex-col min-w-[200px] bg-white shadow-md hover:shadow-lg transition-shadow',
+        bracket: 'flex lg:flex-row flex-col lg:justify-center items-center gap-8 mt-4',
+        round: 'flex flex-col justify-around h-full w-full lg:w-auto',
+        match: 'relative border border-gray p-4 rounded-xl mb-4 flex flex-col w-full lg:w-[200px] bg-white shadow-md hover:shadow-lg transition-shadow',
         player: 'py-2 px-3 border-b border-gray last:border-b-0 transition-colors',
         winner: 'bg-primary/10 text-primary',
         vs: 'text-xs text-gray absolute -right-6 top-1/2 -translate-y-1/2',

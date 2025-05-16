@@ -118,8 +118,8 @@
 	},
 	"pong": {
 		"startGame": "Commencer la partie",
-		"resumeGame": "Reprendre la partie",
-		"quitGame": "Quitter le jeu",
+		"resumeGame": "Reprendre",
+		"quitGame": "Quitter",
 		"backToMenu": "Retour au menu",
 		"changeView": "Changer de vue",
 		"view": "Vue",
@@ -150,7 +150,13 @@
 		"colorPurple": "Violet",
 		"speedNormal": "Normale",
 		"speedFast": "Rapide",
-		"speedTurbo": "Turbo"
+		"speedTurbo": "Turbo",
+		"playAgain": "Rejouer",
+		"tournamentMatch": "Match de tournoi",
+		"matchId": "ID du match",
+		"enterMatchId": "Entrer l'ID du match",
+		"startTournamentMatch": "Commencer le match",
+		"cancel": "Annuler"
 	}
 }
 
