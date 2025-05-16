@@ -13,13 +13,31 @@ const Tournaments: React.FC = () => {
     const [error, setError] = useState<string>('');
 
     const handleAddPlayer = (index: number, name: string) => {
+        // Toujours mettre à jour le joueur avec le nouveau nom
         const newPlayers = [...players];
         if (index < newPlayers.length) {
-            newPlayers[index] = { id: uuidv4(), name, isGuest: true };
+            newPlayers[index] = { id: players[index]?.id || uuidv4(), name, isGuest: true };
         } else {
             newPlayers.push({ id: uuidv4(), name, isGuest: true });
         }
         setPlayers(newPlayers);
+
+        // Vérifier les doublons uniquement si le champ n'est pas vide
+        const trimmedName = name.trim();
+        if (trimmedName !== '') {
+            const playerNames = newPlayers
+                .filter(p => p.name.trim() !== '')
+                .map(p => p.name.toLowerCase());
+            const uniqueNames = new Set(playerNames);
+
+            if (uniqueNames.size !== playerNames.length) {
+                setError('Ce nom est déjà utilisé par un autre joueur');
+            } else {
+                setError('');
+            }
+        } else {
+            setError('');
+        }
     };
 
     const shuffleArray = <T,>(array: T[]): T[] => {
@@ -76,10 +94,20 @@ const Tournaments: React.FC = () => {
         return matches;
     };
 
-    const createTournament = () => {
+    const getMinPlayers = (max: number) => max - 1;    const createTournament = () => {
         const filledPlayers = players.filter(p => p.name.trim() !== '');
-        if (filledPlayers.length < 3) {
-            setError('Il faut au moins 3 joueurs pour créer un tournoi');
+        const minPlayers = getMinPlayers(maxPlayers);
+
+        if (filledPlayers.length < minPlayers) {
+            setError(`Il faut au moins ${minPlayers} joueurs pour un tournoi de ${maxPlayers} joueurs`);
+            return;
+        }
+
+        // Vérifier les doublons une dernière fois
+        const playerNames = filledPlayers.map(p => p.name.toLowerCase());
+        const uniqueNames = new Set(playerNames);
+        if (uniqueNames.size !== playerNames.length) {
+            setError('Impossible de créer le tournoi : certains joueurs ont le même nom');
             return;
         }
 
@@ -124,9 +152,9 @@ const Tournaments: React.FC = () => {
                 {error && <p className={styles.error}>{error}</p>}
 
                 <button
-                    className={players.length < 3 ? styles.buttonDisabled : styles.button}
+                    className={players.filter(p => p.name.trim() !== '').length < getMinPlayers(maxPlayers) ? styles.buttonDisabled : styles.button}
                     onClick={createTournament}
-                    disabled={players.length < 3}
+                    disabled={players.filter(p => p.name.trim() !== '').length < getMinPlayers(maxPlayers)}
                 >
                     Créer le tournoi
                 </button>

@@ -192,6 +192,46 @@ const Menu: React.FC = () => {
 						</Link>
 					</li>
 					<li className={`${MenuStyles.li}`}>
+						{isActive('/tournaments') && <div className={`${MenuStyles.indicator}`} tabIndex={-1} aria-hidden="true"></div>}
+						<Link to="/tournaments" className={`${MenuStyles.navItem} ${getSizeTextStyle(size_text)}`}>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								className={MenuStyles.navIcon}
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke={isActive('/tournaments') ? '#00BABC' : '#9CA3AF'}
+							>
+								<defs>
+									<filter id="tournamentsShadow" x="-20%" y="-20%" width="140%" height="140%">
+										<feDropShadow
+											dx="1"
+											dy="1"
+											stdDeviation="2"
+											floodOpacity="0.3"
+											floodColor="#000"
+										/>
+									</filter>
+								</defs>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+									d="M5 5h14c.55 0 1 .45 1 1v3c0 .55-.45 1-1 1h-1.5l-1.5 8h-8l-1.5-8H5c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1zm7 .5c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5z"
+									filter="url(#tournamentsShadow)"
+								/>
+							</svg>
+							<span
+								className={
+									isActive('/tournaments')
+										? 'text-gray-900 font-medium 3xl:text-2xl'
+										: 'text-gray-500 3xl:text-2xl'
+								}
+							>
+								{t('menu.tournaments')}
+							</span>
+						</Link>
+					</li>
+					<li className={`${MenuStyles.li}`}>
 						{isActive('/settings')&& <div className={`${MenuStyles.indicator}`} tabIndex={-1} aria-hidden="true"></div>}
 						<Link to="/settings" className={`${MenuStyles.navItem} pl-4 ${getSizeTextStyle(size_text)}`}>
 							<svg

@@ -67,6 +67,7 @@
 		"profile": "Profile",
 		"dashboard": "Dashboard",
 		"game": "Game",
+		"tournaments": "Tournaments",
 		"logout": "Logout",
 		"settings": "Settings",
 		"test_text_size": "Text Size Test"
