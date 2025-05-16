@@ -152,15 +152,6 @@ const Tournaments: React.FC = () => {
                                             <div className={`${styles.tournament.player} ${match.winner?.id === match.player2.id ? styles.tournament.winner : ''}`}>
                                                 {match.player2.name}
                                             </div>
-                                            <div
-                                                className={styles.tournament.matchConnector}
-                                                style={{
-                                                    right: '-8px',
-                                                    top: '50%',
-                                                    transform: 'translateY(-50%)',
-                                                    display: roundNumber === Math.ceil(Math.log2(maxPlayers)) ? 'none' : 'block'
-                                                }}
-                                            />
                                             <div className={styles.tournament.matchId}>
                                                 <span>ID: {match.id.slice(0, 8)}...</span>
                                                 <button
