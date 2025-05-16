@@ -61,8 +61,14 @@ export type GameMenuProps = {
   quitGame: () => void;
   settings: GameSettings;
   onSettingsChange: (settings: GameSettings) => void;
+  onStartTournamentMatch?: (matchId: string) => void;
 }
 
 export type CountdownProps = {
   countdown: number;
 }
+
+export type TournamentMatchSettings = {
+  matchId: string | null;
+  isInTournament: boolean;
+};

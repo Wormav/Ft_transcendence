@@ -41,6 +41,8 @@ const PongStyle = {
     'mb-4',
   select:
     'w-full p-2 bg-black/50 text-white border border-gray-600 rounded focus:outline-none focus:border-blue-500',
+  input:
+    'w-full p-2 bg-black/50 text-white border border-gray-600 rounded focus:outline-none focus:border-blue-500',
 };
 
 export default PongStyle;

@@ -3,7 +3,7 @@ import * as BABYLON from 'babylonjs';
 import 'babylonjs-loaders';
 import { useNavigate } from 'react-router-dom';
 import PongStyle from './PongStyle';
-import type { BallDirection, GameField, ScoreState, GameSettings } from '../../types/Pong';
+import type { BallDirection, GameField, ScoreState, GameSettings, TournamentMatchSettings } from '../../types/Pong';
 import { ScoreOverlay, GameMenu, PauseMenu, Countdown, TouchControls } from './components';
 import { useTranslation } from '../../context/TranslationContext';
 import { useSettings } from '../../context/SettingsContext';
@@ -15,7 +15,8 @@ const PADDLE_WIDTH = 0.3;
 const FIELD_MARGIN = 0.05;
 
 export default function Pong() {
-  const navigate = useNavigate();  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
   const { color_items, color_bg, speed_moves, setColorItems, setColorBg, setSpeedMoves } = useSettings();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -40,6 +41,10 @@ export default function Pong() {
   const [editViewMode, setEditViewMode] = useState(false);
   const [currentView, setCurrentView] = useState(0);
   const [isMobileView, setIsMobileView] = useState(false);
+  const [tournamentMatchSettings, setTournamentMatchSettings] = useState<TournamentMatchSettings>({
+    matchId: null,
+    isInTournament: false
+  });
 
   const getPaddleColorFromHex = (hex: string): 'default' | 'green' | 'purple' => {
     switch (hex.toLowerCase()) {
@@ -361,23 +366,41 @@ export default function Pong() {
 
     const scoreLimit = field.width / 2 + 1;
     if (ball.position.x < -scoreLimit) {
-      setScore(prev => ({ ...prev, player2: prev.player2 + 1 }));
-      checkGameOver(0, score.player2 + 1);
+      handleScore('player2');
       resetBall();
     } else if (ball.position.x > scoreLimit) {
-      setScore(prev => ({ ...prev, player1: prev.player1 + 1 }));
-      checkGameOver(score.player1 + 1, 0);
+      handleScore('player1');
       resetBall();
     }
   }, [resetBall, score]);
 
-  const checkGameOver = useCallback((player1Score: number, player2Score: number) => {
-    if (player1Score >= MAX_SCORE || player2Score >= MAX_SCORE) {
-      stopGameLoop();
-      setGameStarted(false);
-      setShowMenu(true);
-    }
-  }, [stopGameLoop]);
+  const handleScore = useCallback((player: 'player1' | 'player2') => {
+    setScore(prevScore => {
+      const newScore = {
+        ...prevScore,
+        [player]: prevScore[player] + 1
+      };
+
+      if (newScore[player] >= MAX_SCORE) {
+        if (tournamentMatchSettings.isInTournament) {
+          // TODO: Envoyer le résultat du match au serveur
+          console.log(`Match de tournoi ${tournamentMatchSettings.matchId} terminé :`, newScore);
+        }
+        setGameStarted(false);
+        setShowMenu(true);
+      }
+
+      return newScore;
+    });
+  }, [tournamentMatchSettings]);
+
+//   const checkGameOver = useCallback((player1Score: number, player2Score: number) => {
+//     if (player1Score >= MAX_SCORE || player2Score >= MAX_SCORE) {
+//       stopGameLoop();
+//       setGameStarted(false);
+//       setShowMenu(true);
+//     }
+//   }, [stopGameLoop]);
 
   const createGameElements = useCallback((scene: BABYLON.Scene) => {
     const { fieldWidth, fieldHeight } = calculateFieldDimensions();
@@ -830,6 +853,19 @@ export default function Pong() {
     }
   }, [editViewMode]);
 
+  const startTournamentMatch = useCallback((matchId: string) => {
+    setTournamentMatchSettings({ matchId, isInTournament: true });
+    setScore({ player1: 0, player2: 0 });
+    setEditViewMode(false);
+    setCurrentView(0);
+    resetBall();
+    startCountdown();
+    if (cameraRef.current) {
+      cameraRef.current.alpha = Math.PI / 2;
+      cameraRef.current.beta = Math.PI / 4;
+    }
+  }, [resetBall, startCountdown]);
+
   return (
     <div className={PongStyle.container}>
       <canvas ref={canvasRef} className={PongStyle.canvas} />
@@ -849,6 +885,7 @@ export default function Pong() {
         quitGame={quitGame}
         settings={gameSettings}
         onSettingsChange={handleSettingsChange}
+        onStartTournamentMatch={startTournamentMatch}
       />
       <PauseMenu
         gameStarted={gameStarted}

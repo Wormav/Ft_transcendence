@@ -67,6 +67,7 @@
 		"profile": "Perfil",
 		"dashboard": "Panel de Control",
 		"game": "Juego",
+		"tournaments": "Torneos",
 		"logout": "Cerrar sesión",
 		"settings": "Ajustes",
 		"test_text_size": "Prueba Tamaño Texto"
@@ -111,6 +112,17 @@
 	"game": {
 		"gameCustom": "Juego personalizado"
 	},
+	"tournaments": {
+		"createTournament": "Crear Torneo",
+		"players": "jugadores",
+		"playerName": "Nombre del jugador",
+		"minPlayersError": "Se necesitan al menos {0} jugadores para un torneo de {1} jugadores",
+		"duplicateNameError": "Este nombre ya está siendo usado por otro jugador",
+		"createError": "No se puede crear el torneo: algunos jugadores tienen el mismo nombre",
+		"createButton": "Crear Torneo",
+		"tournamentTree": "Árbol del Torneo",
+		"copyId": "Copiar ID"
+	},
 	"pong": {
 		"startGame": "Iniciar Juego",
 		"resumeGame": "Reanudar Juego",
@@ -145,7 +157,13 @@
 		"colorPurple": "Morado",
 		"speedNormal": "Normal",
 		"speedFast": "Rápida",
-		"speedTurbo": "Turbo"
+		"speedTurbo": "Turbo",
+		"playAgain": "Jugar de Nuevo",
+		"tournamentMatch": "Partido del Torneo",
+		"matchId": "ID del Partido",
+		"enterMatchId": "Introducir ID del Partido",
+		"startTournamentMatch": "Empezar Partido",
+		"cancel": "Cancelar"
 	}
 }
 

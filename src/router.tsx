@@ -8,6 +8,7 @@ import Login from './pages/Login/Login.tsx';
 import Settings from './pages/Settings/Settings.tsx';
 import Profile from './pages/Profile/Profile.tsx';
 import Dashboard from './pages/Dashboard/Dashboard.tsx';
+import Tournaments from './pages/Tournaments/Tournaments.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -37,6 +38,11 @@ const router = createBrowserRouter([
 			{
 				path: '/dashboard',
 				element: <Dashboard/>,
+				children: [],
+			},
+			{
+				path: '/tournaments',
+				element: <Tournaments/>,
 				children: [],
 			},
 		],
