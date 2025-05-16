@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './TournamentsStyle';
 import type { Match, Player, Tournament } from '../../types/Tournament';
-
+import { useTranslation } from '../../context/TranslationContext';
 
 const Tournaments: React.FC = () => {
+    const { t } = useTranslation();
     const [maxPlayers, setMaxPlayers] = useState<4 | 6 | 8>(4);
     const [players, setPlayers] = useState<Player[]>([
         { id: uuidv4(), name: 'pseudo', isGuest: false }
@@ -13,7 +14,6 @@ const Tournaments: React.FC = () => {
     const [error, setError] = useState<string>('');
 
     const handleAddPlayer = (index: number, name: string) => {
-        // Toujours mettre à jour le joueur avec le nouveau nom
         const newPlayers = [...players];
         if (index < newPlayers.length) {
             newPlayers[index] = { id: players[index]?.id || uuidv4(), name, isGuest: true };
@@ -22,7 +22,6 @@ const Tournaments: React.FC = () => {
         }
         setPlayers(newPlayers);
 
-        // Vérifier les doublons uniquement si le champ n'est pas vide
         const trimmedName = name.trim();
         if (trimmedName !== '') {
             const playerNames = newPlayers
@@ -31,7 +30,7 @@ const Tournaments: React.FC = () => {
             const uniqueNames = new Set(playerNames);
 
             if (uniqueNames.size !== playerNames.length) {
-                setError('Ce nom est déjà utilisé par un autre joueur');
+                setError(t('tournaments.duplicateNameError'));
             } else {
                 setError('');
             }
@@ -54,7 +53,6 @@ const Tournaments: React.FC = () => {
         const matches: Match[] = [];
         const totalRounds = Math.ceil(Math.log2(maxPlayers));
 
-        // Premier tour : création des matchs initiaux
         let remainingPlayers = [...shuffledPlayers];
         const firstRoundMatches = Math.ceil(shuffledPlayers.length / 2);
 
@@ -67,16 +65,15 @@ const Tournaments: React.FC = () => {
                 player1,
                 player2: player2 || { id: uuidv4(), name: 'No player', isGuest: true },
                 round: 1,
-                winner: player2 ? null : player1  // Si pas de player2, player1 gagne automatiquement
+                winner: player2 ? null : player1
             };
             matches.push(match);
 
             if (!player2) {
-                remainingPlayers.push(player1); // Le joueur qui gagne par forfait avance au prochain tour
+                remainingPlayers.push(player1);
             }
         }
 
-        // Tours suivants : nombres de matchs divisés par 2 à chaque tour
         for (let round = 2; round <= totalRounds; round++) {
             const matchesInRound = firstRoundMatches / Math.pow(2, round - 1);
 
@@ -94,20 +91,21 @@ const Tournaments: React.FC = () => {
         return matches;
     };
 
-    const getMinPlayers = (max: number) => max - 1;    const createTournament = () => {
+    const getMinPlayers = (max: number) => max - 1;
+
+    const createTournament = () => {
         const filledPlayers = players.filter(p => p.name.trim() !== '');
         const minPlayers = getMinPlayers(maxPlayers);
 
         if (filledPlayers.length < minPlayers) {
-            setError(`Il faut au moins ${minPlayers} joueurs pour un tournoi de ${maxPlayers} joueurs`);
+            setError(t('tournaments.minPlayersError').replace('{0}', minPlayers.toString()).replace('{1}', maxPlayers.toString()));
             return;
         }
 
-        // Vérifier les doublons une dernière fois
         const playerNames = filledPlayers.map(p => p.name.toLowerCase());
         const uniqueNames = new Set(playerNames);
         if (uniqueNames.size !== playerNames.length) {
-            setError('Impossible de créer le tournoi : certains joueurs ont le même nom');
+            setError(t('tournaments.createError'));
             return;
         }
 
@@ -125,7 +123,7 @@ const Tournaments: React.FC = () => {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>Créer un tournoi</h1>
+            <h1 className={styles.title}>{t('tournaments.createTournament')}</h1>
 
             <div className={styles.form}>
                 <select
@@ -133,9 +131,9 @@ const Tournaments: React.FC = () => {
                     value={maxPlayers}
                     onChange={(e) => setMaxPlayers(Number(e.target.value) as 4 | 6 | 8)}
                 >
-                    <option value={4}>4 joueurs</option>
-                    <option value={6}>6 joueurs</option>
-                    <option value={8}>8 joueurs</option>
+                    <option value={4}>4 {t('tournaments.players')}</option>
+                    <option value={6}>6 {t('tournaments.players')}</option>
+                    <option value={8}>8 {t('tournaments.players')}</option>
                 </select>
 
                 {Array.from({ length: maxPlayers - 1 }).map((_, index) => (
@@ -143,7 +141,7 @@ const Tournaments: React.FC = () => {
                         key={index}
                         type="text"
                         className={styles.playerInput}
-                        placeholder={`Nom du joueur ${index + 2}`}
+                        placeholder={`${t('tournaments.playerName')} ${index + 2}`}
                         onChange={(e) => handleAddPlayer(index + 1, e.target.value)}
                         value={players[index + 1]?.name || ''}
                     />
@@ -156,14 +154,14 @@ const Tournaments: React.FC = () => {
                     onClick={createTournament}
                     disabled={players.filter(p => p.name.trim() !== '').length < getMinPlayers(maxPlayers)}
                 >
-                    Créer le tournoi
+                    {t('tournaments.createButton')}
                 </button>
             </div>
 
             {tournament && (
                 <div className={styles.tournament.container}>
                     <h2 className={styles.tournament.roundTitle}>
-                        Arbre du tournoi
+                        {t('tournaments.tournamentTree')}
                     </h2>
                     <div className={styles.tournament.bracket}>
                         {Array.from({ length: Math.ceil(Math.log2(maxPlayers)) }).map((_, roundIndex) => {
@@ -187,7 +185,7 @@ const Tournaments: React.FC = () => {
                                                     onClick={() => {
                                                         navigator.clipboard.writeText(match.id);
                                                     }}
-                                                    title="Copier l'ID"
+                                                    title={t('tournaments.copyId')}
                                                 >
                                                     📋
                                                 </button>

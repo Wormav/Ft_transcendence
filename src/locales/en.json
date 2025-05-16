@@ -112,6 +112,17 @@
 	"game": {
 		"gameCustom": "Custom game"
 	},
+	"tournaments": {
+		"createTournament": "Create Tournament",
+		"players": "players",
+		"playerName": "Player name",
+		"minPlayersError": "At least {0} players are needed for a {1}-player tournament",
+		"duplicateNameError": "This name is already used by another player",
+		"createError": "Cannot create tournament: some players have the same name",
+		"createButton": "Create Tournament",
+		"tournamentTree": "Tournament Bracket",
+		"copyId": "Copy ID"
+	},
 	"pong": {
 		"startGame": "Start Game",
 		"resumeGame": "Resume Game",
