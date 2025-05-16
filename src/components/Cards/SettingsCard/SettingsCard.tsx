@@ -3,9 +3,11 @@ import { useTranslation } from '../../../context/TranslationContext';
 import globalStyle from '../../../globalStyle';
 import Card, { Space } from '../../Card/Card';
 import CustomBtn from '../../CustomBtn/CustomBtn';
+import { useUser } from '../../../context/UserContext';
 
 export default function SettingsCard() {
 	const { t, locale, setLocale } = useTranslation();
+	const { user, loading } = useUser();
 
 	return (
 		<Card>
@@ -13,30 +15,36 @@ export default function SettingsCard() {
 				<span className={globalStyle.span}>{t('profile.settings')}</span>
 			</div>
 			<div className={globalStyle.separator}></div>
-			<div className={globalStyle.row}>
-				<p>{t('profile.pseudo')} :</p>
-				<Space />
-				<span className={globalStyle.span}>Pseudo</span>
-				<Space />
-				<button
-					className="flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
-					aria-label={t('profile.edit_pseudo')}
-				>
-					<FaPen size={20} color="#00babc" />
-				</button>
-			</div>
-			<div className={globalStyle.row}>
-				<p>{t('profile.email')} :</p>
-				<Space />
-				<span className={globalStyle.span}>blabla@gmail.com</span>
-				<Space />
-				<button
-					className="flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
-					aria-label={t('profile.edit_pseudo')}
-				>
-					<FaPen size={20} color="#00babc" />
-				</button>
-			</div>
+			{loading ? (
+				<p>Chargement des informations...</p>
+			) : (
+				<>
+					<div className={globalStyle.row}>
+						<p>{t('profile.pseudo')} :</p>
+						<Space />
+						<span className={globalStyle.span}>{user?.username || 'Non disponible'}</span>
+						<Space />
+						<button
+							className="flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
+							aria-label={t('profile.edit_pseudo')}
+						>
+							<FaPen size={20} color="#00babc" />
+						</button>
+					</div>
+					<div className={globalStyle.row}>
+						<p>{t('profile.email')} :</p>
+						<Space />
+						<span className={globalStyle.span}>{user?.email || 'Non disponible'}</span>
+						<Space />
+						<button
+							className="flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
+							aria-label={t('profile.edit_pseudo')}
+						>
+							<FaPen size={20} color="#00babc" />
+						</button>
+					</div>
+				</>
+			)}
 			<div className={globalStyle.separator}></div>
 			<p>{t('profile.password')} :</p>
 			<CustomBtn text={t('profile.changePassword')} onClick={() => console.log('btn')} />

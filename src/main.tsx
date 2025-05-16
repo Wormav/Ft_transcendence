@@ -6,12 +6,15 @@ import router from './router';
 import './App.css';
 import './styles/zIndex.css';
 import { SettingsProvider } from './context/SettingsContext';
+import { UserProvider } from './context/UserContext';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<StrictMode>
 		<TranslationProvider>
 			<SettingsProvider>
-			<RouterProvider router={router} />
+				<UserProvider>
+					<RouterProvider router={router} />
+				</UserProvider>
 			</SettingsProvider>
 		</TranslationProvider>
 	</StrictMode>
