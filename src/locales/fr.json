@@ -1,4 +1,7 @@
 {
+	"search": {
+		"placeholder": "Rechercher un utilisateur..."
+	},
 	"accessibility": {
 		"title": "Accessibilité",
 		"text_size": "Taille du texte",

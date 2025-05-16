@@ -1,4 +1,7 @@
 {
+	"search": {
+		"placeholder": "Search for a user..."
+	},
 	"accessibility": {
 		"title": "Accessibility",
 		"text_size": "Text size",
@@ -70,7 +73,8 @@
 		"tournaments": "Tournaments",
 		"logout": "Logout",
 		"settings": "Settings",
-		"test_text_size": "Text Size Test"
+		"test_text_size": "Text Size Test",
+		"addFriend": "Add Friend"
 	},
 	"home": {
 		"welcom": "Welcome to",

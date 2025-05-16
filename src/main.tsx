@@ -4,6 +4,7 @@ import { RouterProvider } from 'react-router-dom';
 import { TranslationProvider } from './context/TranslationContext';
 import router from './router';
 import './App.css';
+import './styles/zIndex.css';
 import { SettingsProvider } from './context/SettingsContext';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
