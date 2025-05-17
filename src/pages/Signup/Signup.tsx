@@ -4,6 +4,7 @@ import type { FormEvent } from 'react';
 import SignupStyle from './SignupStyle';
 import globalStyle from '../../globalStyle';
 import { useTranslation } from '../../context/TranslationContext';
+import { customFetch } from '../../utils/customFetch';
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -67,7 +68,7 @@ export default function Signup() {
 
     if (isValid) {
       try {
-		const response = await fetch(`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/auth/register`, {
+		const response = await customFetch(`/api/auth/register`, {
 		  method: 'POST',
 		  headers: {
 			'Content-Type': 'application/json',

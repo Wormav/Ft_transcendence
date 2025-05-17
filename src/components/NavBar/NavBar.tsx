@@ -36,7 +36,7 @@ const NavBar: React.FC<NavBarProps> = ({ onMenuClick }) => {
 				</div>
 				<div className={NavBarStyles.containerBtn}>
 					<ButtonSettings onClick={() => navigate('/settings')}/>
-					<ButtonProfil onClick={() => navigate('/profile')} img="/jlorette.jpg" />
+					<ButtonProfil onClick={() => navigate('/profile')} />
 				</div>
 			</div>
 		</header>
