@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import type { SettingsContextType, GameSpeedType } from '../types/SettingsTypes';
-import { useUser } from './UserContext';
+import { useUserContext } from './UserContext';
 import { customFetch } from '../utils/customFetch';
 import { getJwtToken } from '../utils/getJwtToken';
 
@@ -16,7 +16,7 @@ const SettingsContext = createContext<SettingsContextType>({
 });
 
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-	const { user } = useUser();
+	const { user } = useUserContext();
 
 	const [color_items, setColorItemsState] = useState<string>('#3498db');
 	const [color_bg, setColorBgState] = useState<string>('#1a1a1a');
@@ -38,6 +38,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 		size_text: number;
 		speed_moves: GameSpeedType;
 	}>) => {
+        console.log("Updating settings with:", options);
 		try {
 			const token = getJwtToken();
 			const response = await customFetch('/api/user/options', {
@@ -52,17 +53,20 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 			if (!response.ok) {
 				throw new Error("Fail update settings user")
 			}
+            console.log("Settings updated successfully");
 		} catch (error) {
 			console.log("Fail update settings user:", error);
 		}
 	};
 
 	const setColorItems = (value: string) => {
+        console.log("setColorItems called with:", value);
         setColorItemsState(value);
         updateSettings({ color_items: value });
     };
 
     const setColorBg = (value: string) => {
+        console.log("setColorBg called with:", value);
         setColorBgState(value);
         updateSettings({ color_bg: value });
     };

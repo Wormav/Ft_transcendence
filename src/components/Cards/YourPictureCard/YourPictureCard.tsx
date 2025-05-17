@@ -3,11 +3,11 @@ import globalStyle from '../../../globalStyle';
 import { useTranslation } from '../../../context/TranslationContext';
 import HomeStyle from '../../../pages/Home/HomeStyle';
 import { FaPen } from 'react-icons/fa6';
-import { useUser } from '../../../context/UserContext';
+import { useUserContext } from '../../../context/UserContext';
 
 export default function YourPictureCard() {
 	const { t } = useTranslation();
-	const { user } = useUser();
+	const { user } = useUserContext();
 
 	const avatarSrc = user?.avatar && user.avatar !== "" ? user.avatar : "/default.JPG";
 

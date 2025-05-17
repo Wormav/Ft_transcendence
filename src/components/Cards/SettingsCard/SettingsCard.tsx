@@ -3,11 +3,11 @@ import { useTranslation } from '../../../context/TranslationContext';
 import globalStyle from '../../../globalStyle';
 import Card, { Space } from '../../Card/Card';
 import CustomBtn from '../../CustomBtn/CustomBtn';
-import { useUser } from '../../../context/UserContext';
+import { useUserContext } from '../../../context/UserContext';
 
 export default function SettingsCard() {
 	const { t, locale, setLocale } = useTranslation();
-	const { user, loading } = useUser();
+	const { user, loading } = useUserContext();
 
 	return (
 		<Card>

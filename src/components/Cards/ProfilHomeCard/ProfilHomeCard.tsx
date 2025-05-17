@@ -3,11 +3,11 @@ import globalStyle from '../../../globalStyle';
 import { useTranslation } from '../../../context/TranslationContext';
 import HomeStyle from '../../../pages/Home/HomeStyle';
 import type { ProfilHomeCardProps } from '../../../types/ProfilHomeCardProps';
-import { useUser } from '../../../context/UserContext';
+import { useUserContext } from '../../../context/UserContext';
 
 export default function ProfilHomeCard({ home = false }: ProfilHomeCardProps) {
 	const { t } = useTranslation();
-	const { user, loading, error } = useUser();
+	const { user, loading, error } = useUserContext();
 
 	return (
 		<Card>

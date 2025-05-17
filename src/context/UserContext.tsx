@@ -93,4 +93,4 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 	);
 };
 
-export const useUser = () => useContext(UserContext);
+export const useUserContext = () => useContext(UserContext);

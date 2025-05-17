@@ -7,6 +7,7 @@ import type { BallDirection, GameField, ScoreState, GameSettings, TournamentMatc
 import { ScoreOverlay, GameMenu, PauseMenu, Countdown, TouchControls } from './components';
 import { useTranslation } from '../../context/TranslationContext';
 import { useSettings } from '../../context/SettingsContext';
+import type { GameSpeedType } from '../../types/SettingsTypes';
 
 const SCALE_FACTOR = 10;
 let BALL_SPEED_INCREASE = 1.05;
@@ -75,6 +76,18 @@ export default function Pong() {
       paddleColor: getPaddleColorFromHex(color_items),
       ballSpeed: speed_moves
     }));
+
+    console.log("User settings loaded:", {
+      color_bg,
+      color_items,
+      speed_moves,
+      plateauColor: getPlateauColorFromHex(color_bg),
+      paddleColor: getPaddleColorFromHex(color_items)
+    });
+
+    if (sceneRef.current && paddleLeftRef.current && paddleRightRef.current) {
+      updateVisualElements();
+    }
   }, [color_bg, color_items, speed_moves]);
 
   const calculateFieldDimensions = useCallback(() => {
@@ -143,7 +156,7 @@ export default function Pong() {
     ballRef.current.position = new BABYLON.Vector3(0, ballRadius, 0);
 
     let baseFactor = 0.005;
-    switch (gameSettings.ballSpeed) {
+    switch (speed_moves) {
       case 'fast': baseFactor = 0.008; break;
       case 'turbo': baseFactor = 0.012; break;
       default: baseFactor = 0.005;
@@ -158,7 +171,7 @@ export default function Pong() {
     if (particleSystemRef.current) {
       particleSystemRef.current.reset();
     }
-  }, [gameSettings.ballSpeed]);
+  }, [speed_moves]);
 
   const startCountdown = useCallback(() => {
     setCountdown(3);
@@ -424,6 +437,10 @@ export default function Pong() {
       new BABYLON.Color3(initialPaddleColor.r * 0.5, initialPaddleColor.g * 0.5, initialPaddleColor.b * 0.5)
     );
 
+    const userPaddleColor = getPaddleColor(getPaddleColorFromHex(color_items));
+    paddleMaterial.diffuseColor = userPaddleColor;
+    paddleMaterial.emissiveColor = new BABYLON.Color3(userPaddleColor.r * 0.5, userPaddleColor.g * 0.5, userPaddleColor.b * 0.5);
+
     const ballMaterial = createMaterial(
       "ballMaterial",
       new BABYLON.Color3(0.8, 0.2, 0.2),
@@ -443,6 +460,9 @@ export default function Pong() {
       initialGroundColor
     );
     groundMaterial.specularColor = new BABYLON.Color3(0.1, 0.1, 0.1);
+
+    const userGroundColor = getPlateauColor(getPlateauColorFromHex(color_bg));
+    groundMaterial.diffuseColor = userGroundColor;
 
     const centerLineMaterial = createMaterial(
       "centerLineMaterial",
@@ -529,6 +549,8 @@ export default function Pong() {
 
     createParticleSystem();
 
+    updateBallSpeed(speed_moves);
+
     const wallThickness = Math.min(playableWidth, playableHeight) * 0.025;
     const createWall = (name: string, zPos: number) => {
       const wall = BABYLON.MeshBuilder.CreateBox(
@@ -555,12 +577,14 @@ export default function Pong() {
   const handleSettingsChange = (newSettings: GameSettings) => {
     setGameSettings(newSettings);
 
-    // Mettre à jour les settings globaux
+    console.log("New settings:", newSettings);
+    console.log("Paddle color hex:", getPaddleColorHex(newSettings.paddleColor));
+    console.log("Plateau color hex:", getPlateauColorHex(newSettings.plateauColor));
+
     setColorItems(getPaddleColorHex(newSettings.paddleColor));
     setColorBg(getPlateauColorHex(newSettings.plateauColor));
-    setSpeedMoves(newSettings.ballSpeed);
+    setSpeedMoves(newSettings.ballSpeed as GameSpeedType);
 
-    // Appliquer les changements visuels
     if (paddleLeftRef.current && paddleRightRef.current) {
       const paddleColor = getPaddleColor(newSettings.paddleColor);
       const paddleMaterial = paddleLeftRef.current.material as BABYLON.StandardMaterial;
@@ -607,6 +631,47 @@ export default function Pong() {
       case 'blue': return new BABYLON.Color3(0.1, 0.1, 0.3);
       case 'red': return new BABYLON.Color3(0.3, 0.1, 0.1);
       default: return new BABYLON.Color3(0.1, 0.1, 0.1);
+    }
+  };  const updateVisualElements = () => {
+    if (paddleLeftRef.current && paddleRightRef.current) {
+      try {
+        const paddleColor = getPaddleColor(getPaddleColorFromHex(color_items));
+
+        const paddleLeftMaterial = paddleLeftRef.current.material as BABYLON.StandardMaterial;
+        const paddleRightMaterial = paddleRightRef.current.material as BABYLON.StandardMaterial;
+
+        if (paddleLeftMaterial && paddleLeftMaterial.diffuseColor) {
+          paddleLeftMaterial.diffuseColor = paddleColor;
+          paddleLeftMaterial.emissiveColor = new BABYLON.Color3(paddleColor.r * 0.5, paddleColor.g * 0.5, paddleColor.b * 0.5);
+        }
+
+        if (paddleRightMaterial && paddleRightMaterial.diffuseColor) {
+          paddleRightMaterial.diffuseColor = paddleColor;
+          paddleRightMaterial.emissiveColor = new BABYLON.Color3(paddleColor.r * 0.5, paddleColor.g * 0.5, paddleColor.b * 0.5);
+        }
+      } catch (error) {
+        console.log("Erreur lors de la mise à jour des raquettes:", error);
+      }
+    }
+
+    if (sceneRef.current) {
+      try {
+        const ground = sceneRef.current.meshes.find(mesh => mesh.name === 'ground');
+        if (ground && ground.material) {
+          const groundMaterial = ground.material as BABYLON.StandardMaterial;
+          if (groundMaterial && groundMaterial.diffuseColor) {
+            groundMaterial.diffuseColor = getPlateauColor(getPlateauColorFromHex(color_bg));
+          }
+        }
+      } catch (error) {
+        console.log("Erreur lors de la mise à jour du plateau:", error);
+      }
+    }
+
+    try {
+      updateBallSpeed(speed_moves);
+    } catch (error) {
+      console.log("Erreur lors de la mise à jour de la vitesse:", error);
     }
   };
 
@@ -683,6 +748,13 @@ export default function Pong() {
 
     const handleResize = () => engine.resize();
     window.addEventListener("resize", handleResize);
+
+    setTimeout(() => {
+      if (sceneRef.current && paddleLeftRef.current && paddleRightRef.current) {
+        console.log("Initialisation des éléments visuels...");
+        updateVisualElements();
+      }
+    }, 500);
 
     return () => {
       if (particleSystemRef.current) {
