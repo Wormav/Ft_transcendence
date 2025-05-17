@@ -1,6 +1,7 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import type { UserContextType, UserData } from '../types/UserContextType';
 import { customFetch } from '../utils/customFetch';
+import { getJwtToken } from '../utils/getJwtToken';
 
 const UserContext = createContext<UserContextType>({
 	user: null,
@@ -9,16 +10,7 @@ const UserContext = createContext<UserContextType>({
 	fetchUserData: async () => {}
 });
 
-const getJwtToken = (): string | null => {
-	const cookies = document.cookie.split(';');
-	for (const cookie of cookies) {
-		const [name, value] = cookie.trim().split('=');
-		if (name === 'jwt') {
-			return value;
-		}
-	}
-	return null;
-};
+
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const [user, setUser] = useState<UserData | null>(null);
@@ -68,7 +60,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 				uuid: userData.uuid,
 				email: userData.email,
 				username: userData.username,
-				avatar: userData.avatar
+				avatar: userData.avatar,
+				color_items: userData.color_items,
+				color_bg: userData.color_bg,
+				size_text: userData.size_text,
+				speed_moves: userData.speed_moves
 			};
 
 			setUser(filteredUserData);

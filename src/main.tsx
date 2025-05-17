@@ -11,11 +11,11 @@ import { UserProvider } from './context/UserContext';
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<StrictMode>
 		<TranslationProvider>
-			<SettingsProvider>
-				<UserProvider>
+			<UserProvider>
+				<SettingsProvider>
 					<RouterProvider router={router} />
-				</UserProvider>
-			</SettingsProvider>
+				</SettingsProvider>
+			</UserProvider>
 		</TranslationProvider>
 	</StrictMode>
 );

@@ -3,13 +3,13 @@ import { useSettings } from '../../../context/SettingsContext';
 import globalStyle from '../../../globalStyle';
 import Card, { Space } from '../../Card/Card';
 import AccessibilityCardStyle from './AccessibilityCardStyle';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export default function AccessibilityCard() {
 	const { t } = useTranslation();
 	const { size_text, setSizeText } = useSettings();
-
 	const [localSizeText, setLocalSizeText] = useState(size_text);
+	const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
 	useEffect(() => {
 		setLocalSizeText(size_text);
@@ -18,13 +18,32 @@ export default function AccessibilityCard() {
 	useEffect(() => {
 		const validSizes = [18, 22, 26];
 		if (!validSizes.includes(size_text)) {
-			setSizeText(26);
+			setSizeText(22);
 		}
 	}, [size_text, setSizeText]);
 
+	const debouncedSetSizeText = useCallback((size: number) => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+        timeoutRef.current = setTimeout(() => {
+            setSizeText(size);
+            timeoutRef.current = null;
+        }, 300);
+	}, [setSizeText]);
+
+	useEffect(() => {
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, []);
+
 	const handleSizeChange = (size: number) => {
-		setSizeText(size);
-	};
+        setLocalSizeText(size);
+        debouncedSetSizeText(size);
+    };
 
 	return (
 		<Card>
