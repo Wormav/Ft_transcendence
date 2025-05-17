@@ -4,8 +4,6 @@ import { useUser } from '../../context/UserContext';
 
 export default function ButtonProfil({ onClick }: ButtonProfilProps) {
 	const { user } = useUser();
-
-	// Utiliser l'avatar de l'utilisateur s'il existe, sinon l'image par défaut
 	const avatarSrc = user?.avatar && user.avatar !== "" ? user.avatar : '/default.JPG';
 
 	return (
