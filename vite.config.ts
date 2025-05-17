@@ -4,7 +4,6 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-	// Chargement des variables d'environnement
 	const env = loadEnv(mode, process.cwd(), '');
 	const backendPort = env.VITE_BACKEND_PORT;
 

@@ -1,88 +1,100 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import type { UserContextType, UserData } from '../types/UserContextType';
+import { customFetch } from '../utils/customFetch';
 
 const UserContext = createContext<UserContextType>({
-  user: null,
-  loading: false,
-  error: null,
-  fetchUserData: async () => {}
+	user: null,
+	loading: false,
+	error: null,
+	fetchUserData: async () => {}
 });
 
 const getJwtToken = (): string | null => {
-  const cookies = document.cookie.split(';');
-  for (const cookie of cookies) {
-    const [name, value] = cookie.trim().split('=');
-    if (name === 'jwt') {
-      return value;
-    }
-  }
-  return null;
+	const cookies = document.cookie.split(';');
+	for (const cookie of cookies) {
+		const [name, value] = cookie.trim().split('=');
+		if (name === 'jwt') {
+			return value;
+		}
+	}
+	return null;
 };
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+	const [user, setUser] = useState<UserData | null>(null);
+	const [loading, setLoading] = useState<boolean>(true);
+	const [error, setError] = useState<string | null>(null);
 
-  const fetchUserData = async () => {
-    setLoading(true);
-    setError(null);
+	const fetchUserData = async () => {
+		if (typeof window !== 'undefined' && window.location.pathname === '/login') {
+			setLoading(false);
+			return;
+		}
 
-    try {
-      const token = getJwtToken();
+		setLoading(true);
+		setError(null);
 
-      if (!token) {
-        setLoading(false);
-        setError('Aucun token d\'authentification trouvé');
-        return;
-      }
+		try {
+			const token = getJwtToken();
 
-      const response = await fetch(`/api/user/me`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+			if (!token) {
+				setLoading(false);
+				setError('No authentication token found. Redirecting...');
+				if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
+					window.location.href = '/login';
+				}
+				return;
+			}
 
-      if (!response.ok) {
-        throw new Error(`Erreur lors de la récupération des données utilisateur: ${response.status}`);
-      }
+			const response = await customFetch(`/api/user/me`, {
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${token}`,
+					'Content-Type': 'application/json'
+				}
+			});
 
-      const userData = await response.json();
+			if (!response.ok) {
+				if (response.status !== 401) {
+					throw new Error(`Error retrieving user data: ${response.status}`);
+				}
+				setLoading(false);
+				return;
+			}
 
-      const filteredUserData: UserData = {
-        uuid: userData.uuid,
-        email: userData.email,
-        username: userData.username,
-        avatar: userData.avatar
-      };
+			const userData = await response.json();
 
-      setUser(filteredUserData);
-      console.log('Données utilisateur récupérées:', filteredUserData);
-    } catch (err: any) {
-      console.error('Erreur lors de la récupération des données utilisateur:', err);
-      // Vérifier si c'est une erreur CORS
-      if (err.message && err.message.includes('NetworkError') ||
-          err.message && err.message.includes('Failed to fetch')) {
-        setError('Erreur de connexion au serveur. Problème potentiel de CORS.');
-      } else {
-        setError(err.message || 'Une erreur est survenue lors de la récupération des données utilisateur');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+			const filteredUserData: UserData = {
+				uuid: userData.uuid,
+				email: userData.email,
+				username: userData.username,
+				avatar: userData.avatar
+			};
 
-  useEffect(() => {
-    fetchUserData();
-  }, []);
+			setUser(filteredUserData);
+			console.log('User data retrieved:', filteredUserData);
+		} catch (err: any) {
+			console.error('Error in fetchUserData:', err);
+			if (err.message === 'Unauthorized') {
+			} else if (err.message && (err.message.includes('NetworkError') || err.message.includes('Failed to fetch'))) {
+				setError('Error connecting to server. Potential CORS issue.');
+			} else {
+				setError(err.message || 'An error occurred while retrieving user data');
+			}
+		} finally {
+			setLoading(false);
+		}
+	};
 
-  return (
-    <UserContext.Provider value={{ user, loading, error, fetchUserData }}>
-      {children}
-    </UserContext.Provider>
-  );
+	useEffect(() => {
+		fetchUserData();
+	}, []);
+
+	return (
+		<UserContext.Provider value={{ user, loading, error, fetchUserData }}>
+			{children}
+		</UserContext.Provider>
+	);
 };
 
 export const useUser = () => useContext(UserContext);

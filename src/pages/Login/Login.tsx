@@ -4,6 +4,7 @@ import type { FormEvent } from 'react';
 import LoginStyle from './LoginStyle';
 import globalStyle from '../../globalStyle';
 import { useTranslation } from '../../context/TranslationContext';
+import { customFetch } from '../../utils/customFetch';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export default function Login() {
     }
 
     try {
-	const response = await fetch(`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/auth/login`, {
+	const response = await customFetch(`/api/auth/login`, {
 	  method: 'POST',
 	  headers: {
 		'Content-Type': 'application/json',
