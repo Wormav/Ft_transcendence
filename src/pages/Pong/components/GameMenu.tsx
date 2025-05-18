@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PongStyle from "../PongStyle";
 import type { GameMenuProps } from "../../../types/Pong";
 import { useTranslation } from "../../../context/TranslationContext";

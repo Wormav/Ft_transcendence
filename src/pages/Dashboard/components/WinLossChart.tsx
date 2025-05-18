@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useTranslation } from "../../../context/TranslationContext";
 import { useWindowSize } from "../../../hooks/useWindowSize";
 import type { WinLossChartProps } from "../../../types/Pong";

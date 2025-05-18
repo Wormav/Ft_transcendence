@@ -1,4 +1,3 @@
-import React from "react";
 import NavBarStyles from "./NavBarStyles";
 import type { NavBarProps } from "../../types/NavBarProps";
 import ButtonSettings from "../ButtonSettings/ButtonSettings";

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { BugerMenuStyles } from "./BugerMenuStyles";
 import type { BurgerMenuProps } from "../../types/BurgerMenuProps";

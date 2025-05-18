@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import PongStyle from "../PongStyle";
 import { useTranslation } from "../../../context/TranslationContext";
 import type { TournamentMatchProps } from "../../../types/TournamentMatch";

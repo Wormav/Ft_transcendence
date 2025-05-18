@@ -1,4 +1,3 @@
-import React from "react";
 import PongStyle from "../PongStyle";
 import type { ScoreOverlayProps } from "../../../types/Pong";
 import { useTranslation } from "../../../context/TranslationContext";

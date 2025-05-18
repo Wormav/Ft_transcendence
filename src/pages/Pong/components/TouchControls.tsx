@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import PongStyle from "../PongStyle";
 import { useTranslation } from "../../../context/TranslationContext";
 import type { TouchControlsProps } from "../../../types/Pong";

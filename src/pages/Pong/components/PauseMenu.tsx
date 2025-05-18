@@ -1,4 +1,3 @@
-import React from "react";
 import PongStyle from "../PongStyle";
 import { useTranslation } from "../../../context/TranslationContext";
 import type { PauseMenuProps } from "../../../types/Pong";
