@@ -8,6 +8,7 @@
 	"addFriend": "Add",
 	"error": {
 		"searchUsers": "Error searching for users",
+		"friendRequest": "Error sending friend request",
 		"unknown": "An unknown error occurred"
 	},
 	"accessibility": {
@@ -119,7 +120,8 @@
 		"language": "Language",
 		"accessibility": "Accessibility",
 		"previewText": "Text preview",
-		"sampleText": "This is a sample text to see the selected size"
+		"sampleText": "This is a sample text to see the selected size",
+		"friendProfile": "Profile of"
 	},
 	"game": {
 		"gameCustom": "Custom game"

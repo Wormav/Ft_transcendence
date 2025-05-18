@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import AddFriendModalStyles from './AddFriendModalStyles';
 import { useTranslation } from '../../context/TranslationContext';
 import { useUserContext } from '../../context/UserContext';
@@ -25,6 +26,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
     const [error, setError] = useState<string | null>(null);
     const { t } = useTranslation();
     const { user } = useUserContext();
+    const navigate = useNavigate();
 
     // Recherche d'utilisateurs
     const searchUsers = async () => {
@@ -84,7 +86,36 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
     }, [isOpen, onClose]);
 
     const sendFriendRequest = async (userId: string) => {
-        console.log('Friend request sent to user with ID:', userId);
+        try {
+            setLoading(true);
+
+            const token = getJwtToken();
+
+            // Cette URL et cette structure de données sont susceptibles d'être modifiées
+            // en fonction de votre API réelle
+            const response = await customFetch('/api/friends/request', {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ friendId: userId })
+            });
+
+            if (!response.ok) {
+                throw new Error(`${t('error.friendRequest')}: ${response.status}`);
+            }
+
+            // Optionnel: vous pourriez vouloir mettre à jour l'interface utilisateur
+            // par exemple en désactivant le bouton pour cet utilisateur
+            console.log('Friend request sent to user with ID:', userId);
+
+        } catch (err: any) {
+            console.error('Error sending friend request:', err);
+            setError(err.message || t('error.unknown'));
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (!isOpen) return null;
@@ -176,9 +207,15 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
                         ) : (
                             <ul className="divide-y divide-gray-200">
                                 {filteredUsers.map(user => (
-                                    <li key={user.uuid} className="py-3 flex items-center justify-between">
+                                    <li key={user.uuid} className={`py-3 flex items-center justify-between ${AddFriendModalStyles.userItem}`}>
                                         <div className="flex items-center">
-                                            <div className="h-10 w-10 rounded-full overflow-hidden bg-gray-200">
+                                            <div
+                                                className="h-10 w-10 rounded-full overflow-hidden bg-gray-200 cursor-pointer"
+                                                onClick={() => {
+                                                    navigate(`/profile/${user.uuid}`);
+                                                    onClose();
+                                                }}
+                                            >
                                                 {user.avatar ? (
                                                     <img
                                                         src={user.avatar}
@@ -193,7 +230,13 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
                                                     />
                                                 )}
                                             </div>
-                                            <div className="ml-3">
+                                            <div
+                                                className="ml-3 cursor-pointer"
+                                                onClick={() => {
+                                                    navigate(`/profile/${user.uuid}`);
+                                                    onClose();
+                                                }}
+                                            >
                                                 <p className="text-sm font-medium text-gray-900">{user.username}</p>
                                             </div>
                                         </div>

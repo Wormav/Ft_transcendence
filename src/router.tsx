@@ -7,6 +7,7 @@ import Signup from './pages/Signup/Signup.tsx';
 import Login from './pages/Login/Login.tsx';
 import Settings from './pages/Settings/Settings.tsx';
 import Profile from './pages/Profile/Profile.tsx';
+import ProfileFriend from './pages/ProfileFriend/ProfileFriend.tsx';
 import Dashboard from './pages/Dashboard/Dashboard.tsx';
 import Tournaments from './pages/Tournaments/Tournaments.tsx';
 
@@ -33,6 +34,11 @@ const router = createBrowserRouter([
 			{
 				path: '/profile',
 				element: <Profile/>,
+				children: [],
+			},
+			{
+				path: '/profile/:uuid',
+				element: <ProfileFriend/>,
 				children: [],
 			},
 			{
