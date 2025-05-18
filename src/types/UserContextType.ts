@@ -7,14 +7,14 @@ export type UserData = {
 	color_bg: string;
 	size_text: number;
 	speed_moves: string;
-}
+};
 
 export type UserContextType = {
-    user: UserData | null;
-    loading: boolean;
-    error: string | null;
-    fetchUserData: () => Promise<void>;
-    updateUsername: (username: string) => Promise<boolean>;
-    updateEmail: (email: string) => Promise<boolean>;
-    updateAvatar: (avatar: string) => Promise<boolean>;
-}
+	user: UserData | null;
+	loading: boolean;
+	error: string | null;
+	fetchUserData: () => Promise<void>;
+	updateUsername: (username: string) => Promise<boolean>;
+	updateEmail: (email: string) => Promise<boolean>;
+	updateAvatar: (avatar: string) => Promise<boolean>;
+};

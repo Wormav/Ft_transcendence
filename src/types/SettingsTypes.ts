@@ -1,4 +1,4 @@
-export type GameSpeedType = 'normal' | 'fast' | 'turbo';
+export type GameSpeedType = "normal" | "fast" | "turbo";
 
 export type SettingsContextType = {
 	color_items: string;
@@ -9,4 +9,4 @@ export type SettingsContextType = {
 	setColorBg: (color: string) => void;
 	setSizeText: (size: number) => void;
 	setSpeedMoves: (speed: GameSpeedType) => void;
-}
+};
