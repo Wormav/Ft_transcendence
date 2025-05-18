@@ -1,19 +1,23 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect } from "react";
 
-import frTranslations from '../locales/fr.json';
-import enTranslations from '../locales/en.json';
-import esTranslations from '../locales/es.json';
-import type { Locale, TranslationContextType, Translations } from '../types/TranslationTypes';
+import frTranslations from "../locales/fr.json";
+import enTranslations from "../locales/en.json";
+import esTranslations from "../locales/es.json";
+import type {
+	Locale,
+	TranslationContextType,
+	Translations,
+} from "../types/TranslationTypes";
 
 const TranslationContext = createContext<TranslationContextType>({
-	locale: 'fr',
+	locale: "fr",
 	translations: {},
 	setLocale: () => {},
-	t: () => '',
+	t: () => "",
 });
 
 const getNestedTranslation = (obj: Translations, path: string): string => {
-	const keys = path.split('.');
+	const keys = path.split(".");
 	let current: any = obj;
 
 	for (const key of keys) {
@@ -24,7 +28,7 @@ const getNestedTranslation = (obj: Translations, path: string): string => {
 		current = current[key];
 	}
 
-	if (typeof current !== 'string') {
+	if (typeof current !== "string") {
 		console.warn(`Translation key does not point to a string: ${path}`);
 		return path;
 	}
@@ -32,18 +36,28 @@ const getNestedTranslation = (obj: Translations, path: string): string => {
 	return current;
 };
 
-export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-	const savedLocale = localStorage.getItem('locale') as Locale;
-	const [locale, setLocale] = useState<Locale>(savedLocale || 'en');
+export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({
+	children,
+}) => {
+	const savedLocale = localStorage.getItem("locale") as Locale;
+	const [locale, setLocale] = useState<Locale>(savedLocale || "en");
 	const [translations, setTranslations] = useState<Translations>(
-		locale === 'fr' ? frTranslations : locale === 'es' ? esTranslations : enTranslations
+		locale === "fr"
+			? frTranslations
+			: locale === "es"
+				? esTranslations
+				: enTranslations,
 	);
 
 	useEffect(() => {
 		setTranslations(
-			locale === 'fr' ? frTranslations : locale === 'es' ? esTranslations : enTranslations
+			locale === "fr"
+				? frTranslations
+				: locale === "es"
+					? esTranslations
+					: enTranslations,
 		);
-		localStorage.setItem('locale', locale);
+		localStorage.setItem("locale", locale);
 	}, [locale]);
 
 	const t = (key: string): string => {

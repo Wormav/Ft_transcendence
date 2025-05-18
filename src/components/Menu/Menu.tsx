@@ -1,11 +1,11 @@
-import { Link, useLocation } from 'react-router-dom';
-import MenuStyles from './MenuStyles';
-import { useTranslation } from '../../context/TranslationContext';
-import { useSettings } from '../../context/SettingsContext';
-import { getSizeTextStyle } from '../../globalStyle';
-import { useLogout } from '../../hooks/useLogout';
-import { useState } from 'react';
-import AddFriendModal from '../AddFriendModal/AddFriendModal';
+import { Link, useLocation } from "react-router-dom";
+import MenuStyles from "./MenuStyles";
+import { useTranslation } from "../../context/TranslationContext";
+import { useSettings } from "../../context/SettingsContext";
+import { getSizeTextStyle } from "../../globalStyle";
+import { useLogout } from "../../hooks/useLogout";
+import { useState } from "react";
+import AddFriendModal from "../AddFriendModal/AddFriendModal";
 
 const Menu: React.FC = () => {
 	const location = useLocation();
@@ -27,7 +27,6 @@ const Menu: React.FC = () => {
 			</div>
 			<nav className={MenuStyles.navigation}>
 				<ul className={MenuStyles.navList}>
-					{/* Ajouter un ami */}
 					<li className={`${MenuStyles.li}`}>
 						<button
 							onClick={() => setIsAddFriendModalOpen(true)}
@@ -41,7 +40,13 @@ const Menu: React.FC = () => {
 								stroke="#9CA3AF"
 							>
 								<defs>
-									<filter id="addFriendShadow" x="-20%" y="-20%" width="140%" height="140%">
+									<filter
+										id="addFriendShadow"
+										x="-20%"
+										y="-20%"
+										width="140%"
+										height="140%"
+									>
 										<feDropShadow
 											dx="1"
 											dy="1"
@@ -60,22 +65,37 @@ const Menu: React.FC = () => {
 								/>
 							</svg>
 							<span className="text-gray-500 3xl:text-2xl">
-								{t('menu.addFriend')}
+								{t("menu.addFriend")}
 							</span>
 						</button>
 					</li>
 					<li className={`${MenuStyles.li}`}>
-						{isActive('/') && <div className={`${MenuStyles.indicator}`} tabIndex={-1} aria-hidden="true"></div>}
-						<Link to="/" className={`${MenuStyles.navItem} ${getSizeTextStyle(size_text)}`}>
+						{isActive("/") && (
+							<div
+								className={`${MenuStyles.indicator}`}
+								tabIndex={-1}
+								aria-hidden="true"
+							></div>
+						)}
+						<Link
+							to="/"
+							className={`${MenuStyles.navItem} ${getSizeTextStyle(size_text)}`}
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={MenuStyles.navIcon}
 								fill="none"
 								viewBox="0 0 24 24"
-								stroke={isActive('/') ? '#00BABC' : '#9CA3AF'}
+								stroke={isActive("/") ? "#00BABC" : "#9CA3AF"}
 							>
 								<defs>
-									<filter id="homeShadow" x="-20%" y="-20%" width="140%" height="140%">
+									<filter
+										id="homeShadow"
+										x="-20%"
+										y="-20%"
+										width="140%"
+										height="140%"
+									>
 										<feDropShadow
 											dx="1"
 											dy="1"
@@ -95,27 +115,42 @@ const Menu: React.FC = () => {
 							</svg>
 							<span
 								className={
-									isActive('/')
-										? 'text-gray-900 font-medium 3xl:text-2xl'
-										: 'text-gray-500 3xl:text-2xl'
+									isActive("/")
+										? "text-gray-900 font-medium 3xl:text-2xl"
+										: "text-gray-500 3xl:text-2xl"
 								}
 							>
-								{t('menu.home')}
+								{t("menu.home")}
 							</span>
 						</Link>
 					</li>
 					<li className={`${MenuStyles.li}`}>
-						{isActive('/profile') && <div className={`${MenuStyles.indicator}`} tabIndex={-1} aria-hidden="true"></div>}
-						<Link to="/profile" className={`${MenuStyles.navItem} ${getSizeTextStyle(size_text)}`}>
+						{isActive("/profile") && (
+							<div
+								className={`${MenuStyles.indicator}`}
+								tabIndex={-1}
+								aria-hidden="true"
+							></div>
+						)}
+						<Link
+							to="/profile"
+							className={`${MenuStyles.navItem} ${getSizeTextStyle(size_text)}`}
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={MenuStyles.navIcon}
 								fill="none"
 								viewBox="0 0 24 24"
-								stroke={isActive('/profile') ? '#00BABC' : '#9CA3AF'}
+								stroke={isActive("/profile") ? "#00BABC" : "#9CA3AF"}
 							>
 								<defs>
-									<filter id="profileShadow" x="-20%" y="-20%" width="140%" height="140%">
+									<filter
+										id="profileShadow"
+										x="-20%"
+										y="-20%"
+										width="140%"
+										height="140%"
+									>
 										<feDropShadow
 											dx="1"
 											dy="1"
@@ -135,27 +170,42 @@ const Menu: React.FC = () => {
 							</svg>
 							<span
 								className={
-									isActive('/profile')
-										? 'text-gray-900 font-medium 3xl:text-2xl'
-										: 'text-gray-500 3xl:text-2xl'
+									isActive("/profile")
+										? "text-gray-900 font-medium 3xl:text-2xl"
+										: "text-gray-500 3xl:text-2xl"
 								}
 							>
-								{t('menu.profile')}
+								{t("menu.profile")}
 							</span>
 						</Link>
 					</li>
 					<li className={`${MenuStyles.li}`}>
-						{isActive('/dashboard') && <div className={`${MenuStyles.indicator}`} tabIndex={-1} aria-hidden="true"></div>}
-						<Link to="/dashboard" className={`${MenuStyles.navItem} ${getSizeTextStyle(size_text)}`}>
+						{isActive("/dashboard") && (
+							<div
+								className={`${MenuStyles.indicator}`}
+								tabIndex={-1}
+								aria-hidden="true"
+							></div>
+						)}
+						<Link
+							to="/dashboard"
+							className={`${MenuStyles.navItem} ${getSizeTextStyle(size_text)}`}
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={MenuStyles.navIcon}
 								fill="none"
 								viewBox="0 0 24 24"
-								stroke={isActive('/dashboard') ? '#00BABC' : '#9CA3AF'}
+								stroke={isActive("/dashboard") ? "#00BABC" : "#9CA3AF"}
 							>
 								<defs>
-									<filter id="dashboardShadow" x="-20%" y="-20%" width="140%" height="140%">
+									<filter
+										id="dashboardShadow"
+										x="-20%"
+										y="-20%"
+										width="140%"
+										height="140%"
+									>
 										<feDropShadow
 											dx="1"
 											dy="1"
@@ -175,27 +225,42 @@ const Menu: React.FC = () => {
 							</svg>
 							<span
 								className={
-									isActive('/dashboard')
-										? 'text-gray-900 font-medium 3xl:text-2xl'
-										: 'text-gray-500 3xl:text-2xl'
+									isActive("/dashboard")
+										? "text-gray-900 font-medium 3xl:text-2xl"
+										: "text-gray-500 3xl:text-2xl"
 								}
 							>
-								{t('menu.dashboard')}
+								{t("menu.dashboard")}
 							</span>
 						</Link>
 					</li>
 					<li className={`${MenuStyles.li}`}>
-						{isActive('/game') && <div className={`${MenuStyles.indicator}`} tabIndex={-1} aria-hidden="true"></div>}
-						<Link to="/game" className={`${MenuStyles.navItem} ${getSizeTextStyle(size_text)}`}>
+						{isActive("/game") && (
+							<div
+								className={`${MenuStyles.indicator}`}
+								tabIndex={-1}
+								aria-hidden="true"
+							></div>
+						)}
+						<Link
+							to="/game"
+							className={`${MenuStyles.navItem} ${getSizeTextStyle(size_text)}`}
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={MenuStyles.navIcon}
 								fill="none"
 								viewBox="0 0 24 24"
-								stroke={isActive('/game') ? '#00BABC' : '#9CA3AF'}
+								stroke={isActive("/game") ? "#00BABC" : "#9CA3AF"}
 							>
 								<defs>
-									<filter id="gameShadow" x="-20%" y="-20%" width="140%" height="140%">
+									<filter
+										id="gameShadow"
+										x="-20%"
+										y="-20%"
+										width="140%"
+										height="140%"
+									>
 										<feDropShadow
 											dx="1"
 											dy="1"
@@ -222,27 +287,42 @@ const Menu: React.FC = () => {
 							</svg>
 							<span
 								className={
-									isActive('/game')
-										? 'text-gray-900 font-medium 3xl:text-2xl'
-										: 'text-gray-500 3xl:text-2xl'
+									isActive("/game")
+										? "text-gray-900 font-medium 3xl:text-2xl"
+										: "text-gray-500 3xl:text-2xl"
 								}
 							>
-								{t('menu.game')}
+								{t("menu.game")}
 							</span>
 						</Link>
 					</li>
 					<li className={`${MenuStyles.li}`}>
-						{isActive('/tournaments') && <div className={`${MenuStyles.indicator}`} tabIndex={-1} aria-hidden="true"></div>}
-						<Link to="/tournaments" className={`${MenuStyles.navItem} ${getSizeTextStyle(size_text)}`}>
+						{isActive("/tournaments") && (
+							<div
+								className={`${MenuStyles.indicator}`}
+								tabIndex={-1}
+								aria-hidden="true"
+							></div>
+						)}
+						<Link
+							to="/tournaments"
+							className={`${MenuStyles.navItem} ${getSizeTextStyle(size_text)}`}
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={MenuStyles.navIcon}
 								fill="none"
 								viewBox="0 0 24 24"
-								stroke={isActive('/tournaments') ? '#00BABC' : '#9CA3AF'}
+								stroke={isActive("/tournaments") ? "#00BABC" : "#9CA3AF"}
 							>
 								<defs>
-									<filter id="tournamentsShadow" x="-20%" y="-20%" width="140%" height="140%">
+									<filter
+										id="tournamentsShadow"
+										x="-20%"
+										y="-20%"
+										width="140%"
+										height="140%"
+									>
 										<feDropShadow
 											dx="1"
 											dy="1"
@@ -262,27 +342,42 @@ const Menu: React.FC = () => {
 							</svg>
 							<span
 								className={
-									isActive('/tournaments')
-										? 'text-gray-900 font-medium 3xl:text-2xl'
-										: 'text-gray-500 3xl:text-2xl'
+									isActive("/tournaments")
+										? "text-gray-900 font-medium 3xl:text-2xl"
+										: "text-gray-500 3xl:text-2xl"
 								}
 							>
-								{t('menu.tournaments')}
+								{t("menu.tournaments")}
 							</span>
 						</Link>
 					</li>
 					<li className={`${MenuStyles.li}`}>
-						{isActive('/settings')&& <div className={`${MenuStyles.indicator}`} tabIndex={-1} aria-hidden="true"></div>}
-						<Link to="/settings" className={`${MenuStyles.navItem} pl-4 ${getSizeTextStyle(size_text)}`}>
+						{isActive("/settings") && (
+							<div
+								className={`${MenuStyles.indicator}`}
+								tabIndex={-1}
+								aria-hidden="true"
+							></div>
+						)}
+						<Link
+							to="/settings"
+							className={`${MenuStyles.navItem} pl-4 ${getSizeTextStyle(size_text)}`}
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={MenuStyles.navIcon}
 								fill="none"
 								viewBox="0 0 24 24"
-								stroke={isActive('/settings') ? '#00BABC' : '#9CA3AF'}
+								stroke={isActive("/settings") ? "#00BABC" : "#9CA3AF"}
 							>
 								<defs>
-									<filter id="settingsShadow" x="-20%" y="-20%" width="140%" height="140%">
+									<filter
+										id="settingsShadow"
+										x="-20%"
+										y="-20%"
+										width="140%"
+										height="140%"
+									>
 										<feDropShadow
 											dx="1"
 											dy="1"
@@ -309,17 +404,20 @@ const Menu: React.FC = () => {
 							</svg>
 							<span
 								className={
-									isActive('/settings')
-										? 'text-gray-900 font-medium 3xl:text-2xl'
-										: 'text-gray-500 3xl:text-2xl'
+									isActive("/settings")
+										? "text-gray-900 font-medium 3xl:text-2xl"
+										: "text-gray-500 3xl:text-2xl"
 								}
 							>
-								{t('menu.settings')}
+								{t("menu.settings")}
 							</span>
 						</Link>
 					</li>
 					<li className="relative">
-						<button onClick={handleLogout} className={`${MenuStyles.logoutButton} pl-4 ${getSizeTextStyle(size_text)}`}>
+						<button
+							onClick={handleLogout}
+							className={`${MenuStyles.logoutButton} pl-4 ${getSizeTextStyle(size_text)}`}
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={MenuStyles.navIcon}
@@ -328,7 +426,13 @@ const Menu: React.FC = () => {
 								stroke="#FF0000"
 							>
 								<defs>
-									<filter id="logoutShadow" x="-20%" y="-20%" width="140%" height="140%">
+									<filter
+										id="logoutShadow"
+										x="-20%"
+										y="-20%"
+										width="140%"
+										height="140%"
+									>
 										<feDropShadow
 											dx="1"
 											dy="1"
@@ -346,7 +450,7 @@ const Menu: React.FC = () => {
 									filter="url(#logoutShadow)"
 								/>
 							</svg>
-							<span className="3xl:text-2xl">{t('menu.logout')}</span>
+							<span className="3xl:text-2xl">{t("menu.logout")}</span>
 						</button>
 					</li>
 				</ul>

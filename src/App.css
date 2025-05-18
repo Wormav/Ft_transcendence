@@ -1,15 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap");
 
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @theme {
 	--color-primary: #028383;
-	--color-background: #FFFFFF;
+	--color-background: #ffffff;
 	--color-white-custom: #fbfbfd;
 	--color-gray-custom: #b8b8ba;
-	--color-red-custom: #DF0101;
+	--color-red-custom: #df0101;
 
-	--font-primary: 'Open Sans', '';
+	--font-primary: "Open Sans", "";
 	--font-size: 22px;
 	--breakpoint-3xl: 140rem;
 	--breakpoint-4xl: 160rem;

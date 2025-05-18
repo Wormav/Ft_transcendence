@@ -1,11 +1,15 @@
-import type { CustomBtnProps } from '../../types/CustomBtnProps';
-import CustomBtnStyle from './CustomBtnStyle';
+import type { CustomBtnProps } from "../../types/CustomBtnProps";
+import CustomBtnStyle from "./CustomBtnStyle";
 
-export default function CustomBtn({ text, onClick, disabled = false }: CustomBtnProps) {
+export default function CustomBtn({
+	text,
+	onClick,
+	disabled = false,
+}: CustomBtnProps) {
 	return (
 		<button
 			className={`${CustomBtnStyle.button} ${
-				disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''
+				disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
 			}`}
 			onClick={onClick}
 			disabled={disabled}

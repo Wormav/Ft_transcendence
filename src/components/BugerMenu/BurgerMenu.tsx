@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { BugerMenuStyles } from './BugerMenuStyles';
-import type { BurgerMenuProps } from '../../types/BurgerMenuProps';
-import { useTranslation } from '../../context/TranslationContext';
-import { useSettings } from '../../context/SettingsContext';
-import { getSizeTextStyle } from '../../globalStyle';
-import AddFriendModal from '../AddFriendModal/AddFriendModal';
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { BugerMenuStyles } from "./BugerMenuStyles";
+import type { BurgerMenuProps } from "../../types/BurgerMenuProps";
+import { useTranslation } from "../../context/TranslationContext";
+import { useSettings } from "../../context/SettingsContext";
+import { getSizeTextStyle } from "../../globalStyle";
+import AddFriendModal from "../AddFriendModal/AddFriendModal";
 
 const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 	const location = useLocation();
@@ -24,7 +24,11 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 			className={`${BugerMenuStyles.menu} ${isOpen ? BugerMenuStyles.menuOpen : BugerMenuStyles.menuClosed}`}
 		>
 			<div className={BugerMenuStyles.div}>
-				<button onClick={onClose} className={BugerMenuStyles.closeButton} aria-label={t('menu.close')}>
+				<button
+					onClick={onClose}
+					className={BugerMenuStyles.closeButton}
+					aria-label={t("menu.close")}
+				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						className={BugerMenuStyles.closeButton}
@@ -57,7 +61,13 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 								stroke="#9CA3AF"
 							>
 								<defs>
-									<filter id="addFriendShadowBurger" x="-20%" y="-20%" width="140%" height="140%">
+									<filter
+										id="addFriendShadowBurger"
+										x="-20%"
+										y="-20%"
+										width="140%"
+										height="140%"
+									>
 										<feDropShadow
 											dx="1"
 											dy="1"
@@ -75,23 +85,33 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 									filter="url(#addFriendShadowBurger)"
 								/>
 							</svg>
-							<span className="text-gray-500">
-								{t('menu.addFriend')}
-							</span>
+							<span className="text-gray-500">{t("menu.addFriend")}</span>
 						</button>
 					</li>
 					<li className={`${BugerMenuStyles.li}`}>
-						{isActive('/') && <div className={`${BugerMenuStyles.indicator}`}></div>}
-						<Link to="/" className={`${BugerMenuStyles.navItem} ${getSizeTextStyle(size_text)}`} onClick={onClose}>
+						{isActive("/") && (
+							<div className={`${BugerMenuStyles.indicator}`}></div>
+						)}
+						<Link
+							to="/"
+							className={`${BugerMenuStyles.navItem} ${getSizeTextStyle(size_text)}`}
+							onClick={onClose}
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={BugerMenuStyles.navIcon}
 								fill="none"
 								viewBox="0 0 24 24"
-								stroke={isActive('/') ? '#00BABC' : '#9CA3AF'}
+								stroke={isActive("/") ? "#00BABC" : "#9CA3AF"}
 							>
 								<defs>
-									<filter id="homeShadow" x="-20%" y="-20%" width="140%" height="140%">
+									<filter
+										id="homeShadow"
+										x="-20%"
+										y="-20%"
+										width="140%"
+										height="140%"
+									>
 										<feDropShadow
 											dx="1"
 											dy="1"
@@ -109,23 +129,39 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 									filter="url(#homeShadow)"
 								/>
 							</svg>
-							<span className={isActive('/') ? 'text-gray-900 font-medium' : 'text-gray-500'}>
-								{t('menu.home')}
+							<span
+								className={
+									isActive("/") ? "text-gray-900 font-medium" : "text-gray-500"
+								}
+							>
+								{t("menu.home")}
 							</span>
 						</Link>
 					</li>
 					<li className={`${BugerMenuStyles.li}`}>
-						{isActive('/profile') && <div className={`${BugerMenuStyles.indicator}`}></div>}
-						<Link to="/profile" className={`${BugerMenuStyles.navItem} ${getSizeTextStyle(size_text)}`} onClick={onClose}>
+						{isActive("/profile") && (
+							<div className={`${BugerMenuStyles.indicator}`}></div>
+						)}
+						<Link
+							to="/profile"
+							className={`${BugerMenuStyles.navItem} ${getSizeTextStyle(size_text)}`}
+							onClick={onClose}
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={BugerMenuStyles.navIcon}
 								fill="none"
 								viewBox="0 0 24 24"
-								stroke={isActive('/profile') ? '#00BABC' : '#9CA3AF'}
+								stroke={isActive("/profile") ? "#00BABC" : "#9CA3AF"}
 							>
 								<defs>
-									<filter id="profileShadow" x="-20%" y="-20%" width="140%" height="140%">
+									<filter
+										id="profileShadow"
+										x="-20%"
+										y="-20%"
+										width="140%"
+										height="140%"
+									>
 										<feDropShadow
 											dx="1"
 											dy="1"
@@ -143,23 +179,41 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 									filter="url(#profileShadow)"
 								/>
 							</svg>
-							<span className={isActive('/profile') ? 'text-gray-900 font-medium' : 'text-gray-500'}>
-								{t('menu.profile')}
+							<span
+								className={
+									isActive("/profile")
+										? "text-gray-900 font-medium"
+										: "text-gray-500"
+								}
+							>
+								{t("menu.profile")}
 							</span>
 						</Link>
 					</li>
 					<li className={`${BugerMenuStyles.li}`}>
-						{isActive('/dashboard') && <div className={`${BugerMenuStyles.indicator}`}></div>}
-						<Link to="/dashboard" className={`${BugerMenuStyles.navItem} ${getSizeTextStyle(size_text)}`} onClick={onClose}>
+						{isActive("/dashboard") && (
+							<div className={`${BugerMenuStyles.indicator}`}></div>
+						)}
+						<Link
+							to="/dashboard"
+							className={`${BugerMenuStyles.navItem} ${getSizeTextStyle(size_text)}`}
+							onClick={onClose}
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={BugerMenuStyles.navIcon}
 								fill="none"
 								viewBox="0 0 24 24"
-								stroke={isActive('/dashboard') ? '#00BABC' : '#9CA3AF'}
+								stroke={isActive("/dashboard") ? "#00BABC" : "#9CA3AF"}
 							>
 								<defs>
-									<filter id="dashboardShadow" x="-20%" y="-20%" width="140%" height="140%">
+									<filter
+										id="dashboardShadow"
+										x="-20%"
+										y="-20%"
+										width="140%"
+										height="140%"
+									>
 										<feDropShadow
 											dx="1"
 											dy="1"
@@ -177,23 +231,41 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 									filter="url(#dashboardShadow)"
 								/>
 							</svg>
-							<span className={isActive('/dashboard') ? 'text-gray-900 font-medium' : 'text-gray-500'}>
-								{t('menu.dashboard')}
+							<span
+								className={
+									isActive("/dashboard")
+										? "text-gray-900 font-medium"
+										: "text-gray-500"
+								}
+							>
+								{t("menu.dashboard")}
 							</span>
 						</Link>
 					</li>
 					<li className={`${BugerMenuStyles.li}`}>
-						{isActive('/game') && <div className={`${BugerMenuStyles.indicator}`}></div>}
-						<Link to="/game" className={`${BugerMenuStyles.navItem}  ${getSizeTextStyle(size_text)}`} onClick={onClose}>
+						{isActive("/game") && (
+							<div className={`${BugerMenuStyles.indicator}`}></div>
+						)}
+						<Link
+							to="/game"
+							className={`${BugerMenuStyles.navItem}  ${getSizeTextStyle(size_text)}`}
+							onClick={onClose}
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={BugerMenuStyles.navIcon}
 								fill="none"
 								viewBox="0 0 24 24"
-								stroke={isActive('/game') ? '#00BABC' : '#9CA3AF'}
+								stroke={isActive("/game") ? "#00BABC" : "#9CA3AF"}
 							>
 								<defs>
-									<filter id="gameShadow" x="-20%" y="-20%" width="140%" height="140%">
+									<filter
+										id="gameShadow"
+										x="-20%"
+										y="-20%"
+										width="140%"
+										height="140%"
+									>
 										<feDropShadow
 											dx="1"
 											dy="1"
@@ -218,23 +290,41 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 									filter="url(#gameShadow)"
 								/>
 							</svg>
-							<span className={isActive('/game') ? 'text-gray-900 font-medium' : 'text-gray-500'}>
-								{t('menu.game')}
+							<span
+								className={
+									isActive("/game")
+										? "text-gray-900 font-medium"
+										: "text-gray-500"
+								}
+							>
+								{t("menu.game")}
 							</span>
 						</Link>
 					</li>
 					<li className={`${BugerMenuStyles.li}`}>
-						{isActive('/tournaments') && <div className={`${BugerMenuStyles.indicator}`}></div>}
-						<Link to="/tournaments" className={`${BugerMenuStyles.navItem} ${getSizeTextStyle(size_text)}`} onClick={onClose}>
+						{isActive("/tournaments") && (
+							<div className={`${BugerMenuStyles.indicator}`}></div>
+						)}
+						<Link
+							to="/tournaments"
+							className={`${BugerMenuStyles.navItem} ${getSizeTextStyle(size_text)}`}
+							onClick={onClose}
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={BugerMenuStyles.navIcon}
 								fill="none"
 								viewBox="0 0 24 24"
-								stroke={isActive('/tournaments') ? '#00BABC' : '#9CA3AF'}
+								stroke={isActive("/tournaments") ? "#00BABC" : "#9CA3AF"}
 							>
 								<defs>
-									<filter id="tournamentsShadow" x="-20%" y="-20%" width="140%" height="140%">
+									<filter
+										id="tournamentsShadow"
+										x="-20%"
+										y="-20%"
+										width="140%"
+										height="140%"
+									>
 										<feDropShadow
 											dx="1"
 											dy="1"
@@ -252,23 +342,41 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 									filter="url(#tournamentsShadow)"
 								/>
 							</svg>
-							<span className={isActive('/tournaments') ? 'text-gray-900 font-medium' : 'text-gray-500'}>
-								{t('menu.tournaments')}
+							<span
+								className={
+									isActive("/tournaments")
+										? "text-gray-900 font-medium"
+										: "text-gray-500"
+								}
+							>
+								{t("menu.tournaments")}
 							</span>
 						</Link>
 					</li>
 					<li className={`${BugerMenuStyles.li}`}>
-						{isActive('/settings') && <div className={`${BugerMenuStyles.indicator}`}></div>}
-						<Link to="/settings" className={`${BugerMenuStyles.navItem}  ${getSizeTextStyle(size_text)}`} onClick={onClose}>
+						{isActive("/settings") && (
+							<div className={`${BugerMenuStyles.indicator}`}></div>
+						)}
+						<Link
+							to="/settings"
+							className={`${BugerMenuStyles.navItem}  ${getSizeTextStyle(size_text)}`}
+							onClick={onClose}
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={BugerMenuStyles.navIcon}
 								fill="none"
 								viewBox="0 0 24 24"
-								stroke={isActive('/settings') ? '#00BABC' : '#9CA3AF'}
+								stroke={isActive("/settings") ? "#00BABC" : "#9CA3AF"}
 							>
 								<defs>
-									<filter id="settingsShadow" x="-20%" y="-20%" width="140%" height="140%">
+									<filter
+										id="settingsShadow"
+										x="-20%"
+										y="-20%"
+										width="140%"
+										height="140%"
+									>
 										<feDropShadow
 											dx="1"
 											dy="1"
@@ -294,14 +402,22 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 								/>
 							</svg>
 							<span
-								className={isActive('/settings') ? 'text-gray-900 font-medium' : 'text-gray-500'}
+								className={
+									isActive("/settings")
+										? "text-gray-900 font-medium"
+										: "text-gray-500"
+								}
 							>
-								{t('menu.settings')}
+								{t("menu.settings")}
 							</span>
 						</Link>
 					</li>
 					<li className="relative">
-						<Link to="/logout" className={`${BugerMenuStyles.logoutButton}  ${getSizeTextStyle(size_text)}`} onClick={onClose}>
+						<Link
+							to="/logout"
+							className={`${BugerMenuStyles.logoutButton}  ${getSizeTextStyle(size_text)}`}
+							onClick={onClose}
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className={BugerMenuStyles.navIcon}
@@ -310,7 +426,13 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 								stroke="#FF0000"
 							>
 								<defs>
-									<filter id="logoutShadow" x="-20%" y="-20%" width="140%" height="140%">
+									<filter
+										id="logoutShadow"
+										x="-20%"
+										y="-20%"
+										width="140%"
+										height="140%"
+									>
 										<feDropShadow
 											dx="1"
 											dy="1"
@@ -328,7 +450,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 									filter="url(#logoutShadow)"
 								/>
 							</svg>
-							<span>{t('menu.logout')}</span>
+							<span>{t("menu.logout")}</span>
 						</Link>
 					</li>
 				</ul>

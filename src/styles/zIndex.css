@@ -1,14 +1,14 @@
 @layer utilities {
-    .z-modal-backdrop {
-        z-index: 999998;
-    }
-    .z-modal {
-        z-index: 999999;
-    }
-    .z-game-content {
-        z-index: 1;
-    }
-    .z-button-disabled {
-        z-index: 1;
-    }
+	.z-modal-backdrop {
+		z-index: 999998;
+	}
+	.z-modal {
+		z-index: 999999;
+	}
+	.z-game-content {
+		z-index: 1;
+	}
+	.z-button-disabled {
+		z-index: 1;
+	}
 }

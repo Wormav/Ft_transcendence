@@ -1,14 +1,14 @@
-import { FaPen } from 'react-icons/fa';
-import { useTranslation } from '../../../context/TranslationContext';
-import globalStyle from '../../../globalStyle';
-import Card, { Space } from '../../Card/Card';
-import CustomBtn from '../../CustomBtn/CustomBtn';
-import { useUserContext } from '../../../context/UserContext';
-import { useState } from 'react';
-import { Modal } from '../../Modal/Modal';
-import SettingsCardStyle from './SettingsCardStyle';
-import { customFetch } from '../../../utils/customFetch';
-import { getJwtToken } from '../../../utils/getJwtToken';
+import { FaPen } from "react-icons/fa";
+import { useTranslation } from "../../../context/TranslationContext";
+import globalStyle from "../../../globalStyle";
+import Card, { Space } from "../../Card/Card";
+import CustomBtn from "../../CustomBtn/CustomBtn";
+import { useUserContext } from "../../../context/UserContext";
+import { useState } from "react";
+import { Modal } from "../../Modal/Modal";
+import SettingsCardStyle from "./SettingsCardStyle";
+import { customFetch } from "../../../utils/customFetch";
+import { getJwtToken } from "../../../utils/getJwtToken";
 
 export default function SettingsCard() {
 	const { t, locale, setLocale } = useTranslation();
@@ -16,16 +16,16 @@ export default function SettingsCard() {
 	const [isEditPseudoModalOpen, setIsEditPseudoModalOpen] = useState(false);
 	const [isEditEmailModalOpen, setIsEditEmailModalOpen] = useState(false);
 	const [isEditPasswordModalOpen, setIsEditPasswordModalOpen] = useState(false);
-	const [newUsername, setNewUsername] = useState('');
-	const [newEmail, setNewEmail] = useState('');
-	const [emailError, setEmailError] = useState('');
-	const [oldPassword, setOldPassword] = useState('');
-	const [newPassword, setNewPassword] = useState('');
-	const [confirmPassword, setConfirmPassword] = useState('');
-	const [passwordError, setPasswordError] = useState('');
-	const [confirmPasswordError, setConfirmPasswordError] = useState('');
-	const [oldPasswordError, setOldPasswordError] = useState('');
-	const [generalError, setGeneralError] = useState('');
+	const [newUsername, setNewUsername] = useState("");
+	const [newEmail, setNewEmail] = useState("");
+	const [emailError, setEmailError] = useState("");
+	const [oldPassword, setOldPassword] = useState("");
+	const [newPassword, setNewPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
+	const [passwordError, setPasswordError] = useState("");
+	const [confirmPasswordError, setConfirmPasswordError] = useState("");
+	const [oldPasswordError, setOldPasswordError] = useState("");
+	const [generalError, setGeneralError] = useState("");
 
 	const validateEmail = (email: string) => {
 		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -34,24 +34,26 @@ export default function SettingsCard() {
 
 	const validatePassword = (password: string) => {
 		const hasUpperCase = /[A-Z]/.test(password);
-		const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+		const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(
+			password,
+		);
 		const hasNumber = /[0-9]/.test(password);
 		const hasMinLength = password.length >= 8;
 
 		const errors = [];
-		if (!hasUpperCase) errors.push(t('auth.signup.passwordErrorUppercase'));
-		if (!hasSpecialChar) errors.push(t('auth.signup.passwordErrorSpecial'));
-		if (!hasNumber) errors.push(t('auth.signup.passwordErrorNumber'));
-		if (!hasMinLength) errors.push(t('auth.signup.passwordErrorLength'));
+		if (!hasUpperCase) errors.push(t("auth.signup.passwordErrorUppercase"));
+		if (!hasSpecialChar) errors.push(t("auth.signup.passwordErrorSpecial"));
+		if (!hasNumber) errors.push(t("auth.signup.passwordErrorNumber"));
+		if (!hasMinLength) errors.push(t("auth.signup.passwordErrorLength"));
 
 		return {
 			isValid: hasUpperCase && hasSpecialChar && hasNumber && hasMinLength,
-			errors
+			errors,
 		};
 	};
 
 	const openEditPseudoModal = () => {
-		setNewUsername(user?.username || '');
+		setNewUsername(user?.username || "");
 		setIsEditPseudoModalOpen(true);
 	};
 
@@ -67,19 +69,19 @@ export default function SettingsCard() {
 	};
 
 	const openEmailModal = () => {
-		setNewEmail(user?.email || '');
-		setEmailError('');
+		setNewEmail(user?.email || "");
+		setEmailError("");
 		setIsEditEmailModalOpen(true);
 	};
 
 	const closeEmailModal = () => {
 		setIsEditEmailModalOpen(false);
-		setEmailError('');
+		setEmailError("");
 	};
 
 	const handleUpdateEmail = async () => {
 		if (!validateEmail(newEmail)) {
-			setEmailError(t('auth.signup.emailError'));
+			setEmailError(t("auth.signup.emailError"));
 			return;
 		}
 
@@ -88,8 +90,8 @@ export default function SettingsCard() {
 				await updateEmail(newEmail);
 				closeEmailModal();
 			} catch (error) {
-				console.error('Error updating email:', error);
-				setEmailError(t('auth.signup.networkError'));
+				console.error("Error updating email:", error);
+				setEmailError(t("auth.signup.networkError"));
 			}
 		} else {
 			closeEmailModal();
@@ -97,13 +99,13 @@ export default function SettingsCard() {
 	};
 
 	const openPasswordModal = () => {
-		setOldPassword('');
-		setNewPassword('');
-		setConfirmPassword('');
-		setPasswordError('');
-		setConfirmPasswordError('');
-		setOldPasswordError('');
-		setGeneralError('');
+		setOldPassword("");
+		setNewPassword("");
+		setConfirmPassword("");
+		setPasswordError("");
+		setConfirmPasswordError("");
+		setOldPasswordError("");
+		setGeneralError("");
 		setIsEditPasswordModalOpen(true);
 	};
 
@@ -112,45 +114,45 @@ export default function SettingsCard() {
 	};
 
 	const handleUpdatePassword = async () => {
-		setPasswordError('');
-		setConfirmPasswordError('');
-		setOldPasswordError('');
-		setGeneralError('');
+		setPasswordError("");
+		setConfirmPasswordError("");
+		setOldPasswordError("");
+		setGeneralError("");
 
 		let isValid = true;
 
-		// Vérifier que l'ancien mot de passe est renseigné
 		if (!oldPassword) {
-			setOldPasswordError(t('profile.oldPasswordRequired'));
+			setOldPasswordError(t("profile.oldPasswordRequired"));
 			isValid = false;
 		}
 
-		// Valider le nouveau mot de passe
 		const passwordValidation = validatePassword(newPassword);
 		if (!passwordValidation.isValid) {
-			const errorMsg = t('auth.signup.passwordError').replace('{0}', passwordValidation.errors.join(', '));
+			const errorMsg = t("auth.signup.passwordError").replace(
+				"{0}",
+				passwordValidation.errors.join(", "),
+			);
 			setPasswordError(errorMsg);
 			isValid = false;
 		}
 
-		// Vérifier que les mots de passe correspondent
 		if (newPassword !== confirmPassword) {
-			setConfirmPasswordError(t('auth.signup.passwordsNotMatch'));
+			setConfirmPasswordError(t("auth.signup.passwordsNotMatch"));
 			isValid = false;
 		}
 
 		if (isValid) {
 			try {
 				const token = getJwtToken();
-				const response = await customFetch('/api/auth/update', {
-					method: 'PUT',
+				const response = await customFetch("/api/auth/update", {
+					method: "PUT",
 					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${token}`
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
 					},
 					body: JSON.stringify({
 						new_password: newPassword,
-						old_password: oldPassword
+						old_password: oldPassword,
 					}),
 				});
 
@@ -161,12 +163,12 @@ export default function SettingsCard() {
 					if (data.error) {
 						setGeneralError(data.error);
 					} else {
-						setGeneralError(t('profile.updatePasswordError'));
+						setGeneralError(t("profile.updatePasswordError"));
 					}
 				}
 			} catch (error) {
-				console.error('Error updating password:', error);
-				setGeneralError(t('profile.networkError'));
+				console.error("Error updating password:", error);
+				setGeneralError(t("profile.networkError"));
 			}
 		}
 	};
@@ -174,7 +176,7 @@ export default function SettingsCard() {
 	return (
 		<Card>
 			<div className={globalStyle.row}>
-				<span className={globalStyle.span}>{t('profile.settings')}</span>
+				<span className={globalStyle.span}>{t("profile.settings")}</span>
 			</div>
 			<div className={globalStyle.separator}></div>
 			{loading ? (
@@ -182,27 +184,31 @@ export default function SettingsCard() {
 			) : (
 				<>
 					<div className={globalStyle.row}>
-						<p>{t('profile.pseudo')} :</p>
+						<p>{t("profile.pseudo")} :</p>
 						<Space />
-						<span className={globalStyle.span}>{user?.username || 'Non disponible'}</span>
+						<span className={globalStyle.span}>
+							{user?.username || "Non disponible"}
+						</span>
 						<Space />
 						<button
 							className={SettingsCardStyle.editButton}
-							aria-label={t('profile.edit_pseudo')}
+							aria-label={t("profile.edit_pseudo")}
 							onClick={openEditPseudoModal}
 						>
 							<FaPen size={20} color="#00babc" />
 						</button>
 					</div>
 					<div className={globalStyle.row}>
-						<p>{t('profile.email')} :</p>
+						<p>{t("profile.email")} :</p>
 						<Space />
-						<span className={globalStyle.span}>{user?.email || 'Non disponible'}</span>
+						<span className={globalStyle.span}>
+							{user?.email || "Non disponible"}
+						</span>
 						<Space />
 						<button
 							className={SettingsCardStyle.editButton}
-								aria-label={t('profile.edit_email')}
-								onClick={openEmailModal}
+							aria-label={t("profile.edit_email")}
+							onClick={openEmailModal}
 						>
 							<FaPen size={20} color="#00babc" />
 						</button>
@@ -210,11 +216,14 @@ export default function SettingsCard() {
 				</>
 			)}
 			<div className={globalStyle.separator}></div>
-			<p>{t('profile.password')} :</p>
-			<CustomBtn text={t('profile.changePassword')} onClick={openPasswordModal} />
+			<p>{t("profile.password")} :</p>
+			<CustomBtn
+				text={t("profile.changePassword")}
+				onClick={openPasswordModal}
+			/>
 			<div className={globalStyle.separator}></div>
 			<div className={globalStyle.row}>
-				<p>{t('profile.language')} :</p>
+				<p>{t("profile.language")} :</p>
 				<Space />
 				<div className="relative">
 					<select
@@ -243,118 +252,130 @@ export default function SettingsCard() {
 					</div>
 				</div>
 			</div>
-		<Modal
-    isOpen={isEditPseudoModalOpen}
-    onClose={closeEditPseudoModal}
-    title={t('profile.edit_pseudo')}
->
-    {/* Modal pseudo */}
-    <div className={SettingsCardStyle.container}>
-        <input
-           type="text"
-                className={SettingsCardStyle.input}
-                placeholder={t('profile.enter_new_username')}
-                value={newUsername}
-                onChange={(e) => setNewUsername(e.target.value)}
-        />
-        <div className={SettingsCardStyle.buttonContainer}>
-            <button
-                className={SettingsCardStyle.cancelButton}
-                onClick={closeEditPseudoModal}
-            >
-                {t('common.cancel')}
-            </button>
-            <button
-                className={SettingsCardStyle.saveButton}
-                onClick={handleUpdateUsername}
-                disabled={!newUsername || newUsername === user?.username}
-            >
-                {t('common.save')}
-            </button>
-        </div>
-    </div>
+			<Modal
+				isOpen={isEditPseudoModalOpen}
+				onClose={closeEditPseudoModal}
+				title={t("profile.edit_pseudo")}
+			>
+				{/* Modal pseudo */}
+				<div className={SettingsCardStyle.container}>
+					<input
+						type="text"
+						className={SettingsCardStyle.input}
+						placeholder={t("profile.enter_new_username")}
+						value={newUsername}
+						onChange={(e) => setNewUsername(e.target.value)}
+					/>
+					<div className={SettingsCardStyle.buttonContainer}>
+						<button
+							className={SettingsCardStyle.cancelButton}
+							onClick={closeEditPseudoModal}
+						>
+							{t("common.cancel")}
+						</button>
+						<button
+							className={SettingsCardStyle.saveButton}
+							onClick={handleUpdateUsername}
+							disabled={!newUsername || newUsername === user?.username}
+						>
+							{t("common.save")}
+						</button>
+					</div>
+				</div>
 			</Modal>
 			<Modal
-    isOpen={isEditEmailModalOpen}
-    onClose={closeEmailModal}
-    title={t('profile.edit_email')}
->
-    {/* Modal email */}
-    <div className={SettingsCardStyle.container}>
-        <input
-           type="email"
-                className={SettingsCardStyle.input}
-                placeholder={t('profile.enter_new_email')}
-                value={newEmail}
-                onChange={(e) => setNewEmail(e.target.value)}
-        />
-        {emailError && <p className={SettingsCardStyle.errorMessage}>{emailError}</p>}
-        <div className={SettingsCardStyle.buttonContainer}>
-            <button
-                className={SettingsCardStyle.cancelButton}
-                onClick={closeEmailModal}
-            >
-                {t('common.cancel')}
-            </button>
-            <button
-                className={SettingsCardStyle.saveButton}
-                onClick={handleUpdateEmail}
-                disabled={!newEmail || newEmail === user?.email}
-            >
-                {t('common.save')}
-            </button>
-        </div>
-    </div>
-</Modal>
+				isOpen={isEditEmailModalOpen}
+				onClose={closeEmailModal}
+				title={t("profile.edit_email")}
+			>
+				{/* Modal email */}
+				<div className={SettingsCardStyle.container}>
+					<input
+						type="email"
+						className={SettingsCardStyle.input}
+						placeholder={t("profile.enter_new_email")}
+						value={newEmail}
+						onChange={(e) => setNewEmail(e.target.value)}
+					/>
+					{emailError && (
+						<p className={SettingsCardStyle.errorMessage}>{emailError}</p>
+					)}
+					<div className={SettingsCardStyle.buttonContainer}>
+						<button
+							className={SettingsCardStyle.cancelButton}
+							onClick={closeEmailModal}
+						>
+							{t("common.cancel")}
+						</button>
+						<button
+							className={SettingsCardStyle.saveButton}
+							onClick={handleUpdateEmail}
+							disabled={!newEmail || newEmail === user?.email}
+						>
+							{t("common.save")}
+						</button>
+					</div>
+				</div>
+			</Modal>
 			<Modal
-    isOpen={isEditPasswordModalOpen}
-    onClose={closePasswordModal}
-    title={t('profile.changePassword')}
->
-    {/* Modal mot de passe */}
-    <div className={SettingsCardStyle.container}>
-        <input
-           type="password"
-                className={SettingsCardStyle.input}
-                placeholder={t('profile.enter_old_password')}
-                value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
-        />
-        {oldPasswordError && <p className={SettingsCardStyle.errorMessage}>{oldPasswordError}</p>}
-        <input
-           type="password"
-                className={SettingsCardStyle.input}
-                placeholder={t('profile.enter_new_password')}
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-        />
-        {passwordError && <p className={SettingsCardStyle.errorMessage}>{passwordError}</p>}
-        <input
-           type="password"
-                className={SettingsCardStyle.input}
-                placeholder={t('profile.confirm_new_password')}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-        />
-        {confirmPasswordError && <p className={SettingsCardStyle.errorMessage}>{confirmPasswordError}</p>}
-        {generalError && <p className={SettingsCardStyle.errorMessage}>{generalError}</p>}
-        <div className={SettingsCardStyle.buttonContainer}>
-            <button
-                className={SettingsCardStyle.cancelButton}
-                onClick={closePasswordModal}
-            >
-                {t('common.cancel')}
-            </button>
-            <button
-                className={SettingsCardStyle.saveButton}
-                onClick={handleUpdatePassword}
-                disabled={!oldPassword || !newPassword || !confirmPassword}
-            >
-                {t('common.save')}
-            </button>
-        </div>
-    </div>
-</Modal>
+				isOpen={isEditPasswordModalOpen}
+				onClose={closePasswordModal}
+				title={t("profile.changePassword")}
+			>
+				{/* Modal password */}
+				<div className={SettingsCardStyle.container}>
+					<input
+						type="password"
+						className={SettingsCardStyle.input}
+						placeholder={t("profile.enter_old_password")}
+						value={oldPassword}
+						onChange={(e) => setOldPassword(e.target.value)}
+					/>
+					{oldPasswordError && (
+						<p className={SettingsCardStyle.errorMessage}>{oldPasswordError}</p>
+					)}
+					<input
+						type="password"
+						className={SettingsCardStyle.input}
+						placeholder={t("profile.enter_new_password")}
+						value={newPassword}
+						onChange={(e) => setNewPassword(e.target.value)}
+					/>
+					{passwordError && (
+						<p className={SettingsCardStyle.errorMessage}>{passwordError}</p>
+					)}
+					<input
+						type="password"
+						className={SettingsCardStyle.input}
+						placeholder={t("profile.confirm_new_password")}
+						value={confirmPassword}
+						onChange={(e) => setConfirmPassword(e.target.value)}
+					/>
+					{confirmPasswordError && (
+						<p className={SettingsCardStyle.errorMessage}>
+							{confirmPasswordError}
+						</p>
+					)}
+					{generalError && (
+						<p className={SettingsCardStyle.errorMessage}>{generalError}</p>
+					)}
+					<div className={SettingsCardStyle.buttonContainer}>
+						<button
+							className={SettingsCardStyle.cancelButton}
+							onClick={closePasswordModal}
+						>
+							{t("common.cancel")}
+						</button>
+						<button
+							className={SettingsCardStyle.saveButton}
+							onClick={handleUpdatePassword}
+							disabled={!oldPassword || !newPassword || !confirmPassword}
+						>
+							{t("common.save")}
+						</button>
+					</div>
+				</div>
+			</Modal>
 		</Card>
 	);
 }

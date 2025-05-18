@@ -1,15 +1,17 @@
-import Card, { Space } from '../../Card/Card';
-import globalStyle from '../../../globalStyle';
-import { useTranslation } from '../../../context/TranslationContext';
-import HomeStyle from '../../../pages/Home/HomeStyle';
-import type { ProfilHomeCardProps } from '../../../types/ProfilHomeCardProps';
-import { useUserContext } from '../../../context/UserContext';
+import Card, { Space } from "../../Card/Card";
+import globalStyle from "../../../globalStyle";
+import { useTranslation } from "../../../context/TranslationContext";
+import HomeStyle from "../../../pages/Home/HomeStyle";
+import type { ProfilHomeCardProps } from "../../../types/ProfilHomeCardProps";
+import { useUserContext } from "../../../context/UserContext";
 
-export default function ProfilHomeCard({ home = false, friendProfile }: ProfilHomeCardProps) {
+export default function ProfilHomeCard({
+	home = false,
+	friendProfile,
+}: ProfilHomeCardProps) {
 	const { t } = useTranslation();
 	const { user, loading, error } = useUserContext();
 
-	// Utiliser le profil ami s'il est fourni, sinon utiliser le profil utilisateur
 	const profileToDisplay = friendProfile || user;
 	const isLoadingProfile = !friendProfile && loading;
 	const profileError = !friendProfile && error;
@@ -18,9 +20,9 @@ export default function ProfilHomeCard({ home = false, friendProfile }: ProfilHo
 	return (
 		<Card>
 			<div className={globalStyle.row}>
-				<p>{isFriendProfile ? t('profile.friendProfile') : t('home.your')}</p>
+				<p>{isFriendProfile ? t("profile.friendProfile") : t("home.your")}</p>
 				<Space />
-				<span className={globalStyle.span}>{t('home.profile')}</span>
+				<span className={globalStyle.span}>{t("home.profile")}</span>
 			</div>
 			{isLoadingProfile ? (
 				<p>Chargement du profil...</p>
@@ -29,7 +31,11 @@ export default function ProfilHomeCard({ home = false, friendProfile }: ProfilHo
 			) : profileToDisplay ? (
 				<>
 					<img
-						src={profileToDisplay.avatar && profileToDisplay.avatar !== "" ? profileToDisplay.avatar : "/default.JPG"}
+						src={
+							profileToDisplay.avatar && profileToDisplay.avatar !== ""
+								? profileToDisplay.avatar
+								: "/default.JPG"
+						}
 						alt="Profile"
 						className={HomeStyle.img}
 					/>
@@ -45,9 +51,9 @@ export default function ProfilHomeCard({ home = false, friendProfile }: ProfilHo
 				<>
 					<div className={globalStyle.separator}></div>
 					<div className={globalStyle.row}>
-						<p>{t('home.lastGame')}</p>
+						<p>{t("home.lastGame")}</p>
 						<Space />
-						<span className={globalStyle.spanAlert}>{t('home.lose')}</span>
+						<span className={globalStyle.spanAlert}>{t("home.lose")}</span>
 					</div>
 				</>
 			)}
