@@ -3,31 +3,37 @@ import globalStyle from '../../../globalStyle';
 import { useTranslation } from '../../../context/TranslationContext';
 import HomeStyle from '../../../pages/Home/HomeStyle';
 import type { ProfilHomeCardProps } from '../../../types/ProfilHomeCardProps';
-import { useUser } from '../../../context/UserContext';
+import { useUserContext } from '../../../context/UserContext';
 
-export default function ProfilHomeCard({ home = false }: ProfilHomeCardProps) {
+export default function ProfilHomeCard({ home = false, friendProfile }: ProfilHomeCardProps) {
 	const { t } = useTranslation();
-	const { user, loading, error } = useUser();
+	const { user, loading, error } = useUserContext();
+
+	// Utiliser le profil ami s'il est fourni, sinon utiliser le profil utilisateur
+	const profileToDisplay = friendProfile || user;
+	const isLoadingProfile = !friendProfile && loading;
+	const profileError = !friendProfile && error;
+	const isFriendProfile = !!friendProfile;
 
 	return (
 		<Card>
 			<div className={globalStyle.row}>
-				<p>{t('home.your')}</p>
+				<p>{isFriendProfile ? t('profile.friendProfile') : t('home.your')}</p>
 				<Space />
 				<span className={globalStyle.span}>{t('home.profile')}</span>
 			</div>
-			{loading ? (
+			{isLoadingProfile ? (
 				<p>Chargement du profil...</p>
-			) : error ? (
-				<p>Erreur: {error}</p>
-			) : user ? (
+			) : profileError ? (
+				<p>Erreur: {profileError}</p>
+			) : profileToDisplay ? (
 				<>
 					<img
-						src={user.avatar && user.avatar !== "" ? user.avatar : "/default.JPG"}
+						src={profileToDisplay.avatar && profileToDisplay.avatar !== "" ? profileToDisplay.avatar : "/default.JPG"}
 						alt="Profile"
 						className={HomeStyle.img}
 					/>
-					<span className={globalStyle.span}>{user.username}</span>
+					<span className={globalStyle.span}>{profileToDisplay.username}</span>
 				</>
 			) : (
 				<>
@@ -35,7 +41,7 @@ export default function ProfilHomeCard({ home = false }: ProfilHomeCardProps) {
 					<span className={globalStyle.span}>Non connecté</span>
 				</>
 			)}
-			{home && user && (
+			{home && user && !isFriendProfile && (
 				<>
 					<div className={globalStyle.separator}></div>
 					<div className={globalStyle.row}>

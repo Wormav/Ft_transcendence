@@ -1,6 +1,15 @@
 {
 	"search": {
-		"placeholder": "Search for a user..."
+		"placeholder": "Search for a user...",
+		"noResults": "No users found",
+		"enterQuery": "Enter a name to search for a user"
+	},
+	"loading": "Loading...",
+	"addFriend": "Add",
+	"error": {
+		"searchUsers": "Error searching for users",
+		"friendRequest": "Error sending friend request",
+		"unknown": "An unknown error occurred"
 	},
 	"accessibility": {
 		"title": "Accessibility",
@@ -111,7 +120,8 @@
 		"language": "Language",
 		"accessibility": "Accessibility",
 		"previewText": "Text preview",
-		"sampleText": "This is a sample text to see the selected size"
+		"sampleText": "This is a sample text to see the selected size",
+		"friendProfile": "Profile of"
 	},
 	"game": {
 		"gameCustom": "Custom game"

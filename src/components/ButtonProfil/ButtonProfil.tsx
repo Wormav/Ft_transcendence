@@ -1,9 +1,9 @@
 import type { ButtonProfilProps } from '../../types/ButtonProfilProps';
 import ButtonProfilStyle from './ButtonProfilStyle';
-import { useUser } from '../../context/UserContext';
+import { useUserContext } from '../../context/UserContext';
 
 export default function ButtonProfil({ onClick }: ButtonProfilProps) {
-	const { user } = useUser();
+	const { user } = useUserContext();
 	const avatarSrc = user?.avatar && user.avatar !== "" ? user.avatar : '/default.JPG';
 
 	return (

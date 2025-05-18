@@ -1,6 +1,15 @@
 {
 	"search": {
-		"placeholder": "Buscar un usuario..."
+		"placeholder": "Buscar un usuario...",
+		"noResults": "No se encontraron usuarios",
+		"enterQuery": "Ingresa un nombre para buscar un usuario"
+	},
+	"loading": "Cargando...",
+	"addFriend": "Añadir",
+	"error": {
+		"searchUsers": "Error al buscar usuarios",
+		"friendRequest": "Error al enviar solicitud de amistad",
+		"unknown": "Ocurrió un error desconocido"
 	},
 	"accessibility": {
 		"title": "Accesibilidad",
@@ -111,7 +120,8 @@
 		"language": "Idioma",
 		"accessibility": "Accesibilidad",
 		"previewText": "Vista previa del texto",
-		"sampleText": "Este es un texto de ejemplo para ver el tamaño seleccionado"
+		"sampleText": "Este es un texto de ejemplo para ver el tamaño seleccionado",
+		"friendProfile": "Perfil de"
 	},
 	"game": {
 		"gameCustom": "Juego personalizado"

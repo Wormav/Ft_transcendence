@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import LoginStyle from './LoginStyle';
@@ -7,7 +7,6 @@ import { useTranslation } from '../../context/TranslationContext';
 import { customFetch } from '../../utils/customFetch';
 
 export default function Login() {
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -45,8 +44,8 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        document.cookie = `jwt=${data.token}; path=/; secure; samesite=strict`;
-        navigate('/');
+		document.cookie = `jwt=${data.token}; path=/; secure; samesite=strict`;
+		 window.location.href = '/';
       } else {
         if (data.error === 'Invalid credentials') {
           setLoginError(t('auth.login.invalidCredentials'));

@@ -1,5 +1,8 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import type { SettingsContextType, GameSpeedType } from '../types/SettingsTypes';
+import { useUserContext } from './UserContext';
+import { customFetch } from '../utils/customFetch';
+import { getJwtToken } from '../utils/getJwtToken';
 
 const SettingsContext = createContext<SettingsContextType>({
 	color_items: '#3498db',
@@ -13,10 +16,71 @@ const SettingsContext = createContext<SettingsContextType>({
 });
 
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-	const [color_items, setColorItems] = useState<string>('#3498db');
-	const [color_bg, setColorBg] = useState<string>('#1a1a1a');
-	const [size_text, setSizeText] = useState<number>(18);
-	const [speed_moves, setSpeedMoves] = useState<GameSpeedType>('normal');
+	const { user } = useUserContext();
+
+	const [color_items, setColorItemsState] = useState<string>('#3498db');
+	const [color_bg, setColorBgState] = useState<string>('#1a1a1a');
+	const [size_text, setSizeTextState] = useState<number>(18);
+	const [speed_moves, setSpeedMovesState] = useState<GameSpeedType>('normal');
+
+	 useEffect(() => {
+        if (user) {
+            if (user.color_items) setColorItems(user.color_items);
+            if (user.color_bg) setColorBg(user.color_bg);
+            if (user.size_text) setSizeText(user.size_text);
+            if (user.speed_moves) setSpeedMoves(user.speed_moves as GameSpeedType);
+        }
+	 }, [user]);
+
+	const updateSettings = async (options: Partial<{
+		color_items: string;
+		color_bg: string;
+		size_text: number;
+		speed_moves: GameSpeedType;
+	}>) => {
+        console.log("Updating settings with:", options);
+		try {
+			const token = getJwtToken();
+			const response = await customFetch('/api/user/options', {
+				method: 'PUT',
+				headers: {
+					Authorization: `Bearer ${token}`,
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(options),
+				credentials: 'include'
+			});
+			if (!response.ok) {
+				throw new Error("Fail update settings user")
+			}
+            console.log("Settings updated successfully");
+		} catch (error) {
+			console.log("Fail update settings user:", error);
+		}
+	};
+
+	const setColorItems = (value: string) => {
+        console.log("setColorItems called with:", value);
+        setColorItemsState(value);
+        updateSettings({ color_items: value });
+    };
+
+    const setColorBg = (value: string) => {
+        console.log("setColorBg called with:", value);
+        setColorBgState(value);
+        updateSettings({ color_bg: value });
+    };
+
+    const setSizeText = (value: number) => {
+        setSizeTextState(value);
+        updateSettings({ size_text: value });
+    };
+
+    const setSpeedMoves = (value: GameSpeedType) => {
+        setSpeedMovesState(value);
+        updateSettings({ speed_moves: value });
+    };
+
 
 	return (
 		<SettingsContext.Provider

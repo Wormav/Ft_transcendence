@@ -1,24 +1,17 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import type { UserContextType, UserData } from '../types/UserContextType';
 import { customFetch } from '../utils/customFetch';
+import { getJwtToken } from '../utils/getJwtToken';
 
 const UserContext = createContext<UserContextType>({
 	user: null,
 	loading: false,
 	error: null,
-	fetchUserData: async () => {}
+	fetchUserData: async () => { },
+	updateUsername: async () => false,
+    updateEmail: async () => false,
+    updateAvatar: async () => false
 });
-
-const getJwtToken = (): string | null => {
-	const cookies = document.cookie.split(';');
-	for (const cookie of cookies) {
-		const [name, value] = cookie.trim().split('=');
-		if (name === 'jwt') {
-			return value;
-		}
-	}
-	return null;
-};
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const [user, setUser] = useState<UserData | null>(null);
@@ -68,7 +61,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 				uuid: userData.uuid,
 				email: userData.email,
 				username: userData.username,
-				avatar: userData.avatar
+				avatar: userData.avatar,
+				color_items: userData.color_items,
+				color_bg: userData.color_bg,
+				size_text: userData.size_text,
+				speed_moves: userData.speed_moves
 			};
 
 			setUser(filteredUserData);
@@ -90,11 +87,90 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 		fetchUserData();
 	}, []);
 
+	const updateUsername = async (username: string): Promise<boolean> => {
+        try {
+            const token = getJwtToken();
+
+            const response = await customFetch('/api/user/update', {
+                method: 'PUT',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to update username: ${response.status}`);
+            }
+
+            await fetchUserData();
+            return true;
+        } catch (err: any) {
+            console.error('Error updating username:', err);
+            setError(err.message || 'An error occurred while updating username');
+            return false;
+        }
+	};
+
+	const updateEmail = async (email: string): Promise<boolean> => {
+        try {
+            const token = getJwtToken();
+
+            const response = await customFetch('/api/user/update', {
+                method: 'PUT',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to update email: ${response.status}`);
+            }
+
+            await fetchUserData();
+            return true;
+        } catch (err: any) {
+            console.error('Error updating email:', err);
+            setError(err.message || 'An error occurred while updating email');
+            return false;
+        }
+	};
+
+	const updateAvatar = async (avatar: string): Promise<boolean> => {
+        try {
+			const token = getJwtToken();
+
+            const response = await customFetch('/api/user/update', {
+                method: 'PUT',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ avatar })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to update avatar: ${response.status}`);
+            }
+
+
+            await fetchUserData();
+            return true;
+        } catch (err: any) {
+            console.error('Error updating avatar:', err);
+            setError(err.message || 'An error occurred while updating avatar');
+            return false;
+        }
+    };
+
 	return (
-		<UserContext.Provider value={{ user, loading, error, fetchUserData }}>
+		<UserContext.Provider value={{ user, loading, error, fetchUserData, updateAvatar, updateEmail, updateUsername }}>
 			{children}
 		</UserContext.Provider>
 	);
 };
 
-export const useUser = () => useContext(UserContext);
+export const useUserContext = () => useContext(UserContext);
