@@ -10,8 +10,11 @@ export type UserData = {
 }
 
 export type UserContextType = {
-	user: UserData | null;
-	loading: boolean;
-	error: string | null;
-	fetchUserData: () => Promise<void>;
+    user: UserData | null;
+    loading: boolean;
+    error: string | null;
+    fetchUserData: () => Promise<void>;
+    updateUsername: (username: string) => Promise<boolean>;
+    updateEmail: (email: string) => Promise<boolean>;
+    updateAvatar: (avatar: string) => Promise<boolean>;
 }
