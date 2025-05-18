@@ -13,8 +13,6 @@ const UserContext = createContext<UserContextType>({
     updateAvatar: async () => false
 });
 
-
-
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const [user, setUser] = useState<UserData | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
