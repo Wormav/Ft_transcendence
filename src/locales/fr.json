@@ -1,6 +1,14 @@
 {
 	"search": {
-		"placeholder": "Rechercher un utilisateur..."
+		"placeholder": "Rechercher un utilisateur...",
+		"noResults": "Aucun utilisateur trouvé",
+		"enterQuery": "Entrez un nom pour rechercher un utilisateur"
+	},
+	"loading": "Chargement...",
+	"addFriend": "Ajouter",
+	"error": {
+		"searchUsers": "Erreur lors de la recherche d'utilisateurs",
+		"unknown": "Une erreur inconnue est survenue"
 	},
 	"accessibility": {
 		"title": "Accessibilité",

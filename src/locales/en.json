@@ -1,6 +1,14 @@
 {
 	"search": {
-		"placeholder": "Search for a user..."
+		"placeholder": "Search for a user...",
+		"noResults": "No users found",
+		"enterQuery": "Enter a name to search for a user"
+	},
+	"loading": "Loading...",
+	"addFriend": "Add",
+	"error": {
+		"searchUsers": "Error searching for users",
+		"unknown": "An unknown error occurred"
 	},
 	"accessibility": {
 		"title": "Accessibility",

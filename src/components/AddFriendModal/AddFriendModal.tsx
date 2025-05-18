@@ -2,15 +2,68 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import AddFriendModalStyles from './AddFriendModalStyles';
 import { useTranslation } from '../../context/TranslationContext';
+import { useUserContext } from '../../context/UserContext';
+import { customFetch } from '../../utils/customFetch';
+import { getJwtToken } from '../../utils/getJwtToken';
 
 interface AddFriendModalProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
+interface UserSearchResult {
+    uuid: string;
+    email: string;
+    username: string;
+    avatar: string;
+}
+
 const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
     const [searchQuery, setSearchQuery] = useState('');
+    const [users, setUsers] = useState<UserSearchResult[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const { t } = useTranslation();
+    const { user } = useUserContext();
+
+    // Recherche d'utilisateurs
+    const searchUsers = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+
+            const token = getJwtToken();
+
+            const response = await customFetch('/api/user/users', {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`${t('error.searchUsers')}: ${response.status}`);
+            }
+
+            const data: UserSearchResult[] = await response.json();
+
+            const filteredUsers = data.filter(u => u.uuid !== user?.uuid);
+
+            setUsers(filteredUsers);
+        } catch (err: any) {
+            console.error('Error searching users:', err);
+            setError(err.message || t('error.unknown'));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isOpen) {
+            searchUsers();
+        }
+    }, [isOpen]);
 
     useEffect(() => {
         const handleEscape = (event: KeyboardEvent) => {
@@ -30,6 +83,10 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
         };
     }, [isOpen, onClose]);
 
+    const sendFriendRequest = async (userId: string) => {
+        console.log('Friend request sent to user with ID:', userId);
+    };
+
     if (!isOpen) return null;
 
     const handleOverlayClick = (event: React.MouseEvent) => {
@@ -37,6 +94,12 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
             onClose();
         }
     };
+
+    const filteredUsers = searchQuery.trim() === ''
+        ? []
+        : users.filter(user =>
+            user.username.toLowerCase().includes(searchQuery.toLowerCase())
+        );
 
     return createPortal(
         <div className="fixed inset-0 isolate" style={{ zIndex: 99999 }}>
@@ -102,7 +165,48 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
                         </button>
                     </div>
                     <div className={AddFriendModalStyles.results}>
-                        {/* Liste des résultats de recherche */}
+                        {loading ? (
+                            <div className="text-center py-4">{t('loading')}</div>
+                        ) : error ? (
+                            <div className="text-red-500 text-center py-4">{error}</div>
+                        ) : searchQuery.trim() === '' ? (
+                            <div className="text-center py-4">{t('search.enterQuery')}</div>
+                        ) : filteredUsers.length === 0 ? (
+                            <div className="text-center py-4">{t('search.noResults')}</div>
+                        ) : (
+                            <ul className="divide-y divide-gray-200">
+                                {filteredUsers.map(user => (
+                                    <li key={user.uuid} className="py-3 flex items-center justify-between">
+                                        <div className="flex items-center">
+                                            <div className="h-10 w-10 rounded-full overflow-hidden bg-gray-200">
+                                                {user.avatar ? (
+                                                    <img
+                                                        src={user.avatar}
+                                                        alt={user.username}
+                                                        className="h-full w-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <img
+                                                        src="/default.JPG"
+                                                        alt={user.username}
+                                                        className="h-full w-full object-cover"
+                                                    />
+                                                )}
+                                            </div>
+                                            <div className="ml-3">
+                                                <p className="text-sm font-medium text-gray-900">{user.username}</p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => sendFriendRequest(user.uuid)}
+                                            className="ml-2 px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
+                                        >
+                                            {t('addFriend')}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
                 </div>
             </div>
