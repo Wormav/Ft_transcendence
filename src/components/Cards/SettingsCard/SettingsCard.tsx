@@ -6,6 +6,7 @@ import CustomBtn from '../../CustomBtn/CustomBtn';
 import { useUserContext } from '../../../context/UserContext';
 import { useState } from 'react';
 import { Modal } from '../../Modal/Modal';
+import SettingsCardStyle from './SettingsCardStyle';
 
 export default function SettingsCard() {
 	const { t, locale, setLocale } = useTranslation();
@@ -14,36 +15,58 @@ export default function SettingsCard() {
 	const [isEditEmailModalOpen, setIsEditEmailModalOpen] = useState(false);
 	const [newUsername, setNewUsername] = useState('');
 	const [newEmail, setNewEmail] = useState('');
+	const [emailError, setEmailError] = useState('');
+
+	const validateEmail = (email: string) => {
+		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+		return emailRegex.test(email);
+	};
 
 	const openEditPseudoModal = () => {
-    setIsEditPseudoModalOpen(true);
+		setNewUsername(user?.username || '');
+		setIsEditPseudoModalOpen(true);
 	};
 
 	const closeEditPseudoModal = () => {
-    	setIsEditPseudoModalOpen(false);
+		setIsEditPseudoModalOpen(false);
 	};
 
 	const handleUpdateUsername = async () => {
-        if (newUsername && newUsername !== user?.username) {
-            await updateUsername(newUsername);
-        }
-        closeEditPseudoModal();
+		if (newUsername && newUsername !== user?.username) {
+			await updateUsername(newUsername);
+		}
+		closeEditPseudoModal();
 	};
 
 	const openEmailModal = () => {
-    setIsEditPseudoModalOpen(true);
+		setNewEmail(user?.email || '');
+		setEmailError('');
+		setIsEditEmailModalOpen(true);
 	};
 
 	const closeEmailModal = () => {
-    	setIsEditPseudoModalOpen(false);
+		setIsEditEmailModalOpen(false);
+		setEmailError('');
 	};
 
 	const handleUpdateEmail = async () => {
-        if (newEmail && newEmail !== user?.email) {
-            await updateEmail(newEmail);
-        }
-        closeEmailModal();
-    };
+		if (!validateEmail(newEmail)) {
+			setEmailError(t('auth.signup.emailError'));
+			return;
+		}
+
+		if (newEmail && newEmail !== user?.email) {
+			try {
+				await updateEmail(newEmail);
+				closeEmailModal();
+			} catch (error) {
+				console.error('Error updating email:', error);
+				setEmailError(t('auth.signup.networkError'));
+			}
+		} else {
+			closeEmailModal();
+		}
+	};
 
 	return (
 		<Card>
@@ -61,7 +84,7 @@ export default function SettingsCard() {
 						<span className={globalStyle.span}>{user?.username || 'Non disponible'}</span>
 						<Space />
 						<button
-							className="flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
+							className={SettingsCardStyle.editButton}
 							aria-label={t('profile.edit_pseudo')}
 							onClick={openEditPseudoModal}
 						>
@@ -74,8 +97,8 @@ export default function SettingsCard() {
 						<span className={globalStyle.span}>{user?.email || 'Non disponible'}</span>
 						<Space />
 						<button
-							className="flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
-								aria-label={t('profile.edit_pseudo')}
+							className={SettingsCardStyle.editButton}
+								aria-label={t('profile.edit_email')}
 								onClick={openEmailModal}
 						>
 							<FaPen size={20} color="#00babc" />
@@ -123,25 +146,25 @@ export default function SettingsCard() {
     title={t('profile.edit_pseudo')}
 >
     {/* Modal pseudo */}
-    <div className="space-y-4">
+    <div className={SettingsCardStyle.container}>
         <input
            type="text"
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className={SettingsCardStyle.input}
                 placeholder={t('profile.enter_new_username')}
                 value={newUsername}
                 onChange={(e) => setNewUsername(e.target.value)}
         />
-        <div className="flex justify-end space-x-2">
+        <div className={SettingsCardStyle.buttonContainer}>
             <button
-                className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
+                className={SettingsCardStyle.cancelButton}
                 onClick={closeEditPseudoModal}
             >
                 {t('common.cancel')}
             </button>
             <button
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                    onClick={handleUpdateUsername}
-                    disabled={!newUsername || newUsername === user?.username}
+                className={SettingsCardStyle.saveButton}
+                onClick={handleUpdateUsername}
+                disabled={!newUsername || newUsername === user?.username}
             >
                 {t('common.save')}
             </button>
@@ -149,30 +172,31 @@ export default function SettingsCard() {
     </div>
 			</Modal>
 			<Modal
-    isOpen={isEditPseudoModalOpen}
-    onClose={closeEditPseudoModal}
+    isOpen={isEditEmailModalOpen}
+    onClose={closeEmailModal}
     title={t('profile.edit_email')}
 >
     {/* Modal email */}
-    <div className="space-y-4">
+    <div className={SettingsCardStyle.container}>
         <input
-           type="text"
-                className="w-full p-2 border border-gray-300 rounded-md"
-                placeholder={t('profile.enter_new_username')}
+           type="email"
+                className={SettingsCardStyle.input}
+                placeholder={t('profile.enter_new_email')}
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
         />
-        <div className="flex justify-end space-x-2">
+        {emailError && <p className={SettingsCardStyle.errorMessage}>{emailError}</p>}
+        <div className={SettingsCardStyle.buttonContainer}>
             <button
-                className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
+                className={SettingsCardStyle.cancelButton}
                 onClick={closeEmailModal}
             >
                 {t('common.cancel')}
             </button>
             <button
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                    onClick={handleUpdateEmail}
-                    disabled={!newEmail || newEmail === user?.email}
+                className={SettingsCardStyle.saveButton}
+                onClick={handleUpdateEmail}
+                disabled={!newEmail || newEmail === user?.email}
             >
                 {t('common.save')}
             </button>

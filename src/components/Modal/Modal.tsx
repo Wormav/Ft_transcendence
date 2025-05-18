@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import type { ModalProps } from "../../types/ModalProps"
 import { createPortal } from "react-dom";
+import { ModalStyles } from "./ModalStyles";
 
 
 export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
@@ -36,9 +37,9 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
                 className="fixed inset-0 bg-black/25 backdrop-blur flex items-center justify-center min-h-screen min-w-screen overflow-hidden"
                 onClick={handleOverlayClick}
             >
-                <div className="bg-white rounded-xl shadow-lg w-full max-w-md mx-auto p-6 relative">
+                <div className={ModalStyles.modal}>
                     <button
-                        className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none"
+                        className={ModalStyles.closeButton}
                         onClick={onClose}
                     >
                         <svg
@@ -46,7 +47,6 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
-                            className="w-6 h-6"
                         >
                             <defs>
                                 <filter id="closeShadow" x="-20%" y="-20%" width="140%" height="140%">
@@ -69,9 +69,9 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
                         </svg>
                     </button>
 
-                    {title && <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>}
+                    {title && <h2 className={ModalStyles.title}>{title}</h2>}
 
-                    <div className="mt-2">
+                    <div className={ModalStyles.content}>
                         {children}
                     </div>
                 </div>
