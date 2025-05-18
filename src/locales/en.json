@@ -105,7 +105,20 @@
 	},
 	"settings": {
 		"yourPicture": "Your picture",
-		"uploadNewProfilPicture": "Upload new profile picture"
+		"uploadNewProfilPicture": "Upload new profile picture",
+		"changeAvatar": "Change Avatar",
+		"updateYourPicture": "Update Your Picture",
+		"uploadImage": "Upload Image",
+		"imageUrl": "Image URL",
+		"chooseImage": "Choose Image",
+		"chooseAnotherImage": "Choose Another Image",
+		"enterImageUrl": "Enter Image URL",
+		"invalidImageFormat": "Invalid image format. Use JPEG, JPG, PNG or GIF",
+		"imageTooLarge": "Image is too large (max 5MB)",
+		"payloadTooLarge": "Image is too large for the server. Please choose a smaller image or compress it",
+		"noImageSelected": "No image selected",
+		"avatarUpdateFailed": "Failed to update avatar",
+		"invalidImageUrl": "Invalid image URL"
 	},
 	"profile": {
 		"account": "Account",

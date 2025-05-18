@@ -42,6 +42,7 @@ export default function YourPictureCard() {
 
 		if (
 			!file.type.match("image/jpeg") &&
+			!file.type.match("image/jpg") &&
 			!file.type.match("image/png") &&
 			!file.type.match("image/gif")
 		) {
@@ -165,7 +166,7 @@ export default function YourPictureCard() {
 								type="file"
 								ref={fileInputRef}
 								className={YourPictureCardStyle.fileInput}
-								accept="image/jpeg,image/png,image/gif"
+								accept="image/jpeg,image/jpg,image/png,image/gif"
 								onChange={handleFileChange}
 							/>
 							<button

@@ -98,7 +98,20 @@
 	},
 	"settings": {
 		"yourPicture": "Votre photo",
-		"uploadNewProfilPicture": "Télécharger une nouvelle photo de profil"
+		"uploadNewProfilPicture": "Télécharger une nouvelle photo de profil",
+		"changeAvatar": "Changer d'avatar",
+		"updateYourPicture": "Mettre à jour votre photo",
+		"uploadImage": "Télécharger une image",
+		"imageUrl": "URL de l'image",
+		"chooseImage": "Choisir une image",
+		"chooseAnotherImage": "Choisir une autre image",
+		"enterImageUrl": "Entrer l'URL de l'image",
+		"invalidImageFormat": "Format d'image invalide. Utilisez JPEG, JPG, PNG ou GIF",
+		"imageTooLarge": "L'image est trop volumineuse (max 5 Mo)",
+		"payloadTooLarge": "L'image est trop volumineuse pour le serveur. Veuillez choisir une image plus petite ou la compresser",
+		"noImageSelected": "Aucune image sélectionnée",
+		"avatarUpdateFailed": "Échec de la mise à jour de l'avatar",
+		"invalidImageUrl": "URL d'image invalide"
 	},
 	"profile": {
 		"account": "Compte",
