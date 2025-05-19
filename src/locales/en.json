@@ -6,6 +6,9 @@
 	},
 	"loading": "Loading...",
 	"addFriend": "Add",
+	"removeFriend": "Remove",
+	"pendingRequest": "Request Sent",
+	"acceptRequest": "Accept",
 	"error": {
 		"searchUsers": "Error searching for users",
 		"friendRequest": "Error sending friend request",

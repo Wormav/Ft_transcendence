@@ -7,14 +7,17 @@ import "./App.css";
 import "./styles/zIndex.css";
 import { SettingsProvider } from "./context/SettingsContext";
 import { UserProvider } from "./context/UserContext";
+import { FriendProvider } from "./context/FriendContext";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<StrictMode>
 		<TranslationProvider>
 			<UserProvider>
-				<SettingsProvider>
-					<RouterProvider router={router} />
-				</SettingsProvider>
+				<FriendProvider>
+					<SettingsProvider>
+						<RouterProvider router={router} />
+					</SettingsProvider>
+				</FriendProvider>
 			</UserProvider>
 		</TranslationProvider>
 	</StrictMode>,

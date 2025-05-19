@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import AddFriendModalStyles from "./AddFriendModalStyles";
 import { useTranslation } from "../../context/TranslationContext";
 import { useUserContext } from "../../context/UserContext";
+import { useFriendContext } from "../../context/FriendContext";
 import { customFetch } from "../../utils/customFetch";
 import { getJwtToken } from "../../utils/getJwtToken";
 import type { AddFriendModalProps } from "../../types/AddFreindModalProps";
@@ -16,6 +17,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 	const [error, setError] = useState<string | null>(null);
 	const { t } = useTranslation();
 	const { user } = useUserContext();
+	const { friendData, fetchFriendData, addFriend } = useFriendContext();
 	const navigate = useNavigate();
 
 	const searchUsers = async () => {
@@ -53,6 +55,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 	useEffect(() => {
 		if (isOpen) {
 			searchUsers();
+			fetchFriendData();
 		}
 	}, [isOpen]);
 
@@ -208,12 +211,90 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 												</p>
 											</div>
 										</div>
-										<button
-											onClick={() => console.log("add freind")}
-											className="ml-2 px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
-										>
-											{t("addFriend")}
-										</button>
+										{(() => {
+											// Vérifier si l'utilisateur est déjà ami
+											const isFriend = friendData?.friends.some(
+												(friend) => friend.uuid === user.uuid,
+											);
+
+											// Vérifier si une demande d'ami a déjà été envoyée
+											const requestSent = friendData?.requests_sent.some(
+												(request) => request.target_uuid === user.uuid,
+											);
+
+											// Vérifier si une demande d'ami a été reçue
+											const requestReceived =
+												friendData?.requests_received.some(
+													(request) => request.requester_uuid === user.uuid,
+												);
+
+											if (isFriend) {
+												return (
+													<button
+														onClick={() =>
+															console.log("supprimer ami", user.uuid)
+														}
+														className="ml-2 px-3 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700"
+													>
+														{t("removeFriend")}
+													</button>
+												);
+											} else if (requestSent) {
+												return (
+													<button
+														onClick={() =>
+															console.log("annuler demande", user.uuid)
+														}
+														className="ml-2 px-3 py-1 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600"
+													>
+														{t("pendingRequest")}
+													</button>
+												);
+											} else if (requestReceived) {
+												return (
+													<button
+														onClick={() =>
+															console.log("accepter demande", user.uuid)
+														}
+														className="ml-2 px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700"
+													>
+														{t("acceptRequest")}
+													</button>
+												);
+											} else {
+												return (
+													<button
+														onClick={async () => {
+															try {
+																const success = await addFriend(user.uuid);
+																if (success) {
+																	console.log(
+																		"Ami ajouté avec succès:",
+																		user.uuid,
+																	);
+																	fetchFriendData();
+																} else {
+																	console.error(
+																		"Échec de l'ajout d'ami:",
+																		user.uuid,
+																	);
+																	// Vous pourriez ajouter un toast ou une notification ici
+																}
+															} catch (error) {
+																console.error(
+																	"Erreur lors de l'ajout d'ami:",
+																	error,
+																);
+																// Vous pourriez ajouter un toast ou une notification ici
+															}
+														}}
+														className="ml-2 px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
+													>
+														{t("addFriend")}
+													</button>
+												);
+											}
+										})()}
 									</li>
 								))}
 							</ul>

@@ -6,6 +6,9 @@
 	},
 	"loading": "Cargando...",
 	"addFriend": "Añadir",
+	"removeFriend": "Eliminar",
+	"pendingRequest": "Solicitud enviada",
+	"acceptRequest": "Aceptar",
 	"error": {
 		"searchUsers": "Error al buscar usuarios",
 		"friendRequest": "Error al enviar solicitud de amistad",
