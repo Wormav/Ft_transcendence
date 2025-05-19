@@ -1,4 +1,4 @@
-import type { FriendProfile } from "./FriendProfile";
+// import type { FriendProfile } from "./FriendProfile";
 
 export type FriendRequest = {
 	id: number;
@@ -9,7 +9,7 @@ export type FriendRequest = {
 };
 
 export type FriendData = {
-	friends: FriendProfile[];
+	friends: FriendRequest[];
 	requests_sent: FriendRequest[];
 	requests_received: FriendRequest[];
 };
@@ -20,4 +20,7 @@ export type FriendContextType = {
 	error: string | null;
 	fetchFriendData: () => Promise<void>;
 	addFriend: (uuid: string) => Promise<boolean>;
+	acceptFriendRequest: (uuid: string) => Promise<boolean>;
+	declineFriendRequest: (uuid: string) => Promise<boolean>;
+	removeFriend: (uuid: string) => Promise<boolean>;
 };

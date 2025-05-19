@@ -9,6 +9,9 @@ const FriendContext = createContext<FriendContextType>({
 	error: null,
 	fetchFriendData: async () => {},
 	addFriend: async () => false,
+	acceptFriendRequest: async () => false,
+	declineFriendRequest: async () => false,
+	removeFriend: async () => false,
 });
 
 export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -105,6 +108,115 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 		}
 	};
 
+	const acceptFriendRequest = async (uuid: string): Promise<boolean> => {
+		setError(null);
+		try {
+			const token = getJwtToken();
+
+			if (!token) {
+				setError("Aucun jeton d'authentification trouvé.");
+				return false;
+			}
+
+			const response = await customFetch(`/api/user/friends/${uuid}`, {
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ action: "accept" }),
+			});
+
+			if (!response.ok) {
+				throw new Error(
+					`Erreur lors de l'acceptation de la demande d'ami: ${response.status}`,
+				);
+			}
+
+			await fetchFriendData();
+			return true;
+		} catch (err: any) {
+			console.error("Erreur dans acceptFriendRequest:", err);
+			setError(
+				err.message ||
+					"Une erreur s'est produite lors de l'acceptation de la demande d'ami",
+			);
+			return false;
+		}
+	};
+
+	const declineFriendRequest = async (uuid: string): Promise<boolean> => {
+		setError(null);
+		try {
+			const token = getJwtToken();
+
+			if (!token) {
+				setError("Aucun jeton d'authentification trouvé.");
+				return false;
+			}
+
+			const response = await customFetch(`/api/user/friends/${uuid}`, {
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ action: "decline" }),
+			});
+
+			if (!response.ok) {
+				throw new Error(
+					`Erreur lors du refus de la demande d'ami: ${response.status}`,
+				);
+			}
+
+			await fetchFriendData();
+			return true;
+		} catch (err: any) {
+			console.error("Erreur dans declineFriendRequest:", err);
+			setError(
+				err.message ||
+					"Une erreur s'est produite lors du refus de la demande d'ami",
+			);
+			return false;
+		}
+	};
+
+	const removeFriend = async (uuid: string): Promise<boolean> => {
+		setError(null);
+		try {
+			const token = getJwtToken();
+
+			if (!token) {
+				setError("Aucun jeton d'authentification trouvé.");
+				return false;
+			}
+
+			const response = await customFetch(`/api/user/friends/${uuid}`, {
+				method: "DELETE",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+			});
+
+			if (!response.ok) {
+				throw new Error(
+					`Erreur lors de la suppression d'ami: ${response.status}`,
+				);
+			}
+
+			await fetchFriendData();
+			return true;
+		} catch (err: any) {
+			console.error("Erreur dans removeFriend:", err);
+			setError(
+				err.message || "Une erreur s'est produite lors de la suppression d'ami",
+			);
+			return false;
+		}
+	};
+
 	return (
 		<FriendContext.Provider
 			value={{
@@ -113,6 +225,9 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 				error,
 				fetchFriendData,
 				addFriend,
+				acceptFriendRequest,
+				declineFriendRequest,
+				removeFriend,
 			}}
 		>
 			{children}

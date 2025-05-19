@@ -5,6 +5,7 @@ import AddFriendModalStyles from "./AddFriendModalStyles";
 import { useTranslation } from "../../context/TranslationContext";
 import { useUserContext } from "../../context/UserContext";
 import { useFriendContext } from "../../context/FriendContext";
+import { useToast } from "../../context/ToastContext";
 import { customFetch } from "../../utils/customFetch";
 import { getJwtToken } from "../../utils/getJwtToken";
 import type { AddFriendModalProps } from "../../types/AddFreindModalProps";
@@ -18,6 +19,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 	const { t } = useTranslation();
 	const { user } = useUserContext();
 	const { friendData, fetchFriendData, addFriend } = useFriendContext();
+	const { showToast } = useToast();
 	const navigate = useNavigate();
 
 	const searchUsers = async () => {
@@ -272,20 +274,24 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 																		"Ami ajouté avec succès:",
 																		user.uuid,
 																	);
+																	showToast(
+																		t("notifications.friendRequestSent"),
+																		"success",
+																	);
 																	fetchFriendData();
 																} else {
 																	console.error(
 																		"Échec de l'ajout d'ami:",
 																		user.uuid,
 																	);
-																	// Vous pourriez ajouter un toast ou une notification ici
+																	showToast(t("notifications.error"), "error");
 																}
 															} catch (error) {
 																console.error(
 																	"Erreur lors de l'ajout d'ami:",
 																	error,
 																);
-																// Vous pourriez ajouter un toast ou une notification ici
+																showToast(t("notifications.error"), "error");
 															}
 														}}
 														className="ml-2 px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"

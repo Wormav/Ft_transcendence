@@ -7,4 +7,5 @@ export type FriendProfile = {
 	color_bg?: string;
 	size_text?: string;
 	speed_moves?: string;
+	status?: "online" | "offline";
 };
