@@ -216,7 +216,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 										{(() => {
 											// Vérifier si l'utilisateur est déjà ami
 											const isFriend = friendData?.friends.some(
-												(friend) => friend.uuid === user.uuid,
+												(friend) => friend.requester_uuid === user.uuid,
 											);
 
 											// Vérifier si une demande d'ami a déjà été envoyée
