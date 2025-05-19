@@ -74,6 +74,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 				color_bg: userData.color_bg,
 				size_text: userData.size_text,
 				speed_moves: userData.speed_moves,
+				last_seen: userData.last_seen,
 			};
 
 			setUser(filteredUserData);

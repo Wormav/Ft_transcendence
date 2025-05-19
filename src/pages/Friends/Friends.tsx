@@ -9,6 +9,16 @@ import { customFetch } from "../../utils/customFetch";
 import { getJwtToken } from "../../utils/getJwtToken";
 import type { FriendProfile } from "../../types/FriendProfile";
 
+// Fonction pour vérifier si un utilisateur est en ligne (moins de 5 minutes depuis last_seen)
+const isUserOnline = (lastSeen?: number): boolean => {
+	if (!lastSeen) return false;
+
+	const currentTime = Date.now();
+	const fiveMinutesInMs = 5 * 60 * 1000; // 5 minutes en millisecondes
+
+	return currentTime - lastSeen < fiveMinutesInMs;
+};
+
 const Friends = () => {
 	const { t } = useTranslation();
 	const {
@@ -34,6 +44,28 @@ const Friends = () => {
 
 	useEffect(() => {
 		fetchFriendData();
+
+		// Mettre à jour le statut en ligne/hors ligne toutes les minutes
+		const statusInterval = setInterval(() => {
+			setRequestUsers((prevUsers) => {
+				const updatedUsers = { ...prevUsers };
+
+				// Mettre à jour le statut de tous les utilisateurs
+				Object.keys(updatedUsers).forEach((uuid) => {
+					const user = updatedUsers[uuid];
+					if (user) {
+						updatedUsers[uuid] = {
+							...user,
+							status: isUserOnline(user.last_seen) ? "online" : "offline",
+						};
+					}
+				});
+
+				return updatedUsers;
+			});
+		}, 60000); // Actualiser toutes les minutes
+
+		return () => clearInterval(statusInterval);
 	}, []);
 	useEffect(() => {
 		if (friendData) {
@@ -43,7 +75,6 @@ const Friends = () => {
 			);
 		}
 
-		// Charger les informations des utilisateurs pour les demandes d'amis
 		if (friendData && friendData.requests_received) {
 			friendData.requests_received.forEach((request) => {
 				if (
@@ -55,13 +86,10 @@ const Friends = () => {
 			});
 		}
 
-		// Charger les informations des amis
 		if (friendData && friendData.friends && user?.uuid) {
 			console.log("Liste des amis (nombre):", friendData.friends.length);
 
-			// Pour chaque ami, déterminer l'UUID de l'ami (qui n'est pas le mien)
 			friendData.friends.forEach((friend) => {
-				// Déterminer l'UUID de l'ami (celui qui n'est pas le mien)
 				const friendUuid =
 					friend.requester_uuid === user.uuid
 						? friend.target_uuid
@@ -71,18 +99,16 @@ const Friends = () => {
 					`Relation d'amitié détectée: ${friend.requester_uuid} <-> ${friend.target_uuid}, ami identifié: ${friendUuid}`,
 				);
 
-				// Vérifier si l'UUID est valide
 				if (!friendUuid) {
 					console.error("Relation d'amitié invalide détectée:", friend);
 					return;
 				}
 
-				// Toujours charger les détails pour avoir les infos à jour
 				console.log(`Chargement des détails pour l'ami ${friendUuid}`);
 				fetchUserDetails(friendUuid);
 			});
 		}
-	}, [friendData, user?.uuid]); // Dépend de friendData et de l'UUID de l'utilisateur
+	}, [friendData, user?.uuid]);
 	const fetchUserDetails = async (uuid: string) => {
 		// Si déjà en train de charger, ne pas faire d'appel supplémentaire
 		if (userLoadingState[uuid]) {
@@ -123,8 +149,13 @@ const Friends = () => {
 				console.warn(`Données invalides pour l'utilisateur ${uuid}:`, userData);
 			}
 
-			// Mettre à jour le state avec les nouvelles données
-			setRequestUsers((prev) => ({ ...prev, [uuid]: userData }));
+			// Utiliser la fonction isUserOnline pour définir le statut en fonction de last_seen
+			const userWithStatus: FriendProfile = {
+				...userData,
+				status: isUserOnline(userData.last_seen) ? "online" : "offline",
+			};
+
+			setRequestUsers((prev) => ({ ...prev, [uuid]: userWithStatus }));
 		} catch (error) {
 			console.error(
 				`Erreur lors de la récupération des détails de l'utilisateur ${uuid}:`,
@@ -137,24 +168,33 @@ const Friends = () => {
 		}
 	};
 
-	const handleRemoveFriend = async (uuid: string) => {
-		if (isProcessing[uuid]) return;
+	const handleRemoveFriend = async (friend: {
+		requester_uuid: string;
+		target_uuid: string;
+		id: number;
+	}) => {
+		if (!user?.uuid) return;
+		const friendUuid =
+			friend.requester_uuid === user.uuid
+				? friend.target_uuid
+				: friend.requester_uuid;
+		if (isProcessing[friendUuid]) return;
 
-		setIsProcessing((prev) => ({ ...prev, [uuid]: true }));
+		setIsProcessing((prev) => ({ ...prev, [friendUuid]: true }));
 		try {
-			const success = await removeFriend(uuid);
+			const success = await removeFriend(friendUuid);
 			if (success) {
-				console.log("Ami supprimé avec succès:", uuid);
+				console.log("Ami supprimé avec succès:", friendUuid);
 				showToast(t("notifications.friendRemoved"), "success");
 			} else {
-				console.error("Échec de la suppression d'ami:", uuid);
+				console.error("Échec de la suppression d'ami:", friendUuid);
 				showToast(t("notifications.error"), "error");
 			}
 		} catch (error) {
 			console.error("Erreur lors de la suppression d'ami:", error);
 			showToast(t("notifications.error"), "error");
 		} finally {
-			setIsProcessing((prev) => ({ ...prev, [uuid]: false }));
+			setIsProcessing((prev) => ({ ...prev, [friendUuid]: false }));
 		}
 	};
 
@@ -273,13 +313,10 @@ const Friends = () => {
 					) : (
 						<ul className={FriendsStyle.list}>
 							{friendData.friends.map((friend) => {
-								// Déterminer l'UUID de l'ami (celui qui n'est pas le mien)
 								const friendUuid =
 									friend.requester_uuid === user?.uuid
 										? friend.target_uuid
 										: friend.requester_uuid;
-
-								// Récupérer les détails de l'ami si disponibles
 								const friendDetails = requestUsers[friendUuid] || {
 									uuid: friendUuid,
 									username: "Loading...",
@@ -287,7 +324,6 @@ const Friends = () => {
 									avatar: "",
 								};
 								const isLoading = userLoadingState[friendUuid] || false;
-
 								return (
 									<li key={friend.id} className={FriendsStyle.listItem}>
 										<div
@@ -326,23 +362,23 @@ const Friends = () => {
 												<div className={FriendsStyle.statusContainer}>
 													<span
 														className={
-															friendDetails.status === "online"
+															isUserOnline(friendDetails.last_seen)
 																? FriendsStyle.onlineIndicator
 																: FriendsStyle.offlineIndicator
 														}
 													></span>
 													<span className={FriendsStyle.statusText}>
-														{friendDetails.status === "online"
+														{isUserOnline(friendDetails.last_seen)
 															? t("friends.online")
 															: t("friends.offline")}
 													</span>
 												</div>
 											</div>
-										</div>{" "}
+										</div>
 										<div className={FriendsStyle.buttonContainer}>
 											<button
 												className={`${FriendsStyle.removeButton} ${isProcessing[friendUuid] ? FriendsStyle.disabledButton : ""}`}
-												onClick={() => handleRemoveFriend(friendUuid)}
+												onClick={() => handleRemoveFriend(friend)}
 												disabled={isProcessing[friendUuid]}
 											>
 												{isProcessing[friendUuid]

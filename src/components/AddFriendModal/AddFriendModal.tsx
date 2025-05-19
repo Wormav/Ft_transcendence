@@ -18,7 +18,14 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 	const [error, setError] = useState<string | null>(null);
 	const { t } = useTranslation();
 	const { user } = useUserContext();
-	const { friendData, fetchFriendData, addFriend } = useFriendContext();
+	const {
+		friendData,
+		fetchFriendData,
+		addFriend,
+		removeFriend,
+		acceptFriendRequest,
+		declineFriendRequest,
+	} = useFriendContext();
 	const { showToast } = useToast();
 	const navigate = useNavigate();
 
@@ -93,6 +100,42 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 			: users.filter((user) =>
 					user.username.toLowerCase().includes(searchQuery.toLowerCase()),
 				);
+
+	// Fonction pour supprimer un ami depuis le modal
+	const handleRemoveFriend = async (targetUserUuid: string) => {
+		if (!user?.uuid) return;
+		// Trouver la relation d'amitié correspondante
+		const relation = friendData?.friends.find(
+			(friend) =>
+				(friend.requester_uuid === user.uuid &&
+					friend.target_uuid === targetUserUuid) ||
+				(friend.target_uuid === user.uuid &&
+					friend.requester_uuid === targetUserUuid),
+		);
+		if (!relation) {
+			console.error(
+				"Relation d'amitié non trouvée pour la suppression",
+				targetUserUuid,
+			);
+			return;
+		}
+		const friendUuid =
+			relation.requester_uuid === user.uuid
+				? relation.target_uuid
+				: relation.requester_uuid;
+		try {
+			const success = await removeFriend(friendUuid);
+			if (success) {
+				showToast(t("notifications.friendRemoved"), "success");
+				fetchFriendData();
+			} else {
+				showToast(t("notifications.error"), "error");
+			}
+		} catch (error) {
+			console.error("Erreur lors de la suppression d'ami:", error);
+			showToast(t("notifications.error"), "error");
+		}
+	};
 
 	return createPortal(
 		<div className="fixed inset-0 isolate" style={{ zIndex: 99999 }}>
@@ -214,9 +257,11 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 											</div>
 										</div>
 										{(() => {
-											// Vérifier si l'utilisateur est déjà ami
+											// Vérifier si l'utilisateur est déjà ami (l'utilisateur peut être requester ou target)
 											const isFriend = friendData?.friends.some(
-												(friend) => friend.requester_uuid === user.uuid,
+												(friend) =>
+													friend.requester_uuid === user.uuid ||
+													friend.target_uuid === user.uuid,
 											);
 
 											// Vérifier si une demande d'ami a déjà été envoyée
@@ -233,9 +278,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 											if (isFriend) {
 												return (
 													<button
-														onClick={() =>
-															console.log("supprimer ami", user.uuid)
-														}
+														onClick={() => handleRemoveFriend(user.uuid)}
 														className="ml-2 px-3 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700"
 													>
 														{t("removeFriend")}
@@ -244,9 +287,42 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 											} else if (requestSent) {
 												return (
 													<button
-														onClick={() =>
-															console.log("annuler demande", user.uuid)
-														}
+														onClick={async () => {
+															try {
+																// Récupérer l'ID de la demande d'ami envoyée
+																const request = friendData?.requests_sent.find(
+																	(req) => req.target_uuid === user.uuid,
+																);
+																if (!request) {
+																	console.error("Demande d'ami non trouvée");
+																	showToast(t("notifications.error"), "error");
+																	return;
+																}
+
+																const success = await declineFriendRequest(
+																	user.uuid,
+																);
+																if (success) {
+																	console.log(
+																		"Demande d'ami annulée avec succès:",
+																		user.uuid,
+																	);
+																	showToast(
+																		t("notifications.requestCancelled"),
+																		"success",
+																	);
+																	fetchFriendData();
+																} else {
+																	showToast(t("notifications.error"), "error");
+																}
+															} catch (error) {
+																console.error(
+																	"Erreur lors de l'annulation de la demande:",
+																	error,
+																);
+																showToast(t("notifications.error"), "error");
+															}
+														}}
 														className="ml-2 px-3 py-1 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600"
 													>
 														{t("pendingRequest")}
@@ -255,9 +331,43 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 											} else if (requestReceived) {
 												return (
 													<button
-														onClick={() =>
-															console.log("accepter demande", user.uuid)
-														}
+														onClick={async () => {
+															try {
+																// Récupérer l'ID de la demande d'ami
+																const request =
+																	friendData?.requests_received.find(
+																		(req) => req.requester_uuid === user.uuid,
+																	);
+																if (!request) {
+																	console.error("Demande d'ami non trouvée");
+																	showToast(t("notifications.error"), "error");
+																	return;
+																}
+
+																const success = await acceptFriendRequest(
+																	user.uuid,
+																);
+																if (success) {
+																	console.log(
+																		"Demande d'ami acceptée avec succès:",
+																		user.uuid,
+																	);
+																	showToast(
+																		t("notifications.friendRequestAccepted"),
+																		"success",
+																	);
+																	fetchFriendData();
+																} else {
+																	showToast(t("notifications.error"), "error");
+																}
+															} catch (error) {
+																console.error(
+																	"Erreur lors de l'acceptation de la demande:",
+																	error,
+																);
+																showToast(t("notifications.error"), "error");
+															}
+														}}
 														className="ml-2 px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700"
 													>
 														{t("acceptRequest")}

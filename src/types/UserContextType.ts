@@ -7,6 +7,7 @@ export type UserData = {
 	color_bg: string;
 	size_text: number;
 	speed_moves: string;
+	last_seen: number;
 };
 
 export type UserContextType = {
