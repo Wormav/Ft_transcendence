@@ -87,7 +87,7 @@ const Friends = () => {
 						: friend.requester_uuid;
 
 				if (!friendUuid) {
-					console.error("Relation d'amitié invalide détectée:", friend);
+					console.error("Invalid friendship relation detected:", friend);
 					return;
 				}
 				fetchUserDetails(friendUuid);
@@ -104,7 +104,7 @@ const Friends = () => {
 		try {
 			const token = getJwtToken();
 			if (!token) {
-				console.error("Aucun jeton d'authentification trouvé");
+				console.error("No authentication token found");
 				showToast(t("notifications.authError"), "error");
 				return;
 			}
@@ -137,10 +137,7 @@ const Friends = () => {
 
 			setRequestUsers((prev) => ({ ...prev, [uuid]: userWithStatus }));
 		} catch (error) {
-			console.error(
-				`Erreur lors de la récupération des détails de l'utilisateur ${uuid}:`,
-				error,
-			);
+			console.error(`Error retrieving user details for ${uuid}:`, error);
 			showToast(t("notifications.userDataError"), "error");
 		} finally {
 			setUserLoadingState((prev) => ({ ...prev, [uuid]: false }));
@@ -165,11 +162,11 @@ const Friends = () => {
 			if (success) {
 				showToast(t("notifications.friendRemoved"), "success");
 			} else {
-				console.error("Échec de la suppression d'ami:", friendUuid);
+				console.error("Failed to remove friend:", friendUuid);
 				showToast(t("notifications.error"), "error");
 			}
 		} catch (error) {
-			console.error("Erreur lors de la suppression d'ami:", error);
+			console.error("Error removing friend:", error);
 			showToast(t("notifications.error"), "error");
 		} finally {
 			setIsProcessing((prev) => ({ ...prev, [friendUuid]: false }));
@@ -185,11 +182,11 @@ const Friends = () => {
 			if (success) {
 				showToast(t("notifications.friendRequestAccepted"), "success");
 			} else {
-				console.error("Échec de l'acceptation de la demande d'ami:", uuid);
+				console.error("Failed to accept friend request:", uuid);
 				showToast(t("notifications.error"), "error");
 			}
 		} catch (error) {
-			console.error("Erreur lors de l'acceptation de la demande d'ami:", error);
+			console.error("Error accepting friend request:", error);
 			showToast(t("notifications.error"), "error");
 		} finally {
 			setIsProcessing((prev) => ({ ...prev, [uuid]: false }));
@@ -205,11 +202,11 @@ const Friends = () => {
 			if (success) {
 				showToast(t("notifications.friendRequestDeclined"), "success");
 			} else {
-				console.error("Échec du refus de la demande d'ami:", uuid);
+				console.error("Failed to decline friend request:", uuid);
 				showToast(t("notifications.error"), "error");
 			}
 		} catch (error) {
-			console.error("Erreur lors du refus de la demande d'ami:", error);
+			console.error("Error declining friend request:", error);
 			showToast(t("notifications.error"), "error");
 		} finally {
 			setIsProcessing((prev) => ({ ...prev, [uuid]: false }));
@@ -319,7 +316,7 @@ const Friends = () => {
 												if (friendUuid) {
 													navigate(`/profile/${friendUuid}`);
 												} else {
-													console.error("UUID manquant pour l'ami:", friend);
+													console.error("Missing UUID for friend:", friend);
 													showToast(t("notifications.error"), "error");
 												}
 											}}
@@ -400,10 +397,7 @@ const Friends = () => {
 												if (request.requester_uuid) {
 													navigate(`/profile/${request.requester_uuid}`);
 												} else {
-													console.error(
-														"UUID manquant pour la demande:",
-														request,
-													);
+													console.error("Missing UUID for request:", request);
 													showToast(t("notifications.error"), "error");
 												}
 											}}

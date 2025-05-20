@@ -60,7 +60,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
 				throw new Error("Fail update settings user");
 			}
 		} catch (error) {
-			console.log("Fail update settings user:", error);
+			console.error("Fail update settings user:", error);
 		}
 	};
 

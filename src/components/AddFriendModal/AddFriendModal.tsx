@@ -115,7 +115,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 		);
 		if (!relation) {
 			console.error(
-				"Relation d'amitié non trouvée pour la suppression",
+				"Friendship relation not found for removal",
 				targetUserUuid,
 			);
 			return;
@@ -133,7 +133,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 				showToast(t("notifications.error"), "error");
 			}
 		} catch (error) {
-			console.error("Erreur lors de la suppression d'ami:", error);
+			console.error("Error removing friend:", error);
 			showToast(t("notifications.error"), "error");
 		}
 	};
@@ -335,7 +335,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 																	}
 																} catch (error) {
 																	console.error(
-																		"Erreur lors de l'annulation de la demande:",
+																		"Error cancelling the request:",
 																		error,
 																	);
 																	showToast(t("notifications.error"), "error");
@@ -380,7 +380,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 																	}
 																} catch (error) {
 																	console.error(
-																		"Erreur lors de l'acceptation de la demande:",
+																		"Error accepting friend request:",
 																		error,
 																	);
 																	showToast(t("notifications.error"), "error");
@@ -405,7 +405,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 																		fetchFriendData();
 																	} else {
 																		console.error(
-																			"Échec de l'ajout d'ami:",
+																			"Failed to add friend:",
 																			user.uuid,
 																		);
 																		showToast(
@@ -414,10 +414,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 																		);
 																	}
 																} catch (error) {
-																	console.error(
-																		"Erreur lors de l'ajout d'ami:",
-																		error,
-																	);
+																	console.error("Error adding friend:", error);
 																	showToast(t("notifications.error"), "error");
 																}
 															}}
