@@ -1,5 +1,3 @@
-// import type { FriendProfile } from "./FriendProfile";
-
 export type FriendRequest = {
 	id: number;
 	requester_uuid: string;

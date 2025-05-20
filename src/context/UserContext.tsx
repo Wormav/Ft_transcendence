@@ -165,7 +165,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const updateAvatar = async (avatar: string): Promise<boolean> => {
 		try {
-			// Vérifier si l'avatar est une URL Google et la remplacer par l'avatar par défaut
 			const finalAvatar = avatar.startsWith(
 				"https://lh3.googleusercontent.com/",
 			)

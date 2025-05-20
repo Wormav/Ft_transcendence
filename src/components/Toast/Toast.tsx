@@ -19,7 +19,7 @@ const Toast: React.FC<ToastProps> = ({
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			setIsVisible(false);
-			setTimeout(onClose, 300); // Wait for fade-out animation before removing
+			setTimeout(onClose, 300);
 		}, duration);
 
 		return () => clearTimeout(timer);
