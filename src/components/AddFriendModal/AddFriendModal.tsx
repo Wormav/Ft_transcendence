@@ -10,6 +10,8 @@ import { customFetch } from "../../utils/customFetch";
 import { getJwtToken } from "../../utils/getJwtToken";
 import type { AddFriendModalProps } from "../../types/AddFreindModalProps";
 import type { UserSearchResult } from "../../types/UserSearchResult";
+import { useSettings } from "../../context/SettingsContext";
+import { getSizeTextStyle } from "../../globalStyle";
 
 const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 	const [searchQuery, setSearchQuery] = useState("");
@@ -28,6 +30,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 	} = useFriendContext();
 	const { showToast } = useToast();
 	const navigate = useNavigate();
+	const { size_text } = useSettings();
 
 	const searchUsers = async () => {
 		try {
@@ -178,14 +181,18 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 							/>
 						</svg>
 					</button>
-					<h2 className={AddFriendModalStyles.title}>{t("menu.addFriend")}</h2>
+					<h2
+						className={`${AddFriendModalStyles.title} ${getSizeTextStyle(size_text)}`}
+					>
+						{t("menu.addFriend")}
+					</h2>
 					<div className={AddFriendModalStyles.searchContainer}>
 						<input
 							type="text"
 							placeholder={t("search.placeholder")}
 							value={searchQuery}
 							onChange={(e) => setSearchQuery(e.target.value)}
-							className={AddFriendModalStyles.searchInput}
+							className={`${AddFriendModalStyles.searchInput} ${getSizeTextStyle(size_text)}`}
 						/>
 						<button className={AddFriendModalStyles.searchButton}>
 							<svg
@@ -206,13 +213,29 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 					</div>
 					<div className={AddFriendModalStyles.results}>
 						{loading ? (
-							<div className="text-center py-4">{t("loading")}</div>
+							<div
+								className={`text-center py-4 ${getSizeTextStyle(size_text)}`}
+							>
+								{t("loading")}
+							</div>
 						) : error ? (
-							<div className="text-red-500 text-center py-4">{error}</div>
+							<div
+								className={`text-red-500 text-center py-4 ${getSizeTextStyle(size_text)}`}
+							>
+								{error}
+							</div>
 						) : searchQuery.trim() === "" ? (
-							<div className="text-center py-4">{t("search.enterQuery")}</div>
+							<div
+								className={`text-center py-4 ${getSizeTextStyle(size_text)}`}
+							>
+								{t("search.enterQuery")}
+							</div>
 						) : filteredUsers.length === 0 ? (
-							<div className="text-center py-4">{t("search.noResults")}</div>
+							<div
+								className={`text-center py-4 ${getSizeTextStyle(size_text)}`}
+							>
+								{t("search.noResults")}
+							</div>
 						) : (
 							<ul className="divide-y divide-gray-200">
 								{filteredUsers.map((user) => (
@@ -235,7 +258,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 													<img
 														src="/default.JPG"
 														alt={user.username}
-														className="h-full w-full object-cover"
+														className={`h-full w-full object-cover`}
 													/>
 												)}
 											</div>
@@ -246,12 +269,16 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 													onClose();
 												}}
 											>
-												<p className="text-sm font-medium text-gray-900">
+												<p
+													className={`text-sm font-medium text-gray-900 ${getSizeTextStyle(size_text)}`}
+												>
 													{user.username}
 												</p>
 											</div>
 										</div>
-										<div className={AddFriendModalStyles.actionButtons}>
+										<div
+											className={`${AddFriendModalStyles.actionButtons} ${getSizeTextStyle(size_text)}`}
+										>
 											{(() => {
 												const isFriend = friendData?.friends.some(
 													(friend) =>
@@ -269,7 +296,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 													return (
 														<button
 															onClick={() => handleRemoveFriend(user.uuid)}
-															className="w-full sm:w-auto px-3 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700"
+															className={`w-full sm:w-auto px-3 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700  ${getSizeTextStyle(size_text)}`}
 														>
 															{t("removeFriend")}
 														</button>
@@ -284,7 +311,6 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 																			(req) => req.target_uuid === user.uuid,
 																		);
 																	if (!request) {
-																		console.error("Demande d'ami non trouvée");
 																		showToast(
 																			t("notifications.error"),
 																			"error",
@@ -315,7 +341,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 																	showToast(t("notifications.error"), "error");
 																}
 															}}
-															className="w-full sm:w-auto px-3 py-1 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600"
+															className={`w-full sm:w-auto px-3 py-1 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600  ${getSizeTextStyle(size_text)}`}
 														>
 															{t("pendingRequest")}
 														</button>
@@ -330,7 +356,6 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 																			(req) => req.requester_uuid === user.uuid,
 																		);
 																	if (!request) {
-																		console.error("Demande d'ami non trouvée");
 																		showToast(
 																			t("notifications.error"),
 																			"error",
@@ -396,7 +421,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 																	showToast(t("notifications.error"), "error");
 																}
 															}}
-															className="w-full sm:w-auto px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
+															className={`w-full sm:w-auto px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700  ${getSizeTextStyle(size_text)}`}
 														>
 															{t("addFriend")}
 														</button>
