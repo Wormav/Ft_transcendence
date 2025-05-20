@@ -81,15 +81,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 				filteredUserData.avatar &&
 				filteredUserData.avatar.startsWith("https://lh3.googleusercontent.com/")
 			) {
-				console.log(
-					"Avatar Google détecté, mise à jour avec l'avatar par défaut",
-				);
 				await updateAvatar("/default.JPG");
 				filteredUserData.avatar = "/default.JPG";
 			}
 
 			setUser(filteredUserData);
-			console.log("User data retrieved:", filteredUserData);
 		} catch (err: any) {
 			console.error("Error in fetchUserData:", err);
 			if (err.message === "Unauthorized") {

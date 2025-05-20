@@ -294,10 +294,6 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 																	user.uuid,
 																);
 																if (success) {
-																	console.log(
-																		"Demande d'ami annulée avec succès:",
-																		user.uuid,
-																	);
 																	showToast(
 																		t("notifications.requestCancelled"),
 																		"success",
@@ -338,10 +334,6 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 																	user.uuid,
 																);
 																if (success) {
-																	console.log(
-																		"Demande d'ami acceptée avec succès:",
-																		user.uuid,
-																	);
 																	showToast(
 																		t("notifications.friendRequestAccepted"),
 																		"success",
@@ -370,10 +362,6 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 															try {
 																const success = await addFriend(user.uuid);
 																if (success) {
-																	console.log(
-																		"Ami ajouté avec succès:",
-																		user.uuid,
-																	);
 																	showToast(
 																		t("notifications.friendRequestSent"),
 																		"success",

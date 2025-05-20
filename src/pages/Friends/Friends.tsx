@@ -62,18 +62,11 @@ const Friends = () => {
 
 				return updatedUsers;
 			});
-		}, 60000); // Actualiser toutes les minutes
+		}, 60000);
 
 		return () => clearInterval(statusInterval);
 	}, []);
 	useEffect(() => {
-		if (friendData) {
-			console.log(
-				"Structure des données amis:",
-				JSON.stringify(friendData, null, 2),
-			);
-		}
-
 		if (friendData && friendData.requests_received) {
 			friendData.requests_received.forEach((request) => {
 				if (
@@ -86,36 +79,25 @@ const Friends = () => {
 		}
 
 		if (friendData && friendData.friends && user?.uuid) {
-			console.log("Liste des amis (nombre):", friendData.friends.length);
-
 			friendData.friends.forEach((friend) => {
 				const friendUuid =
 					friend.requester_uuid === user.uuid
 						? friend.target_uuid
 						: friend.requester_uuid;
 
-				console.log(
-					`Relation d'amitié détectée: ${friend.requester_uuid} <-> ${friend.target_uuid}, ami identifié: ${friendUuid}`,
-				);
-
 				if (!friendUuid) {
 					console.error("Relation d'amitié invalide détectée:", friend);
 					return;
 				}
-
-				console.log(`Chargement des détails pour l'ami ${friendUuid}`);
 				fetchUserDetails(friendUuid);
 			});
 		}
 	}, [friendData, user?.uuid]);
 	const fetchUserDetails = async (uuid: string) => {
-		// Si déjà en train de charger, ne pas faire d'appel supplémentaire
 		if (userLoadingState[uuid]) {
-			console.log(`Chargement déjà en cours pour ${uuid}, requête ignorée`);
 			return;
 		}
 
-		console.log(`Début du chargement des détails pour l'utilisateur ${uuid}`);
 		setUserLoadingState((prev) => ({ ...prev, [uuid]: true }));
 
 		try {
@@ -126,7 +108,6 @@ const Friends = () => {
 				return;
 			}
 
-			console.log(`Envoi de requête à l'API pour l'utilisateur ${uuid}`);
 			const response = await customFetch(`/api/user/${uuid}`, {
 				method: "GET",
 				headers: {
@@ -142,7 +123,6 @@ const Friends = () => {
 			}
 
 			const userData: FriendProfile = await response.json();
-			console.log(`Données utilisateur récupérées pour ${uuid}:`, userData);
 
 			if (!userData || !userData.username) {
 				console.warn(`Données invalides pour l'utilisateur ${uuid}:`, userData);
@@ -163,7 +143,6 @@ const Friends = () => {
 			showToast(t("notifications.userDataError"), "error");
 		} finally {
 			setUserLoadingState((prev) => ({ ...prev, [uuid]: false }));
-			console.log(`Fin du chargement des détails pour l'utilisateur ${uuid}`);
 		}
 	};
 
@@ -183,7 +162,6 @@ const Friends = () => {
 		try {
 			const success = await removeFriend(friendUuid);
 			if (success) {
-				console.log("Ami supprimé avec succès:", friendUuid);
 				showToast(t("notifications.friendRemoved"), "success");
 			} else {
 				console.error("Échec de la suppression d'ami:", friendUuid);
@@ -204,7 +182,6 @@ const Friends = () => {
 		try {
 			const success = await acceptFriendRequest(uuid);
 			if (success) {
-				console.log("Demande d'ami acceptée avec succès:", uuid);
 				showToast(t("notifications.friendRequestAccepted"), "success");
 			} else {
 				console.error("Échec de l'acceptation de la demande d'ami:", uuid);
@@ -225,7 +202,6 @@ const Friends = () => {
 		try {
 			const success = await declineFriendRequest(uuid);
 			if (success) {
-				console.log("Demande d'ami refusée avec succès:", uuid);
 				showToast(t("notifications.friendRequestDeclined"), "success");
 			} else {
 				console.error("Échec du refus de la demande d'ami:", uuid);
@@ -329,7 +305,6 @@ const Friends = () => {
 											className={FriendsStyle.profileSection}
 											onClick={() => {
 												if (friendUuid) {
-													console.log("Navigation vers le profil:", friendUuid);
 													navigate(`/profile/${friendUuid}`);
 												} else {
 													console.error("UUID manquant pour l'ami:", friend);
@@ -408,10 +383,6 @@ const Friends = () => {
 											className={FriendsStyle.profileSection}
 											onClick={() => {
 												if (request.requester_uuid) {
-													console.log(
-														"Navigation vers le profil:",
-														request.requester_uuid,
-													);
 													navigate(`/profile/${request.requester_uuid}`);
 												} else {
 													console.error(

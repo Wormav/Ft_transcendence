@@ -58,7 +58,6 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 
 			const data: FriendData = await response.json();
 			setFriendData(data);
-			console.log("Données d'amis récupérées:", data);
 		} catch (err: any) {
 			console.error("Erreur dans fetchFriendData:", err);
 			setError(
