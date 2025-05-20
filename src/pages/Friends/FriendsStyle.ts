@@ -3,7 +3,7 @@ const FriendsStyle = {
 	title: "font-bold mb-8 text-center text-primary",
 	tabContainer: "flex mb-6 border-b",
 	tabActive: "text-primary border-b-2 border-primary",
-	tabInactive: "text-gray-600 hover:text-gray-900",
+	tabInactive: "text-gray-600 hover:text-gray-900 cursor-pointer",
 	tabButton: "py-3 px-6 font-medium flex-1 text-center",
 	tabCounter: "ml-2 bg-gray-200 text-gray-700 rounded-full px-2 py-0.5 text-xs",
 	tabNotification:
@@ -27,12 +27,13 @@ const FriendsStyle = {
 	statusText: "text-gray-500",
 	requestText: "text-sm text-gray-500",
 	buttonContainer: "flex space-x-2",
-	removeButton: "px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700",
+	removeButton:
+		"px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 cursor-pointer",
 	acceptButton:
-		"px-3 py-1 bg-primary text-white  rounded-md hover:bg-green-700",
+		"px-3 py-1 bg-primary text-white  rounded-md hover:bg-green-700 cursor-pointer",
 	declineButton:
-		"px-3 py-1 bg-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-400",
-	disabledButton: "opacity-50 cursor-not-allowed",
+		"px-3 py-1 bg-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-400 cursor-pointer",
+	disabledButton: "opacity-50 cursor-not-allowed cursor-pointer",
 };
 
 export default FriendsStyle;

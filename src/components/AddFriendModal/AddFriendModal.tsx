@@ -101,10 +101,8 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 					user.username.toLowerCase().includes(searchQuery.toLowerCase()),
 				);
 
-	// Fonction pour supprimer un ami depuis le modal
 	const handleRemoveFriend = async (targetUserUuid: string) => {
 		if (!user?.uuid) return;
-		// Trouver la relation d'amitié correspondante
 		const relation = friendData?.friends.find(
 			(friend) =>
 				(friend.requester_uuid === user.uuid &&
@@ -257,24 +255,18 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 											</div>
 										</div>
 										{(() => {
-											// Vérifier si l'utilisateur est déjà ami (l'utilisateur peut être requester ou target)
 											const isFriend = friendData?.friends.some(
 												(friend) =>
 													friend.requester_uuid === user.uuid ||
 													friend.target_uuid === user.uuid,
 											);
-
-											// Vérifier si une demande d'ami a déjà été envoyée
 											const requestSent = friendData?.requests_sent.some(
 												(request) => request.target_uuid === user.uuid,
 											);
-
-											// Vérifier si une demande d'ami a été reçue
 											const requestReceived =
 												friendData?.requests_received.some(
 													(request) => request.requester_uuid === user.uuid,
 												);
-
 											if (isFriend) {
 												return (
 													<button
@@ -289,7 +281,6 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 													<button
 														onClick={async () => {
 															try {
-																// Récupérer l'ID de la demande d'ami envoyée
 																const request = friendData?.requests_sent.find(
 																	(req) => req.target_uuid === user.uuid,
 																);
@@ -333,7 +324,6 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 													<button
 														onClick={async () => {
 															try {
-																// Récupérer l'ID de la demande d'ami
 																const request =
 																	friendData?.requests_received.find(
 																		(req) => req.requester_uuid === user.uuid,

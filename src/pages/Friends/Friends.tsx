@@ -9,12 +9,11 @@ import { customFetch } from "../../utils/customFetch";
 import { getJwtToken } from "../../utils/getJwtToken";
 import type { FriendProfile } from "../../types/FriendProfile";
 
-// Fonction pour vérifier si un utilisateur est en ligne (moins de 5 minutes depuis last_seen)
 const isUserOnline = (lastSeen?: number): boolean => {
 	if (!lastSeen) return false;
 
 	const currentTime = Date.now();
-	const fiveMinutesInMs = 5 * 60 * 1000; // 5 minutes en millisecondes
+	const fiveMinutesInMs = 5 * 60 * 1000;
 
 	return currentTime - lastSeen < fiveMinutesInMs;
 };

@@ -77,6 +77,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 				last_seen: userData.last_seen,
 			};
 
+			if (
+				filteredUserData.avatar &&
+				filteredUserData.avatar.startsWith("https://lh3.googleusercontent.com/")
+			) {
+				console.log(
+					"Avatar Google détecté, mise à jour avec l'avatar par défaut",
+				);
+				await updateAvatar("/default.JPG");
+				filteredUserData.avatar = "/default.JPG";
+			}
+
 			setUser(filteredUserData);
 			console.log("User data retrieved:", filteredUserData);
 		} catch (err: any) {
@@ -154,6 +165,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const updateAvatar = async (avatar: string): Promise<boolean> => {
 		try {
+			// Vérifier si l'avatar est une URL Google et la remplacer par l'avatar par défaut
+			const finalAvatar = avatar.startsWith(
+				"https://lh3.googleusercontent.com/",
+			)
+				? "/default.JPG"
+				: avatar;
+
 			const token = getJwtToken();
 
 			const response = await customFetch("/api/user/update", {
@@ -162,7 +180,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 					Authorization: `Bearer ${token}`,
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ avatar }),
+				body: JSON.stringify({ avatar: finalAvatar }),
 			});
 
 			if (!response.ok) {
