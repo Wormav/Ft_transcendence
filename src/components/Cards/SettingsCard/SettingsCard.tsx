@@ -1,7 +1,7 @@
 import { FaPen } from "react-icons/fa";
 import { useTranslation } from "../../../context/TranslationContext";
 import globalStyle from "../../../globalStyle";
-import Card, { Space } from "../../Card/Card";
+import Card from "../../Card/Card";
 import CustomBtn from "../../CustomBtn/CustomBtn";
 import { useUserContext } from "../../../context/UserContext";
 import { useState } from "react";
@@ -175,7 +175,7 @@ export default function SettingsCard() {
 
 	return (
 		<Card>
-			<div className={globalStyle.row}>
+			<div className="md:flex md:flex-row items-center block">
 				<span className={globalStyle.span}>{t("profile.settings")}</span>
 			</div>
 			<div className={globalStyle.separator}></div>
@@ -183,13 +183,13 @@ export default function SettingsCard() {
 				<p>Chargement des informations...</p>
 			) : (
 				<>
-					<div className={globalStyle.row}>
+					<div className="md:flex md:flex-row items-center block mb-2">
 						<p>{t("profile.pseudo")} :</p>
-						<Space />
+						<span className="md:mx-2"></span>
 						<span className={globalStyle.span}>
 							{user?.username || "Non disponible"}
 						</span>
-						<Space />
+						<span className="md:mx-2"></span>
 						<button
 							className={SettingsCardStyle.editButton}
 							aria-label={t("profile.edit_pseudo")}
@@ -198,13 +198,13 @@ export default function SettingsCard() {
 							<FaPen size={20} color="#00babc" />
 						</button>
 					</div>
-					<div className={globalStyle.row}>
+					<div className="md:flex md:flex-row items-center block mb-2">
 						<p>{t("profile.email")} :</p>
-						<Space />
+						<span className="md:mx-2"></span>
 						<span className={globalStyle.span}>
 							{user?.email || "Non disponible"}
 						</span>
-						<Space />
+						<span className="md:mx-2"></span>
 						<button
 							className={SettingsCardStyle.editButton}
 							aria-label={t("profile.edit_email")}
@@ -222,10 +222,10 @@ export default function SettingsCard() {
 				onClick={openPasswordModal}
 			/>
 			<div className={globalStyle.separator}></div>
-			<div className={globalStyle.row}>
+			<div className="md:flex md:flex-row items-center block">
 				<p>{t("profile.language")} :</p>
-				<Space />
-				<div className="relative">
+				<span className="md:mx-2"></span>
+				<div className="relative mt-2 md:mt-0">
 					<select
 						className="appearance-none bg-white-custom border border-gray-300 rounded-md py-2 pl-3 pr-10 text-primary focus:outline-none focus:ring-primary focus:border-primary cursor-pointer"
 						value={locale}
