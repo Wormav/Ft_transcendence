@@ -8,6 +8,8 @@ import FriendsStyle from "./FriendsStyle";
 import { customFetch } from "../../utils/customFetch";
 import { getJwtToken } from "../../utils/getJwtToken";
 import type { FriendProfile } from "../../types/FriendProfile";
+import { getSizeTextStyle } from "../../globalStyle";
+import { useSettings } from "../../context/SettingsContext";
 
 const isUserOnline = (lastSeen?: number): boolean => {
 	if (!lastSeen) return false;
@@ -20,6 +22,7 @@ const isUserOnline = (lastSeen?: number): boolean => {
 
 const Friends = () => {
 	const { t } = useTranslation();
+	const { size_text } = useSettings();
 	const {
 		friendData,
 		fetchFriendData,
@@ -44,12 +47,10 @@ const Friends = () => {
 	useEffect(() => {
 		fetchFriendData();
 
-		// Mettre à jour le statut en ligne/hors ligne toutes les minutes
 		const statusInterval = setInterval(() => {
 			setRequestUsers((prevUsers) => {
 				const updatedUsers = { ...prevUsers };
 
-				// Mettre à jour le statut de tous les utilisateurs
 				Object.keys(updatedUsers).forEach((uuid) => {
 					const user = updatedUsers[uuid];
 					if (user) {
@@ -237,7 +238,9 @@ const Friends = () => {
 
 	return (
 		<div className={FriendsStyle.container}>
-			<h1 className={FriendsStyle.title}>{t("friends.title")}</h1>
+			<h1 className={`${FriendsStyle.title} ${getSizeTextStyle(size_text)}`}>
+				{t("friends.title")}
+			</h1>
 
 			{/* Tabs */}
 			<div className={FriendsStyle.tabContainer}>
@@ -246,14 +249,16 @@ const Friends = () => {
 						activeTab === "friends"
 							? FriendsStyle.tabActive
 							: FriendsStyle.tabInactive
-					}`}
+					}  ${getSizeTextStyle(size_text)}`}
 					onClick={() => setActiveTab("friends")}
 				>
 					{t("friends.myFriends")}
 					{friendData &&
 						friendData.friends &&
 						friendData.friends.length > 0 && (
-							<span className={FriendsStyle.tabCounter}>
+							<span
+								className={`${FriendsStyle.tabCounter} ${getSizeTextStyle(size_text)}`}
+							>
 								{friendData.friends.length}
 							</span>
 						)}
@@ -280,13 +285,17 @@ const Friends = () => {
 			{/* Content based on active tab */}
 			{activeTab === "friends" ? (
 				// Friends list
-				<div className={FriendsStyle.contentContainer}>
+				<div
+					className={`${FriendsStyle.contentContainer} ${getSizeTextStyle(size_text)}`}
+				>
 					{!friendData ||
 					!friendData.friends ||
 					friendData.friends.length === 0 ? (
 						renderEmpty(t("friends.noFriends"))
 					) : (
-						<ul className={FriendsStyle.list}>
+						<ul
+							className={`${FriendsStyle.list}  ${getSizeTextStyle(size_text)}`}
+						>
 							{friendData.friends.map((friend) => {
 								const friendUuid =
 									friend.requester_uuid === user?.uuid
@@ -300,7 +309,10 @@ const Friends = () => {
 								};
 								const isLoading = userLoadingState[friendUuid] || false;
 								return (
-									<li key={friend.id} className={FriendsStyle.listItem}>
+									<li
+										key={friend.id}
+										className={`${FriendsStyle.listItem}  ${getSizeTextStyle(size_text)}`}
+									>
 										<div
 											className={FriendsStyle.profileSection}
 											onClick={() => {
@@ -328,7 +340,9 @@ const Friends = () => {
 												)}
 											</div>
 											<div className={FriendsStyle.infoContainer}>
-												<h3 className={FriendsStyle.username}>
+												<h3
+													className={`${FriendsStyle.username}  ${getSizeTextStyle(size_text)}`}
+												>
 													{isLoading
 														? t("loading")
 														: friendDetails.username || "Unknown User"}
@@ -367,8 +381,9 @@ const Friends = () => {
 					)}
 				</div>
 			) : (
-				// Friend requests
-				<div className={FriendsStyle.contentContainer}>
+				<div
+					className={`${FriendsStyle.contentContainer}  ${getSizeTextStyle(size_text)}`}
+				>
 					{!friendData ||
 					!friendData.requests_received ||
 					friendData.requests_received.length === 0 ? (
@@ -409,12 +424,16 @@ const Friends = () => {
 												)}
 											</div>
 											<div className={FriendsStyle.infoContainer}>
-												<h3 className={FriendsStyle.username}>
+												<h3
+													className={`${FriendsStyle.username}  ${getSizeTextStyle(size_text)}`}
+												>
 													{userLoadingState[request.requester_uuid]
 														? t("loading")
 														: requesterDetails?.username || "Unknown User"}
 												</h3>
-												<p className={FriendsStyle.requestText}>
+												<p
+													className={`${FriendsStyle.requestText}  ${getSizeTextStyle(size_text)}`}
+												>
 													{t("friends.sentYouRequest")}
 												</p>
 											</div>
@@ -432,7 +451,7 @@ const Friends = () => {
 													: t("acceptRequest")}
 											</button>
 											<button
-												className={`${FriendsStyle.declineButton} ${isProcessing[request.requester_uuid] ? FriendsStyle.disabledButton : ""}`}
+												className={`${FriendsStyle.declineButton} ${isProcessing[request.requester_uuid] ? FriendsStyle.disabledButton : ""}  ${getSizeTextStyle(size_text)}`}
 												onClick={() =>
 													handleDeclineRequest(request.requester_uuid)
 												}
