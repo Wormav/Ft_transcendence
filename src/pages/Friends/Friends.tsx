@@ -8,6 +8,8 @@ import FriendsStyle from "./FriendsStyle";
 import { customFetch } from "../../utils/customFetch";
 import { getJwtToken } from "../../utils/getJwtToken";
 import type { FriendProfile } from "../../types/FriendProfile";
+import { getSizeTextStyle } from "../../globalStyle";
+import { useSettings } from "../../context/SettingsContext";
 
 const isUserOnline = (lastSeen?: number): boolean => {
 	if (!lastSeen) return false;
@@ -20,6 +22,7 @@ const isUserOnline = (lastSeen?: number): boolean => {
 
 const Friends = () => {
 	const { t } = useTranslation();
+	const { size_text } = useSettings();
 	const {
 		friendData,
 		fetchFriendData,
@@ -44,12 +47,10 @@ const Friends = () => {
 	useEffect(() => {
 		fetchFriendData();
 
-		// Mettre à jour le statut en ligne/hors ligne toutes les minutes
 		const statusInterval = setInterval(() => {
 			setRequestUsers((prevUsers) => {
 				const updatedUsers = { ...prevUsers };
 
-				// Mettre à jour le statut de tous les utilisateurs
 				Object.keys(updatedUsers).forEach((uuid) => {
 					const user = updatedUsers[uuid];
 					if (user) {
@@ -86,7 +87,7 @@ const Friends = () => {
 						: friend.requester_uuid;
 
 				if (!friendUuid) {
-					console.error("Relation d'amitié invalide détectée:", friend);
+					console.error("Invalid friendship relation detected:", friend);
 					return;
 				}
 				fetchUserDetails(friendUuid);
@@ -103,7 +104,7 @@ const Friends = () => {
 		try {
 			const token = getJwtToken();
 			if (!token) {
-				console.error("Aucun jeton d'authentification trouvé");
+				console.error("No authentication token found");
 				showToast(t("notifications.authError"), "error");
 				return;
 			}
@@ -136,10 +137,7 @@ const Friends = () => {
 
 			setRequestUsers((prev) => ({ ...prev, [uuid]: userWithStatus }));
 		} catch (error) {
-			console.error(
-				`Erreur lors de la récupération des détails de l'utilisateur ${uuid}:`,
-				error,
-			);
+			console.error(`Error retrieving user details for ${uuid}:`, error);
 			showToast(t("notifications.userDataError"), "error");
 		} finally {
 			setUserLoadingState((prev) => ({ ...prev, [uuid]: false }));
@@ -164,11 +162,11 @@ const Friends = () => {
 			if (success) {
 				showToast(t("notifications.friendRemoved"), "success");
 			} else {
-				console.error("Échec de la suppression d'ami:", friendUuid);
+				console.error("Failed to remove friend:", friendUuid);
 				showToast(t("notifications.error"), "error");
 			}
 		} catch (error) {
-			console.error("Erreur lors de la suppression d'ami:", error);
+			console.error("Error removing friend:", error);
 			showToast(t("notifications.error"), "error");
 		} finally {
 			setIsProcessing((prev) => ({ ...prev, [friendUuid]: false }));
@@ -184,11 +182,11 @@ const Friends = () => {
 			if (success) {
 				showToast(t("notifications.friendRequestAccepted"), "success");
 			} else {
-				console.error("Échec de l'acceptation de la demande d'ami:", uuid);
+				console.error("Failed to accept friend request:", uuid);
 				showToast(t("notifications.error"), "error");
 			}
 		} catch (error) {
-			console.error("Erreur lors de l'acceptation de la demande d'ami:", error);
+			console.error("Error accepting friend request:", error);
 			showToast(t("notifications.error"), "error");
 		} finally {
 			setIsProcessing((prev) => ({ ...prev, [uuid]: false }));
@@ -204,11 +202,11 @@ const Friends = () => {
 			if (success) {
 				showToast(t("notifications.friendRequestDeclined"), "success");
 			} else {
-				console.error("Échec du refus de la demande d'ami:", uuid);
+				console.error("Failed to decline friend request:", uuid);
 				showToast(t("notifications.error"), "error");
 			}
 		} catch (error) {
-			console.error("Erreur lors du refus de la demande d'ami:", error);
+			console.error("Error declining friend request:", error);
 			showToast(t("notifications.error"), "error");
 		} finally {
 			setIsProcessing((prev) => ({ ...prev, [uuid]: false }));
@@ -237,7 +235,9 @@ const Friends = () => {
 
 	return (
 		<div className={FriendsStyle.container}>
-			<h1 className={FriendsStyle.title}>{t("friends.title")}</h1>
+			<h1 className={`${FriendsStyle.title} ${getSizeTextStyle(size_text)}`}>
+				{t("friends.title")}
+			</h1>
 
 			{/* Tabs */}
 			<div className={FriendsStyle.tabContainer}>
@@ -246,14 +246,16 @@ const Friends = () => {
 						activeTab === "friends"
 							? FriendsStyle.tabActive
 							: FriendsStyle.tabInactive
-					}`}
+					}  ${getSizeTextStyle(size_text)}`}
 					onClick={() => setActiveTab("friends")}
 				>
 					{t("friends.myFriends")}
 					{friendData &&
 						friendData.friends &&
 						friendData.friends.length > 0 && (
-							<span className={FriendsStyle.tabCounter}>
+							<span
+								className={`${FriendsStyle.tabCounter} ${getSizeTextStyle(size_text)}`}
+							>
 								{friendData.friends.length}
 							</span>
 						)}
@@ -280,13 +282,17 @@ const Friends = () => {
 			{/* Content based on active tab */}
 			{activeTab === "friends" ? (
 				// Friends list
-				<div className={FriendsStyle.contentContainer}>
+				<div
+					className={`${FriendsStyle.contentContainer} ${getSizeTextStyle(size_text)}`}
+				>
 					{!friendData ||
 					!friendData.friends ||
 					friendData.friends.length === 0 ? (
 						renderEmpty(t("friends.noFriends"))
 					) : (
-						<ul className={FriendsStyle.list}>
+						<ul
+							className={`${FriendsStyle.list}  ${getSizeTextStyle(size_text)}`}
+						>
 							{friendData.friends.map((friend) => {
 								const friendUuid =
 									friend.requester_uuid === user?.uuid
@@ -300,14 +306,17 @@ const Friends = () => {
 								};
 								const isLoading = userLoadingState[friendUuid] || false;
 								return (
-									<li key={friend.id} className={FriendsStyle.listItem}>
+									<li
+										key={friend.id}
+										className={`${FriendsStyle.listItem}  ${getSizeTextStyle(size_text)}`}
+									>
 										<div
 											className={FriendsStyle.profileSection}
 											onClick={() => {
 												if (friendUuid) {
 													navigate(`/profile/${friendUuid}`);
 												} else {
-													console.error("UUID manquant pour l'ami:", friend);
+													console.error("Missing UUID for friend:", friend);
 													showToast(t("notifications.error"), "error");
 												}
 											}}
@@ -328,7 +337,9 @@ const Friends = () => {
 												)}
 											</div>
 											<div className={FriendsStyle.infoContainer}>
-												<h3 className={FriendsStyle.username}>
+												<h3
+													className={`${FriendsStyle.username}  ${getSizeTextStyle(size_text)}`}
+												>
 													{isLoading
 														? t("loading")
 														: friendDetails.username || "Unknown User"}
@@ -367,8 +378,9 @@ const Friends = () => {
 					)}
 				</div>
 			) : (
-				// Friend requests
-				<div className={FriendsStyle.contentContainer}>
+				<div
+					className={`${FriendsStyle.contentContainer}  ${getSizeTextStyle(size_text)}`}
+				>
 					{!friendData ||
 					!friendData.requests_received ||
 					friendData.requests_received.length === 0 ? (
@@ -385,10 +397,7 @@ const Friends = () => {
 												if (request.requester_uuid) {
 													navigate(`/profile/${request.requester_uuid}`);
 												} else {
-													console.error(
-														"UUID manquant pour la demande:",
-														request,
-													);
+													console.error("Missing UUID for request:", request);
 													showToast(t("notifications.error"), "error");
 												}
 											}}
@@ -409,12 +418,16 @@ const Friends = () => {
 												)}
 											</div>
 											<div className={FriendsStyle.infoContainer}>
-												<h3 className={FriendsStyle.username}>
+												<h3
+													className={`${FriendsStyle.username}  ${getSizeTextStyle(size_text)}`}
+												>
 													{userLoadingState[request.requester_uuid]
 														? t("loading")
 														: requesterDetails?.username || "Unknown User"}
 												</h3>
-												<p className={FriendsStyle.requestText}>
+												<p
+													className={`${FriendsStyle.requestText}  ${getSizeTextStyle(size_text)}`}
+												>
 													{t("friends.sentYouRequest")}
 												</p>
 											</div>
@@ -432,7 +445,7 @@ const Friends = () => {
 													: t("acceptRequest")}
 											</button>
 											<button
-												className={`${FriendsStyle.declineButton} ${isProcessing[request.requester_uuid] ? FriendsStyle.disabledButton : ""}`}
+												className={`${FriendsStyle.declineButton} ${isProcessing[request.requester_uuid] ? FriendsStyle.disabledButton : ""}  ${getSizeTextStyle(size_text)}`}
 												onClick={() =>
 													handleDeclineRequest(request.requester_uuid)
 												}

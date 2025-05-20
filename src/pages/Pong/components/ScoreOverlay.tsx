@@ -1,6 +1,8 @@
 import PongStyle from "../PongStyle";
 import type { ScoreOverlayProps } from "../../../types/Pong";
 import { useTranslation } from "../../../context/TranslationContext";
+import { getSizeTextStyle } from "../../../globalStyle";
+import { useSettings } from "../../../context/SettingsContext";
 
 export const ScoreOverlay: React.FC<ScoreOverlayProps> = ({
 	gameStarted,
@@ -11,11 +13,11 @@ export const ScoreOverlay: React.FC<ScoreOverlayProps> = ({
 	getViewName,
 }) => {
 	const { t } = useTranslation();
-
+	const { size_text } = useSettings();
 	if (!gameStarted || showMenu) return null;
 
 	return (
-		<div className={`${PongStyle.score}`}>
+		<div className={`${PongStyle.score} ${getSizeTextStyle(size_text)}`}>
 			{score.player1} - {score.player2}
 			{editViewMode && (
 				<div className={PongStyle.viewModeText}>{t("pong.editViewMode")}</div>

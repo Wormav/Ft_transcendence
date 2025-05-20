@@ -9,11 +9,11 @@ const YourPictureCardStyle = {
 	fileInput: "hidden",
 	errorMessage: "text-red-500 text-xs mt-1",
 	buttonContainer:
-		"flex flex-col sm:flex-row justify-end sm:space-x-2 space-y-3 sm:space-y-0",
+		"flex flex-col sm:flex-row justify-end sm:space-x-2 space-y-4 sm:space-y-0 mt-3 gap-4",
 	cancelButton:
-		"px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 order-2 sm:order-1",
+		"px-4 py-3 bg-gray-200 rounded-md hover:bg-gray-300 order-2 sm:order-1 mb-1 sm:mb-0",
 	saveButton:
-		"px-4 py-2 bg-primary text-white rounded-md hover:opacity-90 order-1 sm:order-2",
+		"px-4 py-3 bg-primary text-white rounded-md hover:opacity-90 order-1 sm:order-2",
 	previewContainer: "flex justify-center items-center",
 	previewImage: "w-40 h-40 rounded-full object-cover border-4 border-primary",
 	inputContainer: "flex flex-col space-y-2",

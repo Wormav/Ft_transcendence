@@ -3,6 +3,8 @@ import PongStyle from "../PongStyle";
 import type { GameMenuProps } from "../../../types/Pong";
 import { useTranslation } from "../../../context/TranslationContext";
 import { TournamentMatchDialog } from "./TournamentMatchDialog";
+import { useSettings } from "../../../context/SettingsContext";
+import { getSizeTextStyle } from "../../../globalStyle";
 
 export const GameMenu: React.FC<GameMenuProps> = ({
 	showMenu,
@@ -17,6 +19,7 @@ export const GameMenu: React.FC<GameMenuProps> = ({
 	const { t } = useTranslation();
 	const [isMobileView, setIsMobileView] = useState(false);
 	const [showTournamentDialog, setShowTournamentDialog] = useState(false);
+	const { size_text } = useSettings();
 
 	useEffect(() => {
 		const checkMobileView = () => {
@@ -38,10 +41,12 @@ export const GameMenu: React.FC<GameMenuProps> = ({
 
 	return (
 		<div className={PongStyle.overlay}>
-			<h1 className={PongStyle.title}>Pong 3D</h1>
+			<h1 className={`${PongStyle.title} ${getSizeTextStyle(size_text)}`}>
+				Pong 3D
+			</h1>
 
 			{hasScore && (
-				<h2 className={PongStyle.subtitle}>
+				<h2 className={`${PongStyle.subtitle} ${getSizeTextStyle(size_text)}`}>
 					{gameOver
 						? score.player1 >= maxScore
 							? t("pong.player1") + " " + t("pong.youWin")
@@ -50,22 +55,31 @@ export const GameMenu: React.FC<GameMenuProps> = ({
 				</h2>
 			)}
 
-			<button className={PongStyle.button} onClick={startGame}>
+			<button
+				className={`${PongStyle.button}  ${getSizeTextStyle(size_text)}`}
+				onClick={startGame}
+			>
 				{hasScore ? t("pong.playAgain") : t("pong.startGame")}
 			</button>
 
 			<button
-				className={PongStyle.button}
+				className={`${PongStyle.button} ${getSizeTextStyle(size_text)}`}
 				onClick={() => setShowTournamentDialog(true)}
 			>
 				{t("pong.tournamentMatch")}
 			</button>
 
 			<div className={PongStyle.settingsSection}>
-				<h3 className={PongStyle.settingsTitle}>{t("pong.gameSettings")}</h3>
+				<h3
+					className={`${PongStyle.settingsTitle} ${getSizeTextStyle(size_text)}`}
+				>
+					{t("pong.gameSettings")}
+				</h3>
 
 				<div className={PongStyle.settingGroup}>
-					<label>{t("pong.plateauColor")}</label>
+					<label className={getSizeTextStyle(size_text)}>
+						{t("pong.plateauColor")}
+					</label>
 					<select
 						value={settings.plateauColor}
 						onChange={(e) =>
@@ -74,7 +88,7 @@ export const GameMenu: React.FC<GameMenuProps> = ({
 								plateauColor: e.target.value as any,
 							})
 						}
-						className={PongStyle.select}
+						className={`${PongStyle.select}  ${getSizeTextStyle(size_text)}`}
 					>
 						<option value="default">{t("pong.colorDefault")}</option>
 						<option value="blue">{t("pong.colorBlue")}</option>
@@ -92,7 +106,7 @@ export const GameMenu: React.FC<GameMenuProps> = ({
 								paddleColor: e.target.value as any,
 							})
 						}
-						className={PongStyle.select}
+						className={`${PongStyle.select} ${getSizeTextStyle(size_text)}`}
 					>
 						<option value="default">{t("pong.colorDefault")}</option>
 						<option value="green">{t("pong.colorGreen")}</option>
@@ -101,7 +115,9 @@ export const GameMenu: React.FC<GameMenuProps> = ({
 				</div>
 
 				<div className={PongStyle.settingGroup}>
-					<label>{t("pong.ballSpeed")}</label>
+					<label className={getSizeTextStyle(size_text)}>
+						{t("pong.ballSpeed")}
+					</label>
 					<select
 						value={settings.ballSpeed}
 						onChange={(e) =>
@@ -110,7 +126,7 @@ export const GameMenu: React.FC<GameMenuProps> = ({
 								ballSpeed: e.target.value as any,
 							})
 						}
-						className={PongStyle.select}
+						className={`${PongStyle.select} ${getSizeTextStyle(size_text)}`}
 					>
 						<option value="normal">{t("pong.speedNormal")}</option>
 						<option value="fast">{t("pong.speedFast")}</option>
@@ -119,11 +135,14 @@ export const GameMenu: React.FC<GameMenuProps> = ({
 				</div>
 			</div>
 
-			<button className={PongStyle.buttonDanger} onClick={quitGame}>
+			<button
+				className={`${PongStyle.buttonDanger} ${getSizeTextStyle(size_text)}`}
+				onClick={quitGame}
+			>
 				{t("pong.quitGame")}
 			</button>
 
-			<div className={PongStyle.smallText}>
+			<div className={`${PongStyle.smallText} ${getSizeTextStyle(size_text)}`}>
 				{isMobileView ? (
 					<>
 						{t("pong.mobileControls")}

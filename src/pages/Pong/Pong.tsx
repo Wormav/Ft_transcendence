@@ -269,10 +269,7 @@ export default function Pong() {
 						.exitFullscreen()
 						.then(exitFullscreenAndNavigate)
 						.catch((err) => {
-							console.error(
-								"Erreur lors de la sortie du mode plein écran:",
-								err,
-							);
+							console.error("Error exiting fullscreen mode:", err);
 							exitFullscreenAndNavigate();
 						});
 				} else if ((document as any).mozCancelFullScreen) {
@@ -288,7 +285,7 @@ export default function Pong() {
 					exitFullscreenAndNavigate();
 				}
 			} catch (err) {
-				console.error("Exception lors de la sortie du mode plein écran:", err);
+				console.error("Exception when exiting fullscreen mode:", err);
 				exitFullscreenAndNavigate();
 			}
 		} else {
@@ -301,7 +298,7 @@ export default function Pong() {
 			try {
 				if (document.documentElement.requestFullscreen) {
 					document.documentElement.requestFullscreen().catch((err) => {
-						console.error("Erreur lors du passage en plein écran:", err);
+						console.error("Error entering fullscreen mode:", err);
 					});
 				} else if ((document.documentElement as any).mozRequestFullScreen) {
 					(document.documentElement as any).mozRequestFullScreen();
@@ -311,15 +308,15 @@ export default function Pong() {
 					(document.documentElement as any).msRequestFullscreen();
 				}
 			} catch (err) {
-				console.error("Exception lors du passage en plein écran:", err);
+				console.error("Exception when entering fullscreen mode:", err);
 			}
 		} else if (document.exitFullscreen) {
 			try {
 				document.exitFullscreen().catch((err) => {
-					console.error("Erreur lors de la sortie du mode plein écran:", err);
+					console.error("Error exiting fullscreen mode:", err);
 				});
 			} catch (err) {
-				console.error("Exception lors de la sortie du mode plein écran:", err);
+				console.error("Exception when exiting fullscreen mode:", err);
 			}
 		}
 	}, []);
@@ -753,7 +750,7 @@ export default function Pong() {
 					);
 				}
 			} catch (error) {
-				console.log("Erreur lors de la mise à jour des raquettes:", error);
+				console.error("Erreur lors de la mise à jour des raquettes:", error);
 			}
 		}
 
@@ -771,14 +768,14 @@ export default function Pong() {
 					}
 				}
 			} catch (error) {
-				console.log("Erreur lors de la mise à jour du plateau:", error);
+				console.error("Erreur lors de la mise à jour du plateau:", error);
 			}
 		}
 
 		try {
 			updateBallSpeed(speed_moves);
 		} catch (error) {
-			console.log("Erreur lors de la mise à jour de la vitesse:", error);
+			console.error("Erreur lors de la mise à jour de la vitesse:", error);
 		}
 	};
 

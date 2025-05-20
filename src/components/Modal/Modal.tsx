@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import type { ModalProps } from "../../types/ModalProps";
 import { createPortal } from "react-dom";
 import { ModalStyles } from "./ModalStyles";
+import { getSizeTextStyle } from "../../globalStyle";
+import { useSettings } from "../../context/SettingsContext";
 
 export const Modal: React.FC<ModalProps> = ({
 	isOpen,
@@ -9,6 +11,7 @@ export const Modal: React.FC<ModalProps> = ({
 	title,
 	children,
 }) => {
+	const { size_text } = useSettings();
 	useEffect(() => {
 		const handleEscape = (event: KeyboardEvent) => {
 			if (event.key === "Escape") {
@@ -76,9 +79,19 @@ export const Modal: React.FC<ModalProps> = ({
 						</svg>
 					</button>
 
-					{title && <h2 className={ModalStyles.title}>{title}</h2>}
+					{title && (
+						<h2
+							className={`${ModalStyles.title}  ${getSizeTextStyle(size_text)}`}
+						>
+							{title}
+						</h2>
+					)}
 
-					<div className={ModalStyles.content}>{children}</div>
+					<div
+						className={`${ModalStyles.content}  ${getSizeTextStyle(size_text)}`}
+					>
+						{children}
+					</div>
 				</div>
 			</div>
 		</div>,

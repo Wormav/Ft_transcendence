@@ -59,7 +59,7 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 			const data: FriendData = await response.json();
 			setFriendData(data);
 		} catch (err: any) {
-			console.error("Erreur dans fetchFriendData:", err);
+			console.error("Erreur in fetchFriendData:", err);
 			setError(
 				err.message ||
 					"Une erreur s'est produite lors de la récupération des données d'amis",
@@ -99,7 +99,7 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 			await fetchFriendData();
 			return true;
 		} catch (err: any) {
-			console.error("Erreur dans addFriend:", err);
+			console.error("Erreur in addFriend:", err);
 			setError(
 				err.message || "Une erreur s'est produite lors de l'ajout d'ami",
 			);
@@ -135,7 +135,7 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 			await fetchFriendData();
 			return true;
 		} catch (err: any) {
-			console.error("Erreur dans acceptFriendRequest:", err);
+			console.error("Erreur in acceptFriendRequest:", err);
 			setError(
 				err.message ||
 					"Une erreur s'est produite lors de l'acceptation de la demande d'ami",
@@ -172,7 +172,7 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 			await fetchFriendData();
 			return true;
 		} catch (err: any) {
-			console.error("Erreur dans declineFriendRequest:", err);
+			console.error("Erreur in declineFriendRequest:", err);
 			setError(
 				err.message ||
 					"Une erreur s'est produite lors du refus de la demande d'ami",
@@ -209,7 +209,7 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 			await fetchFriendData();
 			return true;
 		} catch (err: any) {
-			console.error("Erreur dans removeFriend:", err);
+			console.error("Erreur in removeFriend:", err);
 			setError(
 				err.message || "Une erreur s'est produite lors de la suppression d'ami",
 			);

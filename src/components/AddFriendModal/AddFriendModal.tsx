@@ -10,6 +10,8 @@ import { customFetch } from "../../utils/customFetch";
 import { getJwtToken } from "../../utils/getJwtToken";
 import type { AddFriendModalProps } from "../../types/AddFreindModalProps";
 import type { UserSearchResult } from "../../types/UserSearchResult";
+import { useSettings } from "../../context/SettingsContext";
+import { getSizeTextStyle } from "../../globalStyle";
 
 const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 	const [searchQuery, setSearchQuery] = useState("");
@@ -28,6 +30,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 	} = useFriendContext();
 	const { showToast } = useToast();
 	const navigate = useNavigate();
+	const { size_text } = useSettings();
 
 	const searchUsers = async () => {
 		try {
@@ -112,7 +115,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 		);
 		if (!relation) {
 			console.error(
-				"Relation d'amitié non trouvée pour la suppression",
+				"Friendship relation not found for removal",
 				targetUserUuid,
 			);
 			return;
@@ -130,7 +133,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 				showToast(t("notifications.error"), "error");
 			}
 		} catch (error) {
-			console.error("Erreur lors de la suppression d'ami:", error);
+			console.error("Error removing friend:", error);
 			showToast(t("notifications.error"), "error");
 		}
 	};
@@ -178,14 +181,18 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 							/>
 						</svg>
 					</button>
-					<h2 className={AddFriendModalStyles.title}>{t("menu.addFriend")}</h2>
+					<h2
+						className={`${AddFriendModalStyles.title} ${getSizeTextStyle(size_text)}`}
+					>
+						{t("menu.addFriend")}
+					</h2>
 					<div className={AddFriendModalStyles.searchContainer}>
 						<input
 							type="text"
 							placeholder={t("search.placeholder")}
 							value={searchQuery}
 							onChange={(e) => setSearchQuery(e.target.value)}
-							className={AddFriendModalStyles.searchInput}
+							className={`${AddFriendModalStyles.searchInput} ${getSizeTextStyle(size_text)}`}
 						/>
 						<button className={AddFriendModalStyles.searchButton}>
 							<svg
@@ -206,21 +213,34 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 					</div>
 					<div className={AddFriendModalStyles.results}>
 						{loading ? (
-							<div className="text-center py-4">{t("loading")}</div>
+							<div
+								className={`text-center py-4 ${getSizeTextStyle(size_text)}`}
+							>
+								{t("loading")}
+							</div>
 						) : error ? (
-							<div className="text-red-500 text-center py-4">{error}</div>
+							<div
+								className={`text-red-500 text-center py-4 ${getSizeTextStyle(size_text)}`}
+							>
+								{error}
+							</div>
 						) : searchQuery.trim() === "" ? (
-							<div className="text-center py-4">{t("search.enterQuery")}</div>
+							<div
+								className={`text-center py-4 ${getSizeTextStyle(size_text)}`}
+							>
+								{t("search.enterQuery")}
+							</div>
 						) : filteredUsers.length === 0 ? (
-							<div className="text-center py-4">{t("search.noResults")}</div>
+							<div
+								className={`text-center py-4 ${getSizeTextStyle(size_text)}`}
+							>
+								{t("search.noResults")}
+							</div>
 						) : (
 							<ul className="divide-y divide-gray-200">
 								{filteredUsers.map((user) => (
-									<li
-										key={user.uuid}
-										className={`py-3 flex items-center justify-between ${AddFriendModalStyles.userItem}`}
-									>
-										<div className="flex items-center">
+									<li key={user.uuid} className={AddFriendModalStyles.userItem}>
+										<div className={AddFriendModalStyles.userInfo}>
 											<div
 												className="h-10 w-10 rounded-full overflow-hidden bg-gray-200 cursor-pointer"
 												onClick={() => {
@@ -238,7 +258,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 													<img
 														src="/default.JPG"
 														alt={user.username}
-														className="h-full w-full object-cover"
+														className={`h-full w-full object-cover`}
 													/>
 												)}
 											</div>
@@ -249,146 +269,163 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 													onClose();
 												}}
 											>
-												<p className="text-sm font-medium text-gray-900">
+												<p
+													className={`text-sm font-medium text-gray-900 ${getSizeTextStyle(size_text)}`}
+												>
 													{user.username}
 												</p>
 											</div>
 										</div>
-										{(() => {
-											const isFriend = friendData?.friends.some(
-												(friend) =>
-													friend.requester_uuid === user.uuid ||
-													friend.target_uuid === user.uuid,
-											);
-											const requestSent = friendData?.requests_sent.some(
-												(request) => request.target_uuid === user.uuid,
-											);
-											const requestReceived =
-												friendData?.requests_received.some(
-													(request) => request.requester_uuid === user.uuid,
+										<div
+											className={`${AddFriendModalStyles.actionButtons} ${getSizeTextStyle(size_text)}`}
+										>
+											{(() => {
+												const isFriend = friendData?.friends.some(
+													(friend) =>
+														friend.requester_uuid === user.uuid ||
+														friend.target_uuid === user.uuid,
 												);
-											if (isFriend) {
-												return (
-													<button
-														onClick={() => handleRemoveFriend(user.uuid)}
-														className="ml-2 px-3 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700"
-													>
-														{t("removeFriend")}
-													</button>
+												const requestSent = friendData?.requests_sent.some(
+													(request) => request.target_uuid === user.uuid,
 												);
-											} else if (requestSent) {
-												return (
-													<button
-														onClick={async () => {
-															try {
-																const request = friendData?.requests_sent.find(
-																	(req) => req.target_uuid === user.uuid,
-																);
-																if (!request) {
-																	console.error("Demande d'ami non trouvée");
-																	showToast(t("notifications.error"), "error");
-																	return;
-																}
+												const requestReceived =
+													friendData?.requests_received.some(
+														(request) => request.requester_uuid === user.uuid,
+													);
+												if (isFriend) {
+													return (
+														<button
+															onClick={() => handleRemoveFriend(user.uuid)}
+															className={`w-full sm:w-auto px-3 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700  ${getSizeTextStyle(size_text)}`}
+														>
+															{t("removeFriend")}
+														</button>
+													);
+												} else if (requestSent) {
+													return (
+														<button
+															onClick={async () => {
+																try {
+																	const request =
+																		friendData?.requests_sent.find(
+																			(req) => req.target_uuid === user.uuid,
+																		);
+																	if (!request) {
+																		showToast(
+																			t("notifications.error"),
+																			"error",
+																		);
+																		return;
+																	}
 
-																const success = await declineFriendRequest(
-																	user.uuid,
-																);
-																if (success) {
-																	showToast(
-																		t("notifications.requestCancelled"),
-																		"success",
-																	);
-																	fetchFriendData();
-																} else {
-																	showToast(t("notifications.error"), "error");
-																}
-															} catch (error) {
-																console.error(
-																	"Erreur lors de l'annulation de la demande:",
-																	error,
-																);
-																showToast(t("notifications.error"), "error");
-															}
-														}}
-														className="ml-2 px-3 py-1 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600"
-													>
-														{t("pendingRequest")}
-													</button>
-												);
-											} else if (requestReceived) {
-												return (
-													<button
-														onClick={async () => {
-															try {
-																const request =
-																	friendData?.requests_received.find(
-																		(req) => req.requester_uuid === user.uuid,
-																	);
-																if (!request) {
-																	console.error("Demande d'ami non trouvée");
-																	showToast(t("notifications.error"), "error");
-																	return;
-																}
-
-																const success = await acceptFriendRequest(
-																	user.uuid,
-																);
-																if (success) {
-																	showToast(
-																		t("notifications.friendRequestAccepted"),
-																		"success",
-																	);
-																	fetchFriendData();
-																} else {
-																	showToast(t("notifications.error"), "error");
-																}
-															} catch (error) {
-																console.error(
-																	"Erreur lors de l'acceptation de la demande:",
-																	error,
-																);
-																showToast(t("notifications.error"), "error");
-															}
-														}}
-														className="ml-2 px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700"
-													>
-														{t("acceptRequest")}
-													</button>
-												);
-											} else {
-												return (
-													<button
-														onClick={async () => {
-															try {
-																const success = await addFriend(user.uuid);
-																if (success) {
-																	showToast(
-																		t("notifications.friendRequestSent"),
-																		"success",
-																	);
-																	fetchFriendData();
-																} else {
-																	console.error(
-																		"Échec de l'ajout d'ami:",
+																	const success = await declineFriendRequest(
 																		user.uuid,
 																	);
+																	if (success) {
+																		showToast(
+																			t("notifications.requestCancelled"),
+																			"success",
+																		);
+																		fetchFriendData();
+																	} else {
+																		showToast(
+																			t("notifications.error"),
+																			"error",
+																		);
+																	}
+																} catch (error) {
+																	console.error(
+																		"Error cancelling the request:",
+																		error,
+																	);
 																	showToast(t("notifications.error"), "error");
 																}
-															} catch (error) {
-																console.error(
-																	"Erreur lors de l'ajout d'ami:",
-																	error,
-																);
-																showToast(t("notifications.error"), "error");
-															}
-														}}
-														className="ml-2 px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
-													>
-														{t("addFriend")}
-													</button>
-												);
-											}
-										})()}
+															}}
+															className={`w-full sm:w-auto px-3 py-1 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600  ${getSizeTextStyle(size_text)}`}
+														>
+															{t("pendingRequest")}
+														</button>
+													);
+												} else if (requestReceived) {
+													return (
+														<button
+															onClick={async () => {
+																try {
+																	const request =
+																		friendData?.requests_received.find(
+																			(req) => req.requester_uuid === user.uuid,
+																		);
+																	if (!request) {
+																		showToast(
+																			t("notifications.error"),
+																			"error",
+																		);
+																		return;
+																	}
+
+																	const success = await acceptFriendRequest(
+																		user.uuid,
+																	);
+																	if (success) {
+																		showToast(
+																			t("notifications.friendRequestAccepted"),
+																			"success",
+																		);
+																		fetchFriendData();
+																	} else {
+																		showToast(
+																			t("notifications.error"),
+																			"error",
+																		);
+																	}
+																} catch (error) {
+																	console.error(
+																		"Error accepting friend request:",
+																		error,
+																	);
+																	showToast(t("notifications.error"), "error");
+																}
+															}}
+															className="w-full sm:w-auto px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700"
+														>
+															{t("acceptRequest")}
+														</button>
+													);
+												} else {
+													return (
+														<button
+															onClick={async () => {
+																try {
+																	const success = await addFriend(user.uuid);
+																	if (success) {
+																		showToast(
+																			t("notifications.friendRequestSent"),
+																			"success",
+																		);
+																		fetchFriendData();
+																	} else {
+																		console.error(
+																			"Failed to add friend:",
+																			user.uuid,
+																		);
+																		showToast(
+																			t("notifications.error"),
+																			"error",
+																		);
+																	}
+																} catch (error) {
+																	console.error("Error adding friend:", error);
+																	showToast(t("notifications.error"), "error");
+																}
+															}}
+															className={`w-full sm:w-auto px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700  ${getSizeTextStyle(size_text)}`}
+														>
+															{t("addFriend")}
+														</button>
+													);
+												}
+											})()}
+										</div>
 									</li>
 								))}
 							</ul>

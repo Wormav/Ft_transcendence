@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 import styles from "./TournamentsStyle";
 import type { Match, Player, Tournament } from "../../types/Tournament";
 import { useTranslation } from "../../context/TranslationContext";
+import { useSettings } from "../../context/SettingsContext";
+import { getSizeTextStyle } from "../../globalStyle";
 
 const Tournaments: React.FC = () => {
 	const { t } = useTranslation();
@@ -12,6 +14,7 @@ const Tournaments: React.FC = () => {
 	]);
 	const [tournament, setTournament] = useState<Tournament | null>(null);
 	const [error, setError] = useState<string>("");
+	const { size_text } = useSettings();
 
 	const handleAddPlayer = (index: number, name: string) => {
 		const newPlayers = [...players];
@@ -131,11 +134,13 @@ const Tournaments: React.FC = () => {
 
 	return (
 		<div className={styles.container}>
-			<h1 className={styles.title}>{t("tournaments.createTournament")}</h1>
+			<h1 className={`${styles.title} ${getSizeTextStyle(size_text)}`}>
+				{t("tournaments.createTournament")}
+			</h1>
 
 			<div className={styles.form}>
 				<select
-					className={styles.select}
+					className={`${styles.select}  ${getSizeTextStyle(size_text)}`}
 					value={maxPlayers}
 					onChange={(e) => setMaxPlayers(Number(e.target.value) as 4 | 6 | 8)}
 				>
@@ -148,7 +153,7 @@ const Tournaments: React.FC = () => {
 					<input
 						key={index}
 						type="text"
-						className={styles.playerInput}
+						className={`${styles.playerInput} ${getSizeTextStyle(size_text)}`}
 						placeholder={`${t("tournaments.playerName")} ${index + 2}`}
 						onChange={(e) => handleAddPlayer(index + 1, e.target.value)}
 						value={players[index + 1]?.name || ""}
@@ -158,12 +163,14 @@ const Tournaments: React.FC = () => {
 				{error && <p className={styles.error}>{error}</p>}
 
 				<button
-					className={
-						players.filter((p) => p.name.trim() !== "").length <
-						getMinPlayers(maxPlayers)
-							? styles.buttonDisabled
-							: styles.button
-					}
+					className={`
+						${
+							players.filter((p) => p.name.trim() !== "").length <
+							getMinPlayers(maxPlayers)
+								? styles.buttonDisabled
+								: styles.button
+						} ${getSizeTextStyle(size_text)}
+					`}
 					onClick={createTournament}
 					disabled={
 						players.filter((p) => p.name.trim() !== "").length <
@@ -176,7 +183,9 @@ const Tournaments: React.FC = () => {
 
 			{tournament && (
 				<div className={styles.tournament.container}>
-					<h2 className={styles.tournament.roundTitle}>
+					<h2
+						className={`${styles.tournament.roundTitle} ${getSizeTextStyle(size_text)}`}
+					>
 						{t("tournaments.tournamentTree")}
 					</h2>
 					<div className={styles.tournament.bracket}>
@@ -192,17 +201,19 @@ const Tournaments: React.FC = () => {
 										{roundMatches.map((match) => (
 											<div key={match.id} className={styles.tournament.match}>
 												<div
-													className={`${styles.tournament.player} ${match.winner?.id === match.player1.id ? styles.tournament.winner : ""}`}
+													className={`${styles.tournament.player}  ${getSizeTextStyle(size_text)} ${match.winner?.id === match.player1.id ? styles.tournament.winner : ""}`}
 												>
 													{match.player1.name}
 												</div>
 												<div
-													className={`${styles.tournament.player} ${match.winner?.id === match.player2.id ? styles.tournament.winner : ""}`}
+													className={`${styles.tournament.player}  ${getSizeTextStyle(size_text)} ${match.winner?.id === match.player2.id ? styles.tournament.winner : ""}`}
 												>
 													{match.player2.name}
 												</div>
 												<div className={styles.tournament.matchId}>
-													<span>ID: {match.id.slice(0, 8)}...</span>
+													<span className={getSizeTextStyle(size_text)}>
+														ID: {match.id.slice(0, 8)}...
+													</span>
 													<button
 														className={styles.tournament.copyButton}
 														onClick={() => {

@@ -53,7 +53,7 @@ export default function ProfileFriend() {
 				const profileData = await response.json();
 				setFriendProfile(profileData);
 			} catch (err: any) {
-				console.error("Erreur lors du chargement du profil ami:", err);
+				console.error("Error loading friend profile:", err);
 				setError(err.message || "Une erreur est survenue");
 			} finally {
 				setLoading(false);

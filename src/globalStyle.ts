@@ -7,6 +7,7 @@ const globalStyle = {
 	littleText: "text-[18px]",
 	NormalText: "text-[22px]",
 	BigText: "text-[26px]",
+	footer: "mt-auto py-4",
 };
 
 export const getSizeTextStyle = (size: number): string => {
