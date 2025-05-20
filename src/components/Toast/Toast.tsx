@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { ToastStyles } from "./ToastStyles.ts";
-
-export type ToastProps = {
-	message: string;
-	type: "success" | "error" | "info";
-	duration?: number;
-	onClose: () => void;
-};
+import { getSizeTextStyle } from "../../globalStyle.ts";
+import { useSettings } from "../../context/SettingsContext.tsx";
+import type { ToastProps } from "../../types/ToastProps.ts";
 
 const Toast: React.FC<ToastProps> = ({
 	message,
@@ -15,6 +11,7 @@ const Toast: React.FC<ToastProps> = ({
 	onClose,
 }) => {
 	const [isVisible, setIsVisible] = useState(true);
+	const { size_text } = useSettings();
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
@@ -84,7 +81,11 @@ const Toast: React.FC<ToastProps> = ({
 			role="alert"
 		>
 			<div className={styles.iconContainer}>{iconByType[type]}</div>
-			<div className={styles.messageContainer}>{message}</div>
+			<div
+				className={`${styles.messageContainer} ${getSizeTextStyle(size_text)}`}
+			>
+				{message}
+			</div>
 			<button
 				type="button"
 				className={styles.closeButton}
