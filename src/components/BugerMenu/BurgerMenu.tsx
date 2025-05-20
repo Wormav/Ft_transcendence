@@ -302,6 +302,58 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 						</Link>
 					</li>
 					<li className={`${BugerMenuStyles.li}`}>
+						{isActive("/friends") && (
+							<div className={`${BugerMenuStyles.indicator}`}></div>
+						)}
+						<Link
+							to="/friends"
+							className={`${BugerMenuStyles.navItem}  ${getSizeTextStyle(size_text)}`}
+							onClick={onClose}
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								className={BugerMenuStyles.navIcon}
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke={isActive("/friends") ? "#00BABC" : "#9CA3AF"}
+							>
+								<defs>
+									<filter
+										id="friendsShadow"
+										x="-20%"
+										y="-20%"
+										width="140%"
+										height="140%"
+									>
+										<feDropShadow
+											dx="1"
+											dy="1"
+											stdDeviation="2"
+											floodOpacity="0.3"
+											floodColor="#000"
+										/>
+									</filter>
+								</defs>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+									d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+									filter="url(#friendsShadow)"
+								/>
+							</svg>
+							<span
+								className={
+									isActive("/friends")
+										? "text-gray-900 font-medium"
+										: "text-gray-500"
+								}
+							>
+								{t("menu.friends")}
+							</span>
+						</Link>
+					</li>
+					<li className={`${BugerMenuStyles.li}`}>
 						{isActive("/tournaments") && (
 							<div className={`${BugerMenuStyles.indicator}`}></div>
 						)}

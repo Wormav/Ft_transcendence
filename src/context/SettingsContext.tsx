@@ -45,7 +45,6 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
 			speed_moves: GameSpeedType;
 		}>,
 	) => {
-		console.log("Updating settings with:", options);
 		try {
 			const token = getJwtToken();
 			const response = await customFetch("/api/user/options", {
@@ -60,20 +59,17 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
 			if (!response.ok) {
 				throw new Error("Fail update settings user");
 			}
-			console.log("Settings updated successfully");
 		} catch (error) {
 			console.log("Fail update settings user:", error);
 		}
 	};
 
 	const setColorItems = (value: string) => {
-		console.log("setColorItems called with:", value);
 		setColorItemsState(value);
 		updateSettings({ color_items: value });
 	};
 
 	const setColorBg = (value: string) => {
-		console.log("setColorBg called with:", value);
 		setColorBgState(value);
 		updateSettings({ color_bg: value });
 	};

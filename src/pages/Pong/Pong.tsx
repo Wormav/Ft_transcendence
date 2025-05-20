@@ -109,14 +109,6 @@ export default function Pong() {
 			ballSpeed: speed_moves,
 		}));
 
-		console.log("User settings loaded:", {
-			color_bg,
-			color_items,
-			speed_moves,
-			plateauColor: getPlateauColorFromHex(color_bg),
-			paddleColor: getPaddleColorFromHex(color_items),
-		});
-
 		if (sceneRef.current && paddleLeftRef.current && paddleRightRef.current) {
 			updateVisualElements();
 		}
@@ -456,10 +448,6 @@ export default function Pong() {
 				if (newScore[player] >= MAX_SCORE) {
 					if (tournamentMatchSettings.isInTournament) {
 						// TODO: Envoyer le résultat du match au serveur
-						console.log(
-							`Match de tournoi ${tournamentMatchSettings.matchId} terminé :`,
-							newScore,
-						);
 					}
 					setGameStarted(false);
 					setShowMenu(true);
@@ -669,16 +657,6 @@ export default function Pong() {
 	const handleSettingsChange = (newSettings: GameSettings) => {
 		setGameSettings(newSettings);
 
-		console.log("New settings:", newSettings);
-		console.log(
-			"Paddle color hex:",
-			getPaddleColorHex(newSettings.paddleColor),
-		);
-		console.log(
-			"Plateau color hex:",
-			getPlateauColorHex(newSettings.plateauColor),
-		);
-
 		setColorItems(getPaddleColorHex(newSettings.paddleColor));
 		setColorBg(getPlateauColorHex(newSettings.plateauColor));
 		setSpeedMoves(newSettings.ballSpeed as GameSpeedType);
@@ -886,7 +864,6 @@ export default function Pong() {
 
 		setTimeout(() => {
 			if (sceneRef.current && paddleLeftRef.current && paddleRightRef.current) {
-				console.log("Initialisation des éléments visuels...");
 				updateVisualElements();
 			}
 		}, 500);

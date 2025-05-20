@@ -6,10 +6,31 @@
 	},
 	"loading": "Cargando...",
 	"addFriend": "Añadir",
+	"removeFriend": "Eliminar",
+	"pendingRequest": "Solicitud enviada",
+	"acceptRequest": "Aceptar",
+	"friends": {
+		"title": "Mis Amigos",
+		"myFriends": "Mis amigos",
+		"requests": "Solicitudes",
+		"noFriends": "Aún no tienes amigos",
+		"noRequests": "No hay solicitudes de amistad pendientes",
+		"online": "En línea",
+		"offline": "Desconectado",
+		"sentYouRequest": "Te envió una solicitud de amistad",
+		"decline": "Rechazar"
+	},
 	"error": {
 		"searchUsers": "Error al buscar usuarios",
 		"friendRequest": "Error al enviar solicitud de amistad",
 		"unknown": "Ocurrió un error desconocido"
+	},
+	"notifications": {
+		"friendRequestSent": "Solicitud de amistad enviada con éxito",
+		"friendRequestAccepted": "Solicitud de amistad aceptada",
+		"friendRequestDeclined": "Solicitud de amistad rechazada",
+		"friendRemoved": "Amigo eliminado",
+		"error": "Ocurrió un error"
 	},
 	"accessibility": {
 		"title": "Accesibilidad",
@@ -83,7 +104,8 @@
 		"logout": "Cerrar sesión",
 		"settings": "Ajustes",
 		"test_text_size": "Prueba Tamaño Texto",
-		"addFriend": "Agregar Amigo"
+		"addFriend": "Agregar Amigo",
+		"friends": "Amigos"
 	},
 	"home": {
 		"welcom": "Bienvenido a",

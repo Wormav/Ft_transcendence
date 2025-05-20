@@ -6,10 +6,31 @@
 	},
 	"loading": "Loading...",
 	"addFriend": "Add",
+	"removeFriend": "Remove",
+	"pendingRequest": "Request Sent",
+	"acceptRequest": "Accept",
+	"friends": {
+		"title": "My Friends",
+		"myFriends": "My Friends",
+		"requests": "Requests",
+		"noFriends": "You don't have any friends yet",
+		"noRequests": "No pending friend requests",
+		"online": "Online",
+		"offline": "Offline",
+		"sentYouRequest": "Sent you a friend request",
+		"decline": "Decline"
+	},
 	"error": {
 		"searchUsers": "Error searching for users",
 		"friendRequest": "Error sending friend request",
 		"unknown": "An unknown error occurred"
+	},
+	"notifications": {
+		"friendRequestSent": "Friend request sent successfully",
+		"friendRequestAccepted": "Friend request accepted",
+		"friendRequestDeclined": "Friend request declined",
+		"friendRemoved": "Friend removed",
+		"error": "An error occurred"
 	},
 	"accessibility": {
 		"title": "Accessibility",
@@ -83,7 +104,8 @@
 		"logout": "Logout",
 		"settings": "Settings",
 		"test_text_size": "Text Size Test",
-		"addFriend": "Add Friend"
+		"addFriend": "Add Friend",
+		"friends": "Friends"
 	},
 	"home": {
 		"welcom": "Welcome to",

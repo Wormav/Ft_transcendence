@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import AddFriendModalStyles from "./AddFriendModalStyles";
 import { useTranslation } from "../../context/TranslationContext";
 import { useUserContext } from "../../context/UserContext";
+import { useFriendContext } from "../../context/FriendContext";
+import { useToast } from "../../context/ToastContext";
 import { customFetch } from "../../utils/customFetch";
 import { getJwtToken } from "../../utils/getJwtToken";
 import type { AddFriendModalProps } from "../../types/AddFreindModalProps";
@@ -16,6 +18,15 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 	const [error, setError] = useState<string | null>(null);
 	const { t } = useTranslation();
 	const { user } = useUserContext();
+	const {
+		friendData,
+		fetchFriendData,
+		addFriend,
+		removeFriend,
+		acceptFriendRequest,
+		declineFriendRequest,
+	} = useFriendContext();
+	const { showToast } = useToast();
 	const navigate = useNavigate();
 
 	const searchUsers = async () => {
@@ -53,6 +64,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 	useEffect(() => {
 		if (isOpen) {
 			searchUsers();
+			fetchFriendData();
 		}
 	}, [isOpen]);
 
@@ -88,6 +100,40 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 			: users.filter((user) =>
 					user.username.toLowerCase().includes(searchQuery.toLowerCase()),
 				);
+
+	const handleRemoveFriend = async (targetUserUuid: string) => {
+		if (!user?.uuid) return;
+		const relation = friendData?.friends.find(
+			(friend) =>
+				(friend.requester_uuid === user.uuid &&
+					friend.target_uuid === targetUserUuid) ||
+				(friend.target_uuid === user.uuid &&
+					friend.requester_uuid === targetUserUuid),
+		);
+		if (!relation) {
+			console.error(
+				"Relation d'amitié non trouvée pour la suppression",
+				targetUserUuid,
+			);
+			return;
+		}
+		const friendUuid =
+			relation.requester_uuid === user.uuid
+				? relation.target_uuid
+				: relation.requester_uuid;
+		try {
+			const success = await removeFriend(friendUuid);
+			if (success) {
+				showToast(t("notifications.friendRemoved"), "success");
+				fetchFriendData();
+			} else {
+				showToast(t("notifications.error"), "error");
+			}
+		} catch (error) {
+			console.error("Erreur lors de la suppression d'ami:", error);
+			showToast(t("notifications.error"), "error");
+		}
+	};
 
 	return createPortal(
 		<div className="fixed inset-0 isolate" style={{ zIndex: 99999 }}>
@@ -208,12 +254,141 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 												</p>
 											</div>
 										</div>
-										<button
-											onClick={() => console.log("add freind")}
-											className="ml-2 px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
-										>
-											{t("addFriend")}
-										</button>
+										{(() => {
+											const isFriend = friendData?.friends.some(
+												(friend) =>
+													friend.requester_uuid === user.uuid ||
+													friend.target_uuid === user.uuid,
+											);
+											const requestSent = friendData?.requests_sent.some(
+												(request) => request.target_uuid === user.uuid,
+											);
+											const requestReceived =
+												friendData?.requests_received.some(
+													(request) => request.requester_uuid === user.uuid,
+												);
+											if (isFriend) {
+												return (
+													<button
+														onClick={() => handleRemoveFriend(user.uuid)}
+														className="ml-2 px-3 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700"
+													>
+														{t("removeFriend")}
+													</button>
+												);
+											} else if (requestSent) {
+												return (
+													<button
+														onClick={async () => {
+															try {
+																const request = friendData?.requests_sent.find(
+																	(req) => req.target_uuid === user.uuid,
+																);
+																if (!request) {
+																	console.error("Demande d'ami non trouvée");
+																	showToast(t("notifications.error"), "error");
+																	return;
+																}
+
+																const success = await declineFriendRequest(
+																	user.uuid,
+																);
+																if (success) {
+																	showToast(
+																		t("notifications.requestCancelled"),
+																		"success",
+																	);
+																	fetchFriendData();
+																} else {
+																	showToast(t("notifications.error"), "error");
+																}
+															} catch (error) {
+																console.error(
+																	"Erreur lors de l'annulation de la demande:",
+																	error,
+																);
+																showToast(t("notifications.error"), "error");
+															}
+														}}
+														className="ml-2 px-3 py-1 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600"
+													>
+														{t("pendingRequest")}
+													</button>
+												);
+											} else if (requestReceived) {
+												return (
+													<button
+														onClick={async () => {
+															try {
+																const request =
+																	friendData?.requests_received.find(
+																		(req) => req.requester_uuid === user.uuid,
+																	);
+																if (!request) {
+																	console.error("Demande d'ami non trouvée");
+																	showToast(t("notifications.error"), "error");
+																	return;
+																}
+
+																const success = await acceptFriendRequest(
+																	user.uuid,
+																);
+																if (success) {
+																	showToast(
+																		t("notifications.friendRequestAccepted"),
+																		"success",
+																	);
+																	fetchFriendData();
+																} else {
+																	showToast(t("notifications.error"), "error");
+																}
+															} catch (error) {
+																console.error(
+																	"Erreur lors de l'acceptation de la demande:",
+																	error,
+																);
+																showToast(t("notifications.error"), "error");
+															}
+														}}
+														className="ml-2 px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700"
+													>
+														{t("acceptRequest")}
+													</button>
+												);
+											} else {
+												return (
+													<button
+														onClick={async () => {
+															try {
+																const success = await addFriend(user.uuid);
+																if (success) {
+																	showToast(
+																		t("notifications.friendRequestSent"),
+																		"success",
+																	);
+																	fetchFriendData();
+																} else {
+																	console.error(
+																		"Échec de l'ajout d'ami:",
+																		user.uuid,
+																	);
+																	showToast(t("notifications.error"), "error");
+																}
+															} catch (error) {
+																console.error(
+																	"Erreur lors de l'ajout d'ami:",
+																	error,
+																);
+																showToast(t("notifications.error"), "error");
+															}
+														}}
+														className="ml-2 px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
+													>
+														{t("addFriend")}
+													</button>
+												);
+											}
+										})()}
 									</li>
 								))}
 							</ul>

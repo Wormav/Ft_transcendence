@@ -74,10 +74,18 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 				color_bg: userData.color_bg,
 				size_text: userData.size_text,
 				speed_moves: userData.speed_moves,
+				last_seen: userData.last_seen,
 			};
 
+			if (
+				filteredUserData.avatar &&
+				filteredUserData.avatar.startsWith("https://lh3.googleusercontent.com/")
+			) {
+				await updateAvatar("/default.JPG");
+				filteredUserData.avatar = "/default.JPG";
+			}
+
 			setUser(filteredUserData);
-			console.log("User data retrieved:", filteredUserData);
 		} catch (err: any) {
 			console.error("Error in fetchUserData:", err);
 			if (err.message === "Unauthorized") {
@@ -153,6 +161,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const updateAvatar = async (avatar: string): Promise<boolean> => {
 		try {
+			const finalAvatar = avatar.startsWith(
+				"https://lh3.googleusercontent.com/",
+			)
+				? "/default.JPG"
+				: avatar;
+
 			const token = getJwtToken();
 
 			const response = await customFetch("/api/user/update", {
@@ -161,7 +175,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 					Authorization: `Bearer ${token}`,
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ avatar }),
+				body: JSON.stringify({ avatar: finalAvatar }),
 			});
 
 			if (!response.ok) {

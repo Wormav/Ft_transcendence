@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { FormEvent } from "react";
 import LoginStyle from "./LoginStyle";
 import globalStyle from "../../globalStyle";
@@ -57,6 +57,19 @@ export default function Login() {
 			console.error("Error during login:", error);
 			setLoginError(t("auth.login.networkError"));
 		}
+	};
+
+	useEffect(() => {
+		const urlParams = new URLSearchParams(window.location.search);
+		const code = urlParams.get("code");
+		if (code) {
+			document.cookie = `jwt=${code}; path=/; secure; samesite=strict`;
+			window.history.replaceState({}, document.title, window.location.pathname);
+		}
+	}, []);
+
+	const handleGoogleLogin = () => {
+		window.location.href = `http://localhost:${import.meta.env.VITE_BACKEND_PORT}/auth/google/login`;
 	};
 
 	return (
@@ -119,7 +132,11 @@ export default function Login() {
 							{t("auth.login.noAccount")}
 						</Link>
 
-						<button type="button" className={LoginStyle.googleButton}>
+						<button
+							type="button"
+							className={LoginStyle.googleButton}
+							onClick={handleGoogleLogin}
+						>
 							<img
 								src="https://accounts.google.com/favicon.ico"
 								alt="Google"

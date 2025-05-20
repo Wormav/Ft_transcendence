@@ -12,7 +12,7 @@ export default function CustomGameCard() {
 			<IoIosSettings size={100} color="#00babc" />
 			<p>{t("home.gameSettings")}</p>
 			<span className={globalStyle.span}>{t("game.gameCustom")}</span>
-			<CustomBtn text={t("home.custom")} onClick={() => console.log("cc")} />
+			<CustomBtn text={t("home.custom")} onClick={() => {}} />
 		</Card>
 	);
 }

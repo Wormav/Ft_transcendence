@@ -7,14 +7,20 @@ import "./App.css";
 import "./styles/zIndex.css";
 import { SettingsProvider } from "./context/SettingsContext";
 import { UserProvider } from "./context/UserContext";
+import { FriendProvider } from "./context/FriendContext";
+import { ToastProvider } from "./context/ToastContext";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<StrictMode>
 		<TranslationProvider>
 			<UserProvider>
-				<SettingsProvider>
-					<RouterProvider router={router} />
-				</SettingsProvider>
+				<FriendProvider>
+					<SettingsProvider>
+						<ToastProvider>
+							<RouterProvider router={router} />
+						</ToastProvider>
+					</SettingsProvider>
+				</FriendProvider>
 			</UserProvider>
 		</TranslationProvider>
 	</StrictMode>,
