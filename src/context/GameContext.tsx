@@ -140,7 +140,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 			}
 
 			const updatedMatch = await response.json();
-			console.log("Match updated:", updatedMatch);
 
 			if (user?.uuid) {
 				await fetchUserMatches(user.uuid);

@@ -43,7 +43,6 @@ export default function ProfileFriend() {
 					return;
 				}
 
-				// Récupérer le profil de l'utilisateur
 				const profileResponse = await customFetch(`/api/user/${uuid}`, {
 					method: "GET",
 					headers: {
@@ -58,7 +57,6 @@ export default function ProfileFriend() {
 					);
 				}
 
-				// Récupérer les matchs de l'utilisateur
 				const matchesResponse = await customFetch(
 					`/api/game/match/user/${uuid}`,
 					{
@@ -79,7 +77,6 @@ export default function ProfileFriend() {
 				const profileData = await profileResponse.json();
 				const matchesData = await matchesResponse.json();
 
-				// Filtrer uniquement les matchs terminés
 				const finishedMatches = matchesData.filter(
 					(match: MatchData) => match.finished === 1,
 				);
@@ -97,7 +94,6 @@ export default function ProfileFriend() {
 		fetchFriendProfile();
 	}, [uuid, navigate]);
 
-	// Convertir les matchs en données de jeu pour les graphiques
 	useEffect(() => {
 		const convertMatchesToGameData = () => {
 			if (!matches || matches.length === 0) return [];

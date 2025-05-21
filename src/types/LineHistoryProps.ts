@@ -1,5 +1,5 @@
 export type LineHistoryProps = {
-	username: string; // Nom d'utilisateur à afficher
+	username: string;
 	versus: string;
 	win: boolean;
 };

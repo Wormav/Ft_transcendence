@@ -36,7 +36,6 @@ const Dashboard: React.FC = () => {
 		};
 
 		const gameData = convertMatchesToGameData();
-		console.log("Matchs convertis pour le Dashboard:", gameData.length);
 		setGames(gameData);
 	}, [matches, user]);
 

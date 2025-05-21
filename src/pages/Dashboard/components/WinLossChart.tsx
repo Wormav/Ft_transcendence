@@ -37,8 +37,6 @@ const WinLossChart: React.FC<WinLossChartProps> = ({ games }) => {
 		).length;
 		const total = games.length;
 
-		// Plus de distinction entre parties IA et joueurs - toutes les parties sont contre des joueurs
-
 		ctx.clearRect(0, 0, rect.width, rect.height);
 
 		const centerX = rect.width / 2;
@@ -109,7 +107,6 @@ const WinLossChart: React.FC<WinLossChartProps> = ({ games }) => {
 		ctx.font = "14px sans-serif";
 		ctx.textAlign = "center";
 
-		// Stats globales
 		ctx.fillStyle = "#000000";
 		ctx.fillText(
 			`${t("dashboard.total")}: ${total} ${t("dashboard.matches")}`,
@@ -148,7 +145,6 @@ const WinLossChart: React.FC<WinLossChartProps> = ({ games }) => {
 		ctx.font = "12px sans-serif";
 		ctx.fillText(t("dashboard.wins"), legendX1 + 18, legendY + 10);
 
-		// Défaites
 		ctx.beginPath();
 		ctx.rect(legendX2, legendY, 12, 12);
 		ctx.fillStyle = colors.losses;

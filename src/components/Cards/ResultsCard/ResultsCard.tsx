@@ -23,7 +23,6 @@ export default function ResultsCard({ friendUuid }: ResultsCardProps) {
 	const [friendMatches, setFriendMatches] = useState<MatchData[]>([]);
 	const [friendUsername, setFriendUsername] = useState<string>("");
 
-	// Récupérer les matchs de l'ami si friendUuid est fourni
 	useEffect(() => {
 		const fetchFriendMatches = async () => {
 			if (!friendUuid) return;
@@ -32,7 +31,6 @@ export default function ResultsCard({ friendUuid }: ResultsCardProps) {
 				const token = getJwtToken();
 				if (!token) return;
 
-				// Récupérer les matchs de l'ami
 				const matchesResponse = await customFetch(
 					`/api/game/match/user/${friendUuid}`,
 					{
@@ -50,7 +48,6 @@ export default function ResultsCard({ friendUuid }: ResultsCardProps) {
 					);
 				}
 
-				// Récupérer le profil de l'ami pour obtenir son username
 				const profileResponse = await customFetch(`/api/user/${friendUuid}`, {
 					method: "GET",
 					headers: {
@@ -68,7 +65,6 @@ export default function ResultsCard({ friendUuid }: ResultsCardProps) {
 				const matchesData = await matchesResponse.json();
 				const profileData = await profileResponse.json();
 
-				// Filtrer uniquement les matchs terminés
 				const finishedMatches = matchesData.filter(
 					(match: MatchData) => match.finished === 1,
 				);
@@ -88,46 +84,36 @@ export default function ResultsCard({ friendUuid }: ResultsCardProps) {
 
 	useEffect(() => {
 		if (friendUuid && friendMatches.length > 0) {
-			// Traiter les matchs de l'ami
-			// Trier les matchs par date (les plus récents d'abord)
 			const sortedMatches = [...friendMatches].sort((a, b) => {
 				const dateA = a.endtime ? new Date(a.endtime).getTime() : 0;
 				const dateB = b.endtime ? new Date(b.endtime).getTime() : 0;
 				return dateB - dateA;
 			});
 
-			// Limiter à 7 matchs maximum pour l'affichage
 			const recentMatches = sortedMatches.slice(0, 7);
 
-			// Convertir les matchs en format adapté pour LineHistory
 			const formattedMatches = recentMatches.map((match) => {
-				// Afficher le nom de l'invité directement
 				const versus = match.guest || "Unknown";
-				const win = match.score1 > match.score2; // Considérer que score1 est le score du joueur
+				const win = match.score1 > match.score2;
 
 				return { username: friendUsername, versus, win };
 			});
 
 			setHistoryLines(formattedMatches);
 		} else if (matches && user && !friendUuid) {
-			// Utiliser le contexte global pour l'utilisateur connecté
 			const userMatches = matches.filter((match) => match.player === user.uuid);
 
-			// Trier les matchs par date (les plus récents d'abord)
 			const sortedMatches = [...userMatches].sort((a, b) => {
 				const dateA = a.endtime ? new Date(a.endtime).getTime() : 0;
 				const dateB = b.endtime ? new Date(b.endtime).getTime() : 0;
 				return dateB - dateA;
 			});
 
-			// Limiter à 7 matchs maximum pour l'affichage
 			const recentMatches = sortedMatches.slice(0, 7);
 
-			// Convertir les matchs en format adapté pour LineHistory
 			const formattedMatches = recentMatches.map((match) => {
-				// Afficher le nom de l'invité directement
 				const versus = match.guest || "Unknown";
-				const win = match.score1 > match.score2; // Considérer que score1 est le score du joueur
+				const win = match.score1 > match.score2;
 
 				return { username: user.username, versus, win };
 			});
@@ -155,7 +141,6 @@ export default function ResultsCard({ friendUuid }: ResultsCardProps) {
 					/>
 				))
 			) : (
-				// Afficher un message si aucun historique
 				<p className="text-center py-4 text-gray-500">
 					{t("dashboard.noGames")}
 				</p>
