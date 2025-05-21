@@ -54,7 +54,8 @@
 		"losses": "défaites",
 		"vsAI": "VS IA",
 		"vsPlayers": "VS Joueurs",
-		"score": "Score"
+		"score": "Score",
+		"noGames": "Aucune partie trouvée"
 	},
 	"auth": {
 		"login": {
@@ -149,6 +150,7 @@
 		"accessibility": "Accessibilité",
 		"previewText": "Aperçu du texte",
 		"sampleText": "Ceci est un exemple de texte pour voir la taille sélectionnée",
+		"history": "Historique de",
 		"friendProfile": "Profil de"
 	},
 	"game": {
