@@ -35,12 +35,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 		try {
 			const token = getJwtToken();
 
-			if (!token) {
-				setLoading(false);
-				setError("No authentication token found");
-				return;
-			}
-
 			const response = await customFetch(`/api/game/match/user/${uuid}`, {
 				method: "GET",
 				headers: {
@@ -54,16 +48,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 			}
 
 			const allMatchesData = await response.json();
-			// Filtrer les matchs terminés (finished === 1) et les matchs actifs (finished === 0)
 			const finishedMatches = allMatchesData.filter(
 				(match: MatchData) => match.finished === 1,
 			);
 			const currentActiveMatches = allMatchesData.filter(
 				(match: MatchData) => match.finished === 0,
 			);
-
-			console.log("Matchs terminés récupérés:", finishedMatches.length);
-			console.log("Matchs actifs récupérés:", currentActiveMatches.length);
 
 			setMatches(finishedMatches);
 			setActiveMatches(currentActiveMatches);
@@ -89,12 +79,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 		try {
 			const token = getJwtToken();
 
-			if (!token) {
-				setLoading(false);
-				setError("No authentication token found");
-				return null;
-			}
-
 			const response = await customFetch(`/api/game/match`, {
 				method: "POST",
 				headers: {
@@ -109,9 +93,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 			}
 
 			const newMatch = await response.json();
-			console.log("Match created:", newMatch);
 
-			// Refresh matches list if user exists
 			if (user?.uuid) {
 				await fetchUserMatches(user.uuid);
 			}
@@ -160,7 +142,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 			const updatedMatch = await response.json();
 			console.log("Match updated:", updatedMatch);
 
-			// Refresh matches list if user exists
 			if (user?.uuid) {
 				await fetchUserMatches(user.uuid);
 			}

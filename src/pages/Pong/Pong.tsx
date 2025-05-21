@@ -227,7 +227,6 @@ export default function Pong() {
 					setGameStarted(true);
 					startGameLoop();
 
-					// Mise à jour du starttime quand la partie commence
 					if (currentMatchUuid) {
 						const now = new Date().toISOString();
 						updateMatch(currentMatchUuid, { starttime: now }).catch((err) =>
@@ -243,18 +242,14 @@ export default function Pong() {
 	}, [startGameLoop, currentMatchUuid, updateMatch]);
 
 	const startGame = useCallback(async () => {
-		// Créer un match avant de démarrer le jeu
 		if (user?.uuid) {
 			try {
-				console.log("Création d'un nouveau match...");
 				const newMatch = await createMatch({
 					player: user.uuid,
 					guest: "Guest",
 				});
 
 				if (newMatch) {
-					console.log("Match créé avec succès:", newMatch);
-					// Stockage de l'UUID du match pour les mises à jour futures
 					setCurrentMatchUuid(newMatch.uuid);
 				}
 			} catch (error) {
@@ -477,14 +472,12 @@ export default function Pong() {
 					[player]: prevScore[player] + 1,
 				};
 
-				// Mise à jour du score dans l'API
 				if (currentMatchUuid) {
 					const scoreUpdate =
 						player === "player1"
 							? { score1: newScore.player1 }
 							: { score2: newScore.player2 };
 
-					// Si le score maximal est atteint, on met aussi à jour finished et endtime
 					if (newScore[player] >= MAX_SCORE) {
 						const now = new Date().toISOString();
 						updateMatch(currentMatchUuid, {
@@ -504,7 +497,6 @@ export default function Pong() {
 						setGameStarted(false);
 						setShowMenu(true);
 					} else {
-						// Sinon on ne met à jour que le score
 						updateMatch(currentMatchUuid, scoreUpdate).catch((err) =>
 							console.error("Erreur lors de la mise à jour du score:", err),
 						);
@@ -516,14 +508,6 @@ export default function Pong() {
 		},
 		[tournamentMatchSettings, currentMatchUuid, updateMatch],
 	);
-
-	//   const checkGameOver = useCallback((player1Score: number, player2Score: number) => {
-	//     if (player1Score >= MAX_SCORE || player2Score >= MAX_SCORE) {
-	//       stopGameLoop();
-	//       setGameStarted(false);
-	//       setShowMenu(true);
-	//     }
-	//   }, [stopGameLoop]);
 
 	const createGameElements = useCallback(
 		(scene: BABYLON.Scene) => {
