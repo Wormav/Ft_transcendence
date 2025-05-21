@@ -7,7 +7,7 @@ export type Tournament = {
 	uuid: string;
 	host: string;
 	players: string[];
-	matchs: TournamentMatchData[];
-	winner?: string;
+	match: TournamentMatchData[]; // "match" au lieu de "matchs" pour correspondre à l'API
+	winner?: string | null; // null possible selon les données de l'API
 	finished: 0 | 1;
 };

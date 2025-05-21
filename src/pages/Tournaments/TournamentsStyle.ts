@@ -11,6 +11,13 @@ const TournamentsStyle = {
 		"w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/80 transition-all duration-300 cursor-pointer shadow-md hover:shadow-lg hover:scale-[1.02]",
 	buttonDisabled:
 		"w-full bg-gray-400 text-white py-2 px-4 rounded-md cursor-not-allowed shadow-md opacity-70",
+	activeTournament:
+		"mb-8 bg-white-custom p-6 rounded-xl shadow-lg border-2 border-primary",
+	tournamentActiveItem:
+		"border border-primary rounded-lg p-4 mb-4 bg-white hover:shadow-lg transition-shadow",
+	tournamentId: "font-bold text-lg mb-2 text-primary",
+	labelText: "font-medium text-gray-700",
+	statusActive: "mt-2 font-bold text-green-600",
 	tournamentList: "mt-8 bg-white-custom p-6 rounded-xl shadow-lg",
 	tournamentItem:
 		"border border-gray-300 rounded-lg p-4 mb-4 hover:shadow-md transition-shadow bg-white",

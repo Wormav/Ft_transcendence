@@ -171,6 +171,11 @@
 		"status": "Statut",
 		"finished": "Terminé",
 		"inProgress": "En cours",
+		"active": "Actif",
+		"activeTournament": "Votre tournoi en cours",
+		"host": "Hôte",
+		"you": "Vous",
+		"matches": "Matchs",
 		"winner": "Gagnant"
 	},
 	"pong": {

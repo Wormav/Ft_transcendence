@@ -19,11 +19,28 @@ const Tournaments: React.FC = () => {
 	} = useTournament();
 	const [maxPlayers, setMaxPlayers] = useState<4 | 6 | 8>(4);
 	const [guestPlayers, setGuestPlayers] = useState<string[]>([]);
-	const [localTournament, setLocalTournament] = useState<Tournament | null>(
+	const [activeTournament, setActiveTournament] = useState<Tournament | null>(
 		null,
 	);
 	const [error, setError] = useState<string>("");
 	const { size_text } = useSettings();
+
+	// Recherche le dernier tournoi actif à chaque changement de la liste des tournois
+	useEffect(() => {
+		const findActiveTournament = () => {
+			// Rechercher le premier tournoi avec finished === 0
+			if (!tournaments) {
+				setActiveTournament(null);
+				return;
+			}
+			const active = tournaments.find(
+				(tournament) => tournament.finished === 0,
+			);
+			setActiveTournament(active || null);
+		};
+
+		findActiveTournament();
+	}, [tournaments]);
 
 	useEffect(() => {
 		if (user?.uuid) {
@@ -97,6 +114,45 @@ const Tournaments: React.FC = () => {
 
 	return (
 		<div className={styles.container}>
+			{/* Affichage du tournoi actif */}
+			{activeTournament && (
+				<div className={styles.activeTournament}>
+					<h2 className={`${styles.subtitle} ${getSizeTextStyle(size_text)}`}>
+						{t("tournaments.activeTournament")}
+					</h2>
+					<div className={styles.tournamentActiveItem}>
+						<p
+							className={`${styles.tournamentId} ${getSizeTextStyle(size_text)}`}
+						>
+							Tournoi #{activeTournament.uuid?.substring(0, 8) || "N/A"}
+						</p>
+						<p className={getSizeTextStyle(size_text)}>
+							<span className={styles.labelText}>{t("tournaments.host")}:</span>{" "}
+							{activeTournament.host === user?.uuid
+								? t("tournaments.you")
+								: activeTournament.host?.substring(0, 8) || "N/A"}
+						</p>
+						<p className={getSizeTextStyle(size_text)}>
+							<span className={styles.labelText}>
+								{t("tournaments.players")}:
+							</span>{" "}
+							{activeTournament.players?.length || 0}
+						</p>
+						<p className={getSizeTextStyle(size_text)}>
+							<span className={styles.labelText}>
+								{t("tournaments.matches")}:
+							</span>{" "}
+							{activeTournament.match?.length || 0}
+						</p>
+						<p
+							className={`${styles.statusActive} ${getSizeTextStyle(size_text)}`}
+						>
+							{t("tournaments.active")}
+						</p>
+					</div>
+				</div>
+			)}
+
 			<h1 className={`${styles.title} ${getSizeTextStyle(size_text)}`}>
 				{t("tournaments.createTournament")}
 			</h1>
@@ -146,7 +202,7 @@ const Tournaments: React.FC = () => {
 				</button>
 			</div>
 
-			{tournaments.length > 0 && (
+			{tournaments && tournaments.length > 0 && (
 				<div className={styles.tournamentList}>
 					<h2 className={`${styles.subtitle} ${getSizeTextStyle(size_text)}`}>
 						{t("tournaments.yourTournaments")}
@@ -154,10 +210,10 @@ const Tournaments: React.FC = () => {
 					{tournaments.map((tournament) => (
 						<div key={tournament.uuid} className={styles.tournamentItem}>
 							<p className={getSizeTextStyle(size_text)}>
-								Tournoi #{tournament.uuid.substring(0, 8)}
+								Tournoi #{tournament.uuid?.substring(0, 8) || "N/A"}
 							</p>
 							<p className={getSizeTextStyle(size_text)}>
-								{t("tournaments.players")}: {tournament.players.length}
+								{t("tournaments.players")}: {tournament.players?.length || 0}
 							</p>
 							<p className={getSizeTextStyle(size_text)}>
 								{t("tournaments.status")}:{" "}
