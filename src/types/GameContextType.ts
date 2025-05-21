@@ -27,6 +27,7 @@ export type UpdateMatchParams = {
 
 export type GameContextType = {
 	matches: MatchData[];
+	activeMatches: MatchData[];
 	loading: boolean;
 	error: string | null;
 	fetchUserMatches: (uuid: string) => Promise<void>;

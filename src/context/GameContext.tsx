@@ -11,6 +11,7 @@ import { useUserContext } from "./UserContext";
 
 const GameContext = createContext<GameContextType>({
 	matches: [],
+	activeMatches: [],
 	loading: false,
 	error: null,
 	fetchUserMatches: async () => {},
@@ -22,6 +23,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [matches, setMatches] = useState<MatchData[]>([]);
+	const [activeMatches, setActiveMatches] = useState<MatchData[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 	const { user } = useUserContext();
@@ -51,8 +53,20 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 				throw new Error(`Error retrieving matches data: ${response.status}`);
 			}
 
-			const matchesData = await response.json();
-			setMatches(matchesData);
+			const allMatchesData = await response.json();
+			// Filtrer les matchs terminés (finished === 1) et les matchs actifs (finished === 0)
+			const finishedMatches = allMatchesData.filter(
+				(match: MatchData) => match.finished === 1,
+			);
+			const currentActiveMatches = allMatchesData.filter(
+				(match: MatchData) => match.finished === 0,
+			);
+
+			console.log("Matchs terminés récupérés:", finishedMatches.length);
+			console.log("Matchs actifs récupérés:", currentActiveMatches.length);
+
+			setMatches(finishedMatches);
+			setActiveMatches(currentActiveMatches);
 		} catch (err: any) {
 			if (err.status !== 404) {
 				console.error("Error in fetchUserMatches:", err);
@@ -174,6 +188,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 		<GameContext.Provider
 			value={{
 				matches,
+				activeMatches,
 				loading,
 				error,
 				fetchUserMatches,
