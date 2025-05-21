@@ -37,22 +37,6 @@ const WinLossChart: React.FC<WinLossChartProps> = ({ games }) => {
 		).length;
 		const total = games.length;
 
-		const iaGames = games.filter((game) => game.gameIA);
-		const iaWins = iaGames.filter(
-			(game) => game.score_player1 > game.score_player2,
-		).length;
-		const iaLosses = iaGames.filter(
-			(game) => game.score_player1 < game.score_player2,
-		).length;
-
-		const humanGames = games.filter((game) => !game.gameIA);
-		const humanWins = humanGames.filter(
-			(game) => game.score_player1 > game.score_player2,
-		).length;
-		const humanLosses = humanGames.filter(
-			(game) => game.score_player1 < game.score_player2,
-		).length;
-
 		ctx.clearRect(0, 0, rect.width, rect.height);
 
 		const centerX = rect.width / 2;
@@ -62,10 +46,6 @@ const WinLossChart: React.FC<WinLossChartProps> = ({ games }) => {
 		const colors = {
 			wins: "#00BABC",
 			losses: "#FF4136",
-			iaWins: "#00796B",
-			iaLosses: "#C62828",
-			humanWins: "#4CAF50",
-			humanLosses: "#F44336",
 		};
 
 		const drawPieSlice = (
@@ -127,7 +107,6 @@ const WinLossChart: React.FC<WinLossChartProps> = ({ games }) => {
 		ctx.font = "14px sans-serif";
 		ctx.textAlign = "center";
 
-		// Stats globales
 		ctx.fillStyle = "#000000";
 		ctx.fillText(
 			`${t("dashboard.total")}: ${total} ${t("dashboard.matches")}`,
@@ -148,7 +127,7 @@ const WinLossChart: React.FC<WinLossChartProps> = ({ games }) => {
 		ctx.fillStyle = "#000000";
 		ctx.font = "12px sans-serif";
 		ctx.fillText(
-			`${t("dashboard.vsAI")}: ${iaWins}V/${iaLosses}D | ${t("dashboard.vsPlayers")}: ${humanWins}V/${humanLosses}D`,
+			`${t("dashboard.vsPlayers")}: ${wins}V/${losses}D`,
 			centerX,
 			statsY + 45,
 		);
@@ -166,7 +145,6 @@ const WinLossChart: React.FC<WinLossChartProps> = ({ games }) => {
 		ctx.font = "12px sans-serif";
 		ctx.fillText(t("dashboard.wins"), legendX1 + 18, legendY + 10);
 
-		// Défaites
 		ctx.beginPath();
 		ctx.rect(legendX2, legendY, 12, 12);
 		ctx.fillStyle = colors.losses;

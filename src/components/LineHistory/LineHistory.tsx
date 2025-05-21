@@ -4,7 +4,11 @@ import globalStyle, { getSizeTextStyle } from "../../globalStyle";
 import type { LineHistoryProps } from "../../types/LineHistoryProps";
 import { Space } from "../Card/Card";
 
-export default function LineHistory({ versus, win }: LineHistoryProps) {
+export default function LineHistory({
+	username,
+	versus,
+	win,
+}: LineHistoryProps) {
 	const { t } = useTranslation();
 
 	const { size_text } = useSettings();
@@ -12,7 +16,7 @@ export default function LineHistory({ versus, win }: LineHistoryProps) {
 	return (
 		<div className={globalStyle.row}>
 			<span className={`${globalStyle.span} ${getSizeTextStyle(size_text)}`}>
-				Pseudo
+				{username}
 			</span>
 			<Space />
 			<span

@@ -3,92 +3,41 @@ import Card from "../../components/Card/Card";
 import globalStyle from "../../globalStyle";
 import { useTranslation } from "../../context/TranslationContext";
 import { useWindowSize } from "../../hooks/useWindowSize";
+import { useGameContext } from "../../context/GameContext";
+import { useUserContext } from "../../context/UserContext";
 import LineChart from "./components/LineChart";
 import WinLossChart from "./components/WinLossChart";
 import type { GameData } from "../../types/Pong";
 
-const mockGames: GameData[] = [
-	{
-		id: "1",
-		player_id: "user1",
-		date: Date.now() - 6 * 24 * 60 * 60 * 1000,
-		score_player1: 5,
-		score_player2: 3,
-		gameIA: false,
-	},
-	{
-		id: "2",
-		player_id: "user1",
-		date: Date.now() - 5 * 24 * 60 * 60 * 1000,
-		score_player1: 2,
-		score_player2: 5,
-		gameIA: true,
-	},
-	{
-		id: "3",
-		player_id: "user1",
-		date: Date.now() - 4 * 24 * 60 * 60 * 1000,
-		score_player1: 5,
-		score_player2: 0,
-		gameIA: false,
-	},
-	{
-		id: "4",
-		player_id: "user1",
-		date: Date.now() - 3 * 24 * 60 * 60 * 1000,
-		score_player1: 5,
-		score_player2: 4,
-		gameIA: true,
-	},
-	{
-		id: "5",
-		player_id: "user1",
-		date: Date.now() - 2 * 24 * 60 * 60 * 1000,
-		score_player1: 3,
-		score_player2: 5,
-		gameIA: false,
-	},
-	{
-		id: "6",
-		player_id: "user1",
-		date: Date.now() - 1 * 24 * 60 * 60 * 1000,
-		score_player1: 5,
-		score_player2: 2,
-		gameIA: true,
-	},
-	{
-		id: "7",
-		player_id: "user1",
-		date: Date.now(),
-		score_player1: 4,
-		score_player2: 5,
-		gameIA: false,
-	},
-];
-
 const Dashboard: React.FC = () => {
 	const { t } = useTranslation();
 	const windowSize = useWindowSize();
-	const [games, setGames] = useState<GameData[]>(mockGames);
+	const { matches } = useGameContext();
+	const { user } = useUserContext();
+	const [games, setGames] = useState<GameData[]>([]);
 	const [, setRender] = useState(0);
 
 	useEffect(() => {
-		const loadData = async () => {
-			try {
-				// Example of a mock API call
-				// const response = await fetch('/api/games');
-				// const data = await response.json();
-				// setGames(data);
+		const convertMatchesToGameData = () => {
+			if (!matches || matches.length === 0) return [];
 
-				// For now, using mock data
-				setGames(mockGames);
-			} catch (error) {
-				console.error("Error loading data:", error);
-			}
+			const userMatches = user?.uuid
+				? matches.filter((match) => match.player === user.uuid)
+				: matches;
+
+			return userMatches.map((match) => ({
+				id: match.uuid,
+				player_id: match.player,
+				date: match.endtime ? new Date(match.endtime).getTime() : Date.now(),
+				score_player1: match.score1,
+				score_player2: match.score2,
+				gameIA: match.guest === "Guest",
+			}));
 		};
 
-		loadData();
-	}, []);
+		const gameData = convertMatchesToGameData();
+		setGames(gameData);
+	}, [matches, user]);
 
 	useEffect(() => {
 		setRender((prev) => prev + 1);

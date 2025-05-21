@@ -27,9 +27,14 @@ const MAX_SCORE = 10;
 const PADDLE_WIDTH = 0.3;
 const FIELD_MARGIN = 0.05;
 
+import { useGameContext } from "../../context/GameContext";
+import { useUserContext } from "../../context/UserContext";
+
 export default function Pong() {
 	const navigate = useNavigate();
 	const { t } = useTranslation();
+	const { createMatch, updateMatch } = useGameContext();
+	const { user } = useUserContext();
 	const {
 		color_items,
 		color_bg,
@@ -70,6 +75,8 @@ export default function Pong() {
 			matchId: null,
 			isInTournament: false,
 		});
+
+	const [currentMatchUuid, setCurrentMatchUuid] = useState<string | null>(null);
 
 	const getPaddleColorFromHex = (
 		hex: string,
@@ -219,14 +226,37 @@ export default function Pong() {
 					clearInterval(interval);
 					setGameStarted(true);
 					startGameLoop();
+
+					if (currentMatchUuid) {
+						const now = new Date().toISOString();
+						updateMatch(currentMatchUuid, { starttime: now }).catch((err) =>
+							console.error("Erreur lors de la mise à jour du starttime:", err),
+						);
+					}
+
 					return 0;
 				}
 				return prev - 1;
 			});
 		}, 1000);
-	}, [startGameLoop]);
+	}, [startGameLoop, currentMatchUuid, updateMatch]);
 
-	const startGame = useCallback(() => {
+	const startGame = useCallback(async () => {
+		if (user?.uuid) {
+			try {
+				const newMatch = await createMatch({
+					player: user.uuid,
+					guest: "Guest",
+				});
+
+				if (newMatch) {
+					setCurrentMatchUuid(newMatch.uuid);
+				}
+			} catch (error) {
+				console.error("Erreur lors de la création du match:", error);
+			}
+		}
+
 		setScore({ player1: 0, player2: 0 });
 		setEditViewMode(false);
 		setCurrentView(0);
@@ -236,7 +266,7 @@ export default function Pong() {
 			cameraRef.current.alpha = Math.PI / 2;
 			cameraRef.current.beta = Math.PI / 4;
 		}
-	}, [resetBall, startCountdown]);
+	}, [resetBall, startCountdown, createMatch, user]);
 
 	const togglePause = useCallback(() => {
 		setGamePaused((prev) => !prev);
@@ -442,27 +472,42 @@ export default function Pong() {
 					[player]: prevScore[player] + 1,
 				};
 
-				if (newScore[player] >= MAX_SCORE) {
-					if (tournamentMatchSettings.isInTournament) {
-						// TODO: Envoyer le résultat du match au serveur
+				if (currentMatchUuid) {
+					const scoreUpdate =
+						player === "player1"
+							? { score1: newScore.player1 }
+							: { score2: newScore.player2 };
+
+					if (newScore[player] >= MAX_SCORE) {
+						const now = new Date().toISOString();
+						updateMatch(currentMatchUuid, {
+							...scoreUpdate,
+							finished: 1,
+							endtime: now,
+						}).catch((err) =>
+							console.error(
+								"Erreur lors de la mise à jour du score et fin de partie:",
+								err,
+							),
+						);
+
+						if (tournamentMatchSettings.isInTournament) {
+							// TODO: Logique spécifique pour les tournois
+						}
+						setGameStarted(false);
+						setShowMenu(true);
+					} else {
+						updateMatch(currentMatchUuid, scoreUpdate).catch((err) =>
+							console.error("Erreur lors de la mise à jour du score:", err),
+						);
 					}
-					setGameStarted(false);
-					setShowMenu(true);
 				}
 
 				return newScore;
 			});
 		},
-		[tournamentMatchSettings],
+		[tournamentMatchSettings, currentMatchUuid, updateMatch],
 	);
-
-	//   const checkGameOver = useCallback((player1Score: number, player2Score: number) => {
-	//     if (player1Score >= MAX_SCORE || player2Score >= MAX_SCORE) {
-	//       stopGameLoop();
-	//       setGameStarted(false);
-	//       setShowMenu(true);
-	//     }
-	//   }, [stopGameLoop]);
 
 	const createGameElements = useCallback(
 		(scene: BABYLON.Scene) => {

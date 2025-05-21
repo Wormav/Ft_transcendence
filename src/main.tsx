@@ -9,18 +9,21 @@ import { SettingsProvider } from "./context/SettingsContext";
 import { UserProvider } from "./context/UserContext";
 import { FriendProvider } from "./context/FriendContext";
 import { ToastProvider } from "./context/ToastContext";
+import { GameProvider } from "./context/GameContext";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<StrictMode>
 		<TranslationProvider>
 			<UserProvider>
-				<FriendProvider>
-					<SettingsProvider>
-						<ToastProvider>
-							<RouterProvider router={router} />
-						</ToastProvider>
-					</SettingsProvider>
-				</FriendProvider>
+				<GameProvider>
+					<FriendProvider>
+						<SettingsProvider>
+							<ToastProvider>
+								<RouterProvider router={router} />
+							</ToastProvider>
+						</SettingsProvider>
+					</FriendProvider>
+				</GameProvider>
 			</UserProvider>
 		</TranslationProvider>
 	</StrictMode>,
