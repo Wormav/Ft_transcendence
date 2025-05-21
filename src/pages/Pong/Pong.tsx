@@ -27,9 +27,14 @@ const MAX_SCORE = 10;
 const PADDLE_WIDTH = 0.3;
 const FIELD_MARGIN = 0.05;
 
+import { useGameContext } from "../../context/GameContext";
+import { useUserContext } from "../../context/UserContext";
+
 export default function Pong() {
 	const navigate = useNavigate();
 	const { t } = useTranslation();
+	const { createMatch } = useGameContext();
+	const { user } = useUserContext();
 	const {
 		color_items,
 		color_bg,
@@ -226,7 +231,24 @@ export default function Pong() {
 		}, 1000);
 	}, [startGameLoop]);
 
-	const startGame = useCallback(() => {
+	const startGame = useCallback(async () => {
+		// Créer un match avant de démarrer le jeu
+		if (user?.uuid) {
+			try {
+				console.log("Création d'un nouveau match...");
+				const newMatch = await createMatch({
+					player: user.uuid,
+					guest: "Guest",
+				});
+
+				if (newMatch) {
+					console.log("Match créé avec succès:", newMatch);
+				}
+			} catch (error) {
+				console.error("Erreur lors de la création du match:", error);
+			}
+		}
+
 		setScore({ player1: 0, player2: 0 });
 		setEditViewMode(false);
 		setCurrentView(0);
@@ -236,7 +258,7 @@ export default function Pong() {
 			cameraRef.current.alpha = Math.PI / 2;
 			cameraRef.current.beta = Math.PI / 4;
 		}
-	}, [resetBall, startCountdown]);
+	}, [resetBall, startCountdown, createMatch, user]);
 
 	const togglePause = useCallback(() => {
 		setGamePaused((prev) => !prev);

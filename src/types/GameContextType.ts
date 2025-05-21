@@ -11,9 +11,16 @@ export type MatchData = {
 	endtime: string | null;
 };
 
+export type CreateMatchParams = {
+	player?: string;
+	guest?: string;
+	guest2?: string;
+};
+
 export type GameContextType = {
 	matches: MatchData[];
 	loading: boolean;
 	error: string | null;
 	fetchUserMatches: (uuid: string) => Promise<void>;
+	createMatch: (params: CreateMatchParams) => Promise<MatchData | null>;
 };

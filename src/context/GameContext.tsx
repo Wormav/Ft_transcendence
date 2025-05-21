@@ -1,5 +1,9 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import type { GameContextType, MatchData } from "../types/GameContextType";
+import type {
+	GameContextType,
+	MatchData,
+	CreateMatchParams,
+} from "../types/GameContextType";
 import { customFetch } from "../utils/customFetch";
 import { getJwtToken } from "../utils/getJwtToken";
 import { useUserContext } from "./UserContext";
@@ -9,6 +13,7 @@ const GameContext = createContext<GameContextType>({
 	loading: false,
 	error: null,
 	fetchUserMatches: async () => {},
+	createMatch: async () => null,
 });
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -46,15 +51,62 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 
 			const matchesData = await response.json();
 			setMatches(matchesData);
-
-			// Console log des données comme demandé
-			console.log("Matches data:", matchesData);
 		} catch (err: any) {
-			console.error("Error in fetchUserMatches:", err);
+			if (err.status !== 404) {
+				console.error("Error in fetchUserMatches:", err);
+			}
 			setError(
 				err.message ||
 					"Une erreur est survenue lors de la récupération des données de match",
 			);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const createMatch = async (
+		params: CreateMatchParams,
+	): Promise<MatchData | null> => {
+		setLoading(true);
+		setError(null);
+
+		try {
+			const token = getJwtToken();
+
+			if (!token) {
+				setLoading(false);
+				setError("No authentication token found");
+				return null;
+			}
+
+			const response = await customFetch(`/api/game/match`, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(params),
+			});
+
+			if (!response.ok) {
+				throw new Error(`Error creating match: ${response.status}`);
+			}
+
+			const newMatch = await response.json();
+			console.log("Match created:", newMatch);
+
+			// Refresh matches list if user exists
+			if (user?.uuid) {
+				await fetchUserMatches(user.uuid);
+			}
+
+			return newMatch;
+		} catch (err: any) {
+			console.error("Error creating match:", err);
+			setError(
+				err.message || "Une erreur est survenue lors de la création du match",
+			);
+			return null;
 		} finally {
 			setLoading(false);
 		}
@@ -73,6 +125,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 				loading,
 				error,
 				fetchUserMatches,
+				createMatch,
 			}}
 		>
 			{children}
