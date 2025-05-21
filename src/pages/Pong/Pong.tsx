@@ -33,7 +33,7 @@ import { useUserContext } from "../../context/UserContext";
 export default function Pong() {
 	const navigate = useNavigate();
 	const { t } = useTranslation();
-	const { createMatch } = useGameContext();
+	const { createMatch, updateMatch } = useGameContext();
 	const { user } = useUserContext();
 	const {
 		color_items,
@@ -75,6 +75,8 @@ export default function Pong() {
 			matchId: null,
 			isInTournament: false,
 		});
+
+	const [currentMatchUuid, setCurrentMatchUuid] = useState<string | null>(null);
 
 	const getPaddleColorFromHex = (
 		hex: string,
@@ -224,12 +226,21 @@ export default function Pong() {
 					clearInterval(interval);
 					setGameStarted(true);
 					startGameLoop();
+
+					// Mise à jour du starttime quand la partie commence
+					if (currentMatchUuid) {
+						const now = new Date().toISOString();
+						updateMatch(currentMatchUuid, { starttime: now }).catch((err) =>
+							console.error("Erreur lors de la mise à jour du starttime:", err),
+						);
+					}
+
 					return 0;
 				}
 				return prev - 1;
 			});
 		}, 1000);
-	}, [startGameLoop]);
+	}, [startGameLoop, currentMatchUuid, updateMatch]);
 
 	const startGame = useCallback(async () => {
 		// Créer un match avant de démarrer le jeu
@@ -243,6 +254,8 @@ export default function Pong() {
 
 				if (newMatch) {
 					console.log("Match créé avec succès:", newMatch);
+					// Stockage de l'UUID du match pour les mises à jour futures
+					setCurrentMatchUuid(newMatch.uuid);
 				}
 			} catch (error) {
 				console.error("Erreur lors de la création du match:", error);
@@ -464,18 +477,44 @@ export default function Pong() {
 					[player]: prevScore[player] + 1,
 				};
 
-				if (newScore[player] >= MAX_SCORE) {
-					if (tournamentMatchSettings.isInTournament) {
-						// TODO: Envoyer le résultat du match au serveur
+				// Mise à jour du score dans l'API
+				if (currentMatchUuid) {
+					const scoreUpdate =
+						player === "player1"
+							? { score1: newScore.player1 }
+							: { score2: newScore.player2 };
+
+					// Si le score maximal est atteint, on met aussi à jour finished et endtime
+					if (newScore[player] >= MAX_SCORE) {
+						const now = new Date().toISOString();
+						updateMatch(currentMatchUuid, {
+							...scoreUpdate,
+							finished: 1,
+							endtime: now,
+						}).catch((err) =>
+							console.error(
+								"Erreur lors de la mise à jour du score et fin de partie:",
+								err,
+							),
+						);
+
+						if (tournamentMatchSettings.isInTournament) {
+							// TODO: Logique spécifique pour les tournois
+						}
+						setGameStarted(false);
+						setShowMenu(true);
+					} else {
+						// Sinon on ne met à jour que le score
+						updateMatch(currentMatchUuid, scoreUpdate).catch((err) =>
+							console.error("Erreur lors de la mise à jour du score:", err),
+						);
 					}
-					setGameStarted(false);
-					setShowMenu(true);
 				}
 
 				return newScore;
 			});
 		},
-		[tournamentMatchSettings],
+		[tournamentMatchSettings, currentMatchUuid, updateMatch],
 	);
 
 	//   const checkGameOver = useCallback((player1Score: number, player2Score: number) => {

@@ -3,6 +3,7 @@ import type {
 	GameContextType,
 	MatchData,
 	CreateMatchParams,
+	UpdateMatchParams,
 } from "../types/GameContextType";
 import { customFetch } from "../utils/customFetch";
 import { getJwtToken } from "../utils/getJwtToken";
@@ -14,6 +15,7 @@ const GameContext = createContext<GameContextType>({
 	error: null,
 	fetchUserMatches: async () => {},
 	createMatch: async () => null,
+	updateMatch: async () => null,
 });
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -112,6 +114,56 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 		}
 	};
 
+	const updateMatch = async (
+		matchUuid: string,
+		params: UpdateMatchParams,
+	): Promise<MatchData | null> => {
+		setLoading(true);
+		setError(null);
+
+		try {
+			const token = getJwtToken();
+
+			if (!token) {
+				setLoading(false);
+				setError("No authentication token found");
+				return null;
+			}
+
+			const response = await customFetch(`/api/game/match/${matchUuid}`, {
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(params),
+			});
+
+			if (!response.ok) {
+				throw new Error(`Error updating match: ${response.status}`);
+			}
+
+			const updatedMatch = await response.json();
+			console.log("Match updated:", updatedMatch);
+
+			// Refresh matches list if user exists
+			if (user?.uuid) {
+				await fetchUserMatches(user.uuid);
+			}
+
+			return updatedMatch;
+		} catch (err: any) {
+			console.error("Error updating match:", err);
+			setError(
+				err.message ||
+					"Une erreur est survenue lors de la mise à jour du match",
+			);
+			return null;
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	useEffect(() => {
 		if (user?.uuid) {
 			fetchUserMatches(user.uuid);
@@ -126,6 +178,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 				error,
 				fetchUserMatches,
 				createMatch,
+				updateMatch,
 			}}
 		>
 			{children}
