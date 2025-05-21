@@ -14,10 +14,11 @@ const TournamentsStyle = {
 	activeTournament:
 		"mb-8 bg-white-custom p-6 rounded-xl shadow-lg border-2 border-primary",
 	tournamentActiveItem:
-		"border border-primary rounded-lg p-4 mb-4 bg-white hover:shadow-lg transition-shadow",
+		"border border-primary rounded-lg p-4 mb-4 bg-white hover:shadow-lg transition-shadow cursor-pointer relative",
 	tournamentId: "font-bold text-lg mb-2 text-primary",
 	labelText: "font-medium text-gray-700",
 	statusActive: "mt-2 font-bold text-green-600",
+	viewBracket: "text-primary/80 italic mt-3 text-sm text-right",
 	tournamentList: "mt-8 bg-white-custom p-6 rounded-xl shadow-lg",
 	tournamentItem:
 		"border border-gray-300 rounded-lg p-4 mb-4 hover:shadow-md transition-shadow bg-white",

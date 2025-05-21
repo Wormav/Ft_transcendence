@@ -1,6 +1,10 @@
 export type TournamentMatchData = {
 	uuid: string;
 	round: number;
+	player1?: string;
+	player2?: string;
+	winner?: string;
+	finished?: 0 | 1;
 };
 
 export type Tournament = {

@@ -55,6 +55,13 @@
 		"vsAI": "VS IA",
 		"vsPlayers": "VS Joueurs",
 		"score": "Score",
+		"winRate": "Taux de victoire",
+		"lossRate": "Taux de défaite",
+		"versus": "contre",
+		"dateRange": "Période",
+		"lastWeek": "7 derniers jours",
+		"lastMonth": "30 derniers jours",
+		"allTime": "Tout",
 		"noGames": "Aucune partie trouvée"
 	},
 	"auth": {
@@ -176,7 +183,15 @@
 		"host": "Hôte",
 		"you": "Vous",
 		"matches": "Matchs",
-		"winner": "Gagnant"
+		"winner": "Gagnant",
+		"viewBracket": "Voir l'arbre du tournoi",
+		"noMatches": "Pas de matchs disponibles",
+		"idCopied": "ID copié dans le presse-papier",
+		"loading": "Chargement...",
+		"round": "Round",
+		"final": "Finale",
+		"semifinal": "Demi-finale",
+		"quarterfinal": "Quart de finale"
 	},
 	"pong": {
 		"startGame": "Commencer la partie",

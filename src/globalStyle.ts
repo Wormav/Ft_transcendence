@@ -23,4 +23,8 @@ export const getSizeTextStyle = (size: number): string => {
 	}
 };
 
+export const createLazyStyles = (styles: Record<string, string>) => {
+	return styles;
+};
+
 export default globalStyle;

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./TournamentsStyle";
 import type { Tournament } from "../../types/Tournament";
 import { useTranslation } from "../../context/TranslationContext";
@@ -9,6 +10,7 @@ import { useUserContext } from "../../context/UserContext";
 
 const Tournaments: React.FC = () => {
 	const { t } = useTranslation();
+	const navigate = useNavigate();
 	const { user } = useUserContext();
 	const {
 		tournaments,
@@ -120,7 +122,13 @@ const Tournaments: React.FC = () => {
 					<h2 className={`${styles.subtitle} ${getSizeTextStyle(size_text)}`}>
 						{t("tournaments.activeTournament")}
 					</h2>
-					<div className={styles.tournamentActiveItem}>
+					<div
+						className={styles.tournamentActiveItem}
+						onClick={() =>
+							activeTournament.uuid &&
+							navigate(`/tournaments/${activeTournament.uuid}`)
+						}
+					>
 						<p
 							className={`${styles.tournamentId} ${getSizeTextStyle(size_text)}`}
 						>
@@ -148,6 +156,11 @@ const Tournaments: React.FC = () => {
 							className={`${styles.statusActive} ${getSizeTextStyle(size_text)}`}
 						>
 							{t("tournaments.active")}
+						</p>
+						<p
+							className={`${styles.viewBracket} ${getSizeTextStyle(size_text)}`}
+						>
+							{t("tournaments.viewBracket")} →
 						</p>
 					</div>
 				</div>
@@ -208,7 +221,14 @@ const Tournaments: React.FC = () => {
 						{t("tournaments.yourTournaments")}
 					</h2>
 					{tournaments.map((tournament) => (
-						<div key={tournament.uuid} className={styles.tournamentItem}>
+						<div
+							key={tournament.uuid}
+							className={styles.tournamentItem}
+							onClick={() =>
+								tournament.uuid && navigate(`/tournaments/${tournament.uuid}`)
+							}
+							style={{ cursor: "pointer" }}
+						>
 							<p className={getSizeTextStyle(size_text)}>
 								Tournoi #{tournament.uuid?.substring(0, 8) || "N/A"}
 							</p>
@@ -226,6 +246,11 @@ const Tournaments: React.FC = () => {
 									{t("tournaments.winner")}: {tournament.winner}
 								</p>
 							)}
+							<p
+								className={`${styles.viewBracket} ${getSizeTextStyle(size_text)}`}
+							>
+								{t("tournaments.viewBracket")} →
+							</p>
 						</div>
 					))}
 				</div>

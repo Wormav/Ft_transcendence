@@ -119,12 +119,78 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 		[fetchUserTournaments],
 	);
 
+	const getTournamentById = useCallback(
+		async (id: string): Promise<Tournament> => {
+			try {
+				const token = getJwtToken();
+
+				if (!token) {
+					throw new Error("Utilisateur non authentifié");
+				}
+
+				const response = await customFetch(`/api/game/tournament/${id}`, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				});
+
+				if (!response.ok) {
+					throw new Error("Erreur lors de la récupération du tournoi");
+				}
+
+				const tournamentData = await response.json();
+				return tournamentData;
+			} catch (err) {
+				throw new Error(
+					err instanceof Error
+						? err.message
+						: "Une erreur est survenue lors de la récupération du tournoi",
+				);
+			}
+		},
+		[],
+	);
+
+	const getMatchById = useCallback(async (id: string) => {
+		try {
+			const token = getJwtToken();
+
+			if (!token) {
+				throw new Error("Utilisateur non authentifié");
+			}
+
+			const response = await customFetch(`/api/game/match/${id}`, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			if (!response.ok) {
+				throw new Error("Erreur lors de la récupération du match");
+			}
+
+			return await response.json();
+		} catch (err) {
+			throw new Error(
+				err instanceof Error
+					? err.message
+					: "Une erreur est survenue lors de la récupération du match",
+			);
+		}
+	}, []);
+
 	const value: TournamentContextType = {
 		tournaments,
 		loading,
 		error,
 		fetchUserTournaments,
 		createTournament,
+		getTournamentById,
+		getMatchById,
 	};
 
 	return (
