@@ -6,6 +6,7 @@ export interface TournamentContextType {
 	loading: boolean;
 	error: string | null;
 	fetchUserTournaments: (uuid: string) => Promise<void>;
+	createTournament: (hostUuid: string, players: string[]) => Promise<void>;
 }
 
 export type TournamentProviderProps = {

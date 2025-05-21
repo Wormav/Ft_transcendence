@@ -164,8 +164,14 @@
 		"duplicateNameError": "Ce nom est déjà utilisé par un autre joueur",
 		"createError": "Impossible de créer le tournoi : certains joueurs ont le même nom",
 		"createButton": "Créer le tournoi",
+		"creating": "Création en cours...",
 		"tournamentTree": "Arbre du tournoi",
-		"copyId": "Copier l'ID"
+		"copyId": "Copier l'ID",
+		"yourTournaments": "Vos tournois",
+		"status": "Statut",
+		"finished": "Terminé",
+		"inProgress": "En cours",
+		"winner": "Gagnant"
 	},
 	"pong": {
 		"startGame": "Commencer la partie",

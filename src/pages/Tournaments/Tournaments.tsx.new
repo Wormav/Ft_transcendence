@@ -10,18 +10,10 @@ import { useUserContext } from "../../context/UserContext";
 const Tournaments: React.FC = () => {
 	const { t } = useTranslation();
 	const { user } = useUserContext();
-	const {
-		tournaments,
-		loading,
-		error: tournamentError,
-		createTournament,
-		fetchUserTournaments,
-	} = useTournament();
+	const { tournaments, loading, error: tournamentError, createTournament, fetchUserTournaments } = useTournament();
 	const [maxPlayers, setMaxPlayers] = useState<4 | 6 | 8>(4);
 	const [guestPlayers, setGuestPlayers] = useState<string[]>([]);
-	const [localTournament, setLocalTournament] = useState<Tournament | null>(
-		null,
-	);
+	const [localTournament, setLocalTournament] = useState<Tournament | null>(null);
 	const [error, setError] = useState<string>("");
 	const { size_text } = useSettings();
 
@@ -62,7 +54,7 @@ const Tournaments: React.FC = () => {
 		}
 
 		// Filtrer les joueurs vides
-		const validPlayers = guestPlayers.filter((p) => p && p.trim() !== "");
+		const validPlayers = guestPlayers.filter(p => p && p.trim() !== "");
 		const minPlayers = getMinPlayers(maxPlayers);
 
 		if (validPlayers.length < minPlayers) {
@@ -87,11 +79,7 @@ const Tournaments: React.FC = () => {
 			setError("");
 			// Après la création, les tournois sont récupérés dans la fonction createTournament
 		} catch (err) {
-			setError(
-				err instanceof Error
-					? err.message
-					: "Une erreur est survenue lors de la création du tournoi",
-			);
+			setError(err instanceof Error ? err.message : "Une erreur est survenue lors de la création du tournoi");
 		}
 	};
 
@@ -139,7 +127,7 @@ const Tournaments: React.FC = () => {
 					disabled={
 						loading ||
 						guestPlayers.filter((p) => p && p.trim() !== "").length <
-							getMinPlayers(maxPlayers)
+						getMinPlayers(maxPlayers)
 					}
 				>
 					{loading ? t("tournaments.creating") : t("tournaments.createButton")}
@@ -160,10 +148,7 @@ const Tournaments: React.FC = () => {
 								{t("tournaments.players")}: {tournament.players.length}
 							</p>
 							<p className={getSizeTextStyle(size_text)}>
-								{t("tournaments.status")}:{" "}
-								{tournament.finished === 1
-									? t("tournaments.finished")
-									: t("tournaments.inProgress")}
+								{t("tournaments.status")}: {tournament.finished === 1 ? t("tournaments.finished") : t("tournaments.inProgress")}
 							</p>
 							{tournament.winner && (
 								<p className={getSizeTextStyle(size_text)}>
