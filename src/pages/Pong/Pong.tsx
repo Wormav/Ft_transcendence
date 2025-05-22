@@ -491,8 +491,8 @@ export default function Pong() {
 					// Donc on doit mapper correctement les scores
 					const scoreUpdate = tournamentMatchSettings.isInTournament
 						? player === "player1"
-							? { score2: newScore.player1 } // player1 (gauche) correspond à guest (score2)
-							: { score1: newScore.player2 } // player2 (droite) correspond à player (score1)
+							? { score1: newScore.player1 } // player1 (gauche) correspond à guest1 (score1)
+							: { score2: newScore.player2 } // player2 (droite) correspond à guest2 (score2)
 						: player === "player1"
 							? { score1: newScore.player1 }
 							: { score2: newScore.player2 };
@@ -1156,23 +1156,27 @@ export default function Pong() {
 
 				console.log("Match de tournoi récupéré:", matchDetails);
 
-				// Le player est à gauche, et le guest (ou guest2) à droite
-				const playerLeft = matchDetails.player
-					? user && matchDetails.player === user.uuid
-						? user.username || "Vous"
-						: matchDetails.player.substring(0, 8)
-					: t("pong.player1");
+				// Gérer le cas spécial où il n'y a pas de player mais deux guests
+				const playerLeft =
+					!matchDetails.player && matchDetails.guest
+						? matchDetails.guest.substring(0, 8)
+						: matchDetails.player
+							? user && matchDetails.player === user.uuid
+								? user.username || "Vous"
+								: matchDetails.player.substring(0, 8)
+							: t("pong.player1");
 
-				const playerRight = matchDetails.guest
-					? matchDetails.guest.substring(0, 8)
-					: matchDetails.guest2
+				const playerRight =
+					!matchDetails.player && matchDetails.guest2
 						? matchDetails.guest2.substring(0, 8)
-						: t("pong.player2");
+						: matchDetails.guest
+							? matchDetails.guest.substring(0, 8)
+							: t("pong.player2");
 
 				// Mettre à jour les noms des joueurs
 				setPlayerNames({
-					player1: playerLeft, // Joueur de gauche
-					player2: playerRight, // Joueur de droite
+					player1: playerLeft,
+					player2: playerRight,
 				});
 
 				// Stocker l'ID du match pour les mises à jour futures
