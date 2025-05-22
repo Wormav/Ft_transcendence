@@ -31,14 +31,23 @@ const TournamentBracket: React.FC = () => {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 
-	const getPlayerDisplayName = (playerId: string | null): string => {
-		if (!playerId) return "TBD";
+	// Fonction pour obtenir le nom d'affichage d'un joueur
+	const getPlayerDisplayName = (
+		playerId: string | null,
+		isPlayer: boolean = true,
+	): string => {
+		// Si l'id est null, on retourne "Guest1" pour un player et "Guest2" pour un guest
+		if (!playerId) {
+			return isPlayer ? "Guest1" : "Guest2";
+		}
 
+		// Si c'est l'utilisateur courant
 		if (user && user.uuid === playerId) {
 			return user.username || "Vous";
 		}
 
-		return playerId.substring(0, 8) || "TBD";
+		// Sinon on retourne les 8 premiers caractères de l'id
+		return playerId.substring(0, 8);
 	};
 
 	useEffect(() => {
@@ -252,7 +261,7 @@ const TournamentBracket: React.FC = () => {
 									{t("tournaments.winner")}:
 								</span>{" "}
 								<strong className="text-primary">
-									{getPlayerDisplayName(tournament.winner)}
+									{getPlayerDisplayName(tournament.winner, true)}
 								</strong>
 							</p>
 						)}
@@ -337,9 +346,18 @@ const TournamentBracket: React.FC = () => {
 																			: ""
 																	}`}
 																>
-																	{getPlayerDisplayName(
-																		matchDetails[match.uuid].player,
-																	)}
+																	{/* Si player est null mais qu'il y a un score,
+																	utiliser guest à la place de "Guest1" */}
+																	{!matchDetails[match.uuid].player &&
+																	matchDetails[match.uuid].guest
+																		? getPlayerDisplayName(
+																				matchDetails[match.uuid].guest,
+																				false,
+																			)
+																		: getPlayerDisplayName(
+																				matchDetails[match.uuid].player,
+																				true,
+																			)}
 																</span>
 																{(tournament.finished === 1 ||
 																	matchDetails[match.uuid].finished === 1) && (
@@ -367,13 +385,20 @@ const TournamentBracket: React.FC = () => {
 																			: ""
 																	}`}
 																>
-																	{matchDetails[match.uuid].guest
+																	{/* Utiliser guest2 si disponible, sinon guest si player est non null,
+																	sinon utiliser "Guest2" */}
+																	{matchDetails[match.uuid].guest2
 																		? getPlayerDisplayName(
-																				matchDetails[match.uuid].guest,
-																			)
-																		: getPlayerDisplayName(
 																				matchDetails[match.uuid].guest2,
-																			)}
+																				false,
+																			)
+																		: !matchDetails[match.uuid].player &&
+																			  matchDetails[match.uuid].guest
+																			? "Guest2"
+																			: getPlayerDisplayName(
+																					matchDetails[match.uuid].guest,
+																					false,
+																				)}
 																</span>
 																{(tournament.finished === 1 ||
 																	matchDetails[match.uuid].finished === 1) && (
@@ -407,13 +432,28 @@ const TournamentBracket: React.FC = () => {
 															<strong>
 																{matchDetails[match.uuid].score1 >
 																matchDetails[match.uuid].score2
-																	? getPlayerDisplayName(
-																			matchDetails[match.uuid].player,
-																		)
-																	: getPlayerDisplayName(
-																			matchDetails[match.uuid].guest ||
+																	? !matchDetails[match.uuid].player &&
+																		matchDetails[match.uuid].guest
+																		? getPlayerDisplayName(
+																				matchDetails[match.uuid].guest,
+																				false,
+																			)
+																		: getPlayerDisplayName(
+																				matchDetails[match.uuid].player,
+																				true,
+																			)
+																	: matchDetails[match.uuid].guest2
+																		? getPlayerDisplayName(
 																				matchDetails[match.uuid].guest2,
-																		)}
+																				false,
+																			)
+																		: !matchDetails[match.uuid].player &&
+																			  matchDetails[match.uuid].guest
+																			? "Guest2"
+																			: getPlayerDisplayName(
+																					matchDetails[match.uuid].guest,
+																					false,
+																				)}
 															</strong>
 														</p>
 													)}

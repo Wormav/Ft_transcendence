@@ -33,7 +33,7 @@ const styles = {
 	score:
 		"font-bold text-lg bg-slate-100  px-2 py-1 rounded text-center min-w-[28px] flex-shrink-0",
 	scoreHighlight:
-		"font-bold text-lg bg-primary bg-opacity-20 px-2 py-1 rounded text-center text-primary min-w-[28px] flex-shrink-0",
+		"font-bold text-lg bg-primary bg-opacity-20 px-2 py-1 rounded text-center text-white min-w-[28px] flex-shrink-0",
 	copyButton:
 		"bg-primary hover:bg-opacity-80 text-white py-1 px-3 rounded-md mt-3 self-start transition-all duration-200 flex items-center gap-1 cursor-pointer z-10 hover:translate-y-[-1px] hover:shadow-md",
 	button:
