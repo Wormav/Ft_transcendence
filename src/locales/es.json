@@ -190,7 +190,8 @@
 		"round": "Ronda",
 		"final": "Final",
 		"semifinal": "Semifinal",
-		"quarterfinal": "Cuartos de final"
+		"quarterfinal": "Cuartos de final",
+		"mobileView": "Para una mejor experiencia, desplázate para ver todas las rondas del torneo"
 	},
 	"pong": {
 		"startGame": "Iniciar Juego",

@@ -257,11 +257,17 @@ const TournamentBracket: React.FC = () => {
 			</div>
 
 			{/* Message d'aide pour mobile */}
+			<div className="md:hidden bg-slate-50 p-4 rounded-lg mb-6 text-center">
+				<p className={getSizeTextStyle(size_text)}>
+					{t("tournaments.mobileView")}
+				</p>
+			</div>
 
 			<div className={styles.bracketContainer}>
 				{tournament.match && tournament.match.length > 0 ? (
 					<div className={styles.bracketTree}>
-						{/* Afficher les matchs organisés par rounds dans l'ordre inverse pour mobile (du premier round à la finale) */}
+						{/* Afficher les matchs organisés par rounds dans l'ordre inverse pour desktop (de la finale au premier round)
+						et dans l'ordre normal pour mobile (du premier round à la finale) */}
 						{Object.entries(matchesByRound)
 							.sort(([roundA], [roundB]) => parseInt(roundA) - parseInt(roundB))
 							.map(([round, matches]) => (
@@ -380,6 +386,9 @@ const TournamentBracket: React.FC = () => {
 												<button
 													className={`${styles.copyButton} ${getSizeTextStyle(size_text)}`}
 													onClick={() => copyMatchId(match.uuid || "")}
+													type="button"
+													role="button"
+													aria-label={t("tournaments.copyId")}
 												>
 													{t("tournaments.copyId")}
 													<svg
