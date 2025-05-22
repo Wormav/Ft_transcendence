@@ -11,14 +11,25 @@ export const ScoreOverlay: React.FC<ScoreOverlayProps> = ({
 	editViewMode,
 	currentView,
 	getViewName,
+	playerNames,
 }) => {
 	const { t } = useTranslation();
 	const { size_text } = useSettings();
 	if (!gameStarted || showMenu) return null;
 
+	// Définir des noms par défaut si non fournis
+	const player1 = playerNames?.player1 || t("pong.player1");
+	const player2 = playerNames?.player2 || t("pong.player2");
+
 	return (
 		<div className={`${PongStyle.score} ${getSizeTextStyle(size_text)}`}>
-			{score.player1} - {score.player2}
+			<div className={PongStyle.scoreWithNames}>
+				<span className={PongStyle.playerName}>{player1}</span>
+				<span className={PongStyle.scoreNumbers}>
+					{score.player1} - {score.player2}
+				</span>
+				<span className={PongStyle.playerName}>{player2}</span>
+			</div>
 			{editViewMode && (
 				<div className={PongStyle.viewModeText}>{t("pong.editViewMode")}</div>
 			)}

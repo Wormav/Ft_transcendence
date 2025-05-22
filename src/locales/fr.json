@@ -241,6 +241,10 @@
 		"matchId": "ID du match",
 		"enterMatchId": "Entrer l'ID du match",
 		"startTournamentMatch": "Commencer le match",
-		"cancel": "Annuler"
+		"cancel": "Annuler",
+		"matchError": "Erreur lors du démarrage du match de tournoi",
+		"matchNotFound": "Match de tournoi non trouvé",
+		"matchAlreadyFinished": "Ce match est déjà terminé",
+		"matchCompleted": "Match de tournoi terminé avec succès"
 	}
 }

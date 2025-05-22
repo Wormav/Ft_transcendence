@@ -20,6 +20,8 @@ import {
 import { useTranslation } from "../../context/TranslationContext";
 import { useSettings } from "../../context/SettingsContext";
 import type { GameSpeedType } from "../../types/SettingsTypes";
+import { useTournament } from "../../context/TournamentContext";
+import type { MatchDetail } from "../../types/TournamentMatch";
 
 const SCALE_FACTOR = 10;
 let BALL_SPEED_INCREASE = 1.05;
@@ -77,6 +79,15 @@ export default function Pong() {
 		});
 
 	const [currentMatchUuid, setCurrentMatchUuid] = useState<string | null>(null);
+
+	// Noms des joueurs pour les matchs de tournoi
+	const [playerNames, setPlayerNames] = useState<{
+		player1: string;
+		player2: string;
+	}>({
+		player1: t("pong.player1"),
+		player2: t("pong.player2"),
+	});
 
 	const getPaddleColorFromHex = (
 		hex: string,
@@ -480,23 +491,34 @@ export default function Pong() {
 
 					if (newScore[player] >= MAX_SCORE) {
 						const now = new Date().toISOString();
-						updateMatch(currentMatchUuid, {
+
+						// Options de fin de partie
+						const endGameOptions = {
 							...scoreUpdate,
 							finished: 1,
 							endtime: now,
-						}).catch((err) =>
-							console.error(
-								"Erreur lors de la mise à jour du score et fin de partie:",
-								err,
-							),
-						);
+						};
 
-						if (tournamentMatchSettings.isInTournament) {
-							// TODO: Logique spécifique pour les tournois
-						}
+						// Mise à jour du match
+						updateMatch(currentMatchUuid, endGameOptions)
+							.then((result) => {
+								console.log("Match terminé avec succès:", result);
+								// Afficher un message à l'utilisateur
+								if (tournamentMatchSettings.isInTournament) {
+									alert(t("tournaments.matchCompleted"));
+								}
+							})
+							.catch((err) =>
+								console.error(
+									"Erreur lors de la mise à jour du score et fin de partie:",
+									err,
+								),
+							);
+
 						setGameStarted(false);
 						setShowMenu(true);
 					} else {
+						// Mise à jour du score en cours de partie
 						updateMatch(currentMatchUuid, scoreUpdate).catch((err) =>
 							console.error("Erreur lors de la mise à jour du score:", err),
 						);
@@ -506,7 +528,7 @@ export default function Pong() {
 				return newScore;
 			});
 		},
-		[tournamentMatchSettings, currentMatchUuid, updateMatch],
+		[tournamentMatchSettings, currentMatchUuid, updateMatch, t],
 	);
 
 	const createGameElements = useCallback(
@@ -1107,20 +1129,67 @@ export default function Pong() {
 		}
 	}, [editViewMode]);
 
+	const { getMatchById } = useTournament();
+
 	const startTournamentMatch = useCallback(
-		(matchId: string) => {
-			setTournamentMatchSettings({ matchId, isInTournament: true });
-			setScore({ player1: 0, player2: 0 });
-			setEditViewMode(false);
-			setCurrentView(0);
-			resetBall();
-			startCountdown();
-			if (cameraRef.current) {
-				cameraRef.current.alpha = Math.PI / 2;
-				cameraRef.current.beta = Math.PI / 4;
+		async (matchId: string) => {
+			try {
+				// Récupérer les détails du match de tournoi depuis l'API
+				const matchDetails = await getMatchById(matchId);
+
+				if (!matchDetails) {
+					throw new Error("Match de tournoi non trouvé");
+				}
+
+				// Vérifier que le match n'est pas déjà terminé
+				if (matchDetails.finished === 1) {
+					throw new Error("Ce match de tournoi est déjà terminé");
+				}
+
+				console.log("Match de tournoi récupéré:", matchDetails);
+
+				// Extraire les noms des joueurs (ou utiliser des valeurs par défaut)
+				const player1Name = matchDetails.player
+					? user && matchDetails.player === user.uuid
+						? user.username || "Vous"
+						: matchDetails.player.substring(0, 8)
+					: t("pong.player1");
+
+				const player2Name = matchDetails.guest
+					? matchDetails.guest.substring(0, 8)
+					: matchDetails.guest2
+						? matchDetails.guest2.substring(0, 8)
+						: t("pong.player2");
+
+				// Mettre à jour les noms des joueurs
+				setPlayerNames({
+					player1: player1Name,
+					player2: player2Name,
+				});
+
+				// Stocker l'ID du match pour les mises à jour futures
+				setCurrentMatchUuid(matchId);
+				setTournamentMatchSettings({ matchId, isInTournament: true });
+
+				// Réinitialiser le score et la vue
+				setScore({ player1: 0, player2: 0 });
+				setEditViewMode(false);
+				setCurrentView(0);
+				resetBall();
+				startCountdown();
+
+				if (cameraRef.current) {
+					cameraRef.current.alpha = Math.PI / 2;
+					cameraRef.current.beta = Math.PI / 4;
+				}
+			} catch (error) {
+				console.error("Erreur lors du démarrage du match de tournoi:", error);
+				alert(t("tournaments.matchError"));
+				// Revenir à l'état normal du jeu
+				setTournamentMatchSettings({ matchId: null, isInTournament: false });
 			}
 		},
-		[resetBall, startCountdown],
+		[resetBall, startCountdown, getMatchById, t, user],
 	);
 
 	return (
@@ -1133,6 +1202,9 @@ export default function Pong() {
 				editViewMode={editViewMode}
 				currentView={currentView}
 				getViewName={getViewName}
+				playerNames={
+					tournamentMatchSettings.isInTournament ? playerNames : undefined
+				}
 			/>
 			<GameMenu
 				showMenu={showMenu}
