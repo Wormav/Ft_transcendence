@@ -1,39 +1,77 @@
-import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./TournamentsStyle";
-import type { Match, Player, Tournament } from "../../types/Tournament";
+import type { Tournament } from "../../types/Tournament";
 import { useTranslation } from "../../context/TranslationContext";
 import { useSettings } from "../../context/SettingsContext";
 import { getSizeTextStyle } from "../../globalStyle";
+import { useTournament } from "../../context/TournamentContext";
+import { useUserContext } from "../../context/UserContext";
+
+type TabType = "active" | "finished";
 
 const Tournaments: React.FC = () => {
 	const { t } = useTranslation();
-	const [maxPlayers, setMaxPlayers] = useState<4 | 6 | 8>(4);
-	const [players, setPlayers] = useState<Player[]>([
-		{ id: uuidv4(), name: "pseudo", isGuest: false },
-	]);
-	const [tournament, setTournament] = useState<Tournament | null>(null);
+	const navigate = useNavigate();
+	const { user } = useUserContext();
+	const {
+		tournaments,
+		loading,
+		error: tournamentError,
+		createTournament,
+		fetchUserTournaments,
+	} = useTournament();
+	const [guestPlayers, setGuestPlayers] = useState<string[]>([]);
+	const [activeTournament, setActiveTournament] = useState<Tournament | null>(
+		null,
+	);
 	const [error, setError] = useState<string>("");
+	const [activeTab, setActiveTab] = useState<TabType>("active");
 	const { size_text } = useSettings();
 
-	const handleAddPlayer = (index: number, name: string) => {
-		const newPlayers = [...players];
-		if (index < newPlayers.length) {
-			newPlayers[index] = {
-				id: players[index]?.id || uuidv4(),
-				name,
-				isGuest: true,
-			};
-		} else {
-			newPlayers.push({ id: uuidv4(), name, isGuest: true });
+	useEffect(() => {
+		const findActiveTournament = () => {
+			if (!tournaments) {
+				setActiveTournament(null);
+				return;
+			}
+			const active = tournaments.find(
+				(tournament) => tournament.finished === 0,
+			);
+			setActiveTournament(active || null);
+		};
+
+		findActiveTournament();
+	}, [tournaments]);
+
+	useEffect(() => {
+		if (user?.uuid) {
+			fetchUserTournaments(user.uuid);
 		}
-		setPlayers(newPlayers);
+	}, [user, fetchUserTournaments]);
+
+	const filteredTournaments = useMemo(() => {
+		if (!tournaments) return [];
+
+		return tournaments.filter((tournament) => {
+			if (activeTab === "active") {
+				return tournament.finished === 0;
+			} else {
+				return tournament.finished === 1;
+			}
+		});
+	}, [tournaments, activeTab]);
+
+	const handleAddPlayer = (index: number, name: string) => {
+		const newPlayers = [...guestPlayers];
+		newPlayers[index] = name;
+		setGuestPlayers(newPlayers);
 
 		const trimmedName = name.trim();
 		if (trimmedName !== "") {
 			const playerNames = newPlayers
-				.filter((p) => p.name.trim() !== "")
-				.map((p) => p.name.toLowerCase());
+				.filter((p) => p && p.trim() !== "")
+				.map((p) => p.toLowerCase());
 			const uniqueNames = new Set(playerNames);
 
 			if (uniqueNames.size !== playerNames.length) {
@@ -46,191 +84,203 @@ const Tournaments: React.FC = () => {
 		}
 	};
 
-	const shuffleArray = <T,>(array: T[]): T[] => {
-		const newArray = [...array];
-		for (let i = newArray.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1));
-			[newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-		}
-		return newArray;
-	};
+	const getRequiredGuestPlayers = (maxPlayerCount: number) =>
+		maxPlayerCount - 1;
 
-	const generateMatches = (tournamentPlayers: Player[]): Match[] => {
-		const shuffledPlayers = shuffleArray(tournamentPlayers);
-		const matches: Match[] = [];
-		const totalRounds = Math.ceil(Math.log2(maxPlayers));
-
-		let remainingPlayers = [...shuffledPlayers];
-		const firstRoundMatches = Math.ceil(shuffledPlayers.length / 2);
-
-		for (let i = 0; i < firstRoundMatches; i++) {
-			const player1 = remainingPlayers[i * 2];
-			const player2 = remainingPlayers[i * 2 + 1];
-
-			const match: Match = {
-				id: uuidv4(),
-				player1,
-				player2: player2 || { id: uuidv4(), name: "No player", isGuest: true },
-				round: 1,
-				winner: player2 ? null : player1,
-			};
-			matches.push(match);
-
-			if (!player2) {
-				remainingPlayers.push(player1);
-			}
+	const handleCreateTournament = async () => {
+		if (!user?.uuid) {
+			setError("Vous devez être connecté pour créer un tournoi");
+			return;
 		}
 
-		for (let round = 2; round <= totalRounds; round++) {
-			const matchesInRound = firstRoundMatches / Math.pow(2, round - 1);
+		const validPlayers = guestPlayers
+			.filter((p) => p && p.trim() !== "")
+			.map((p) => p.trim());
 
-			for (let i = 0; i < matchesInRound; i++) {
-				matches.push({
-					id: uuidv4(),
-					player1: { id: uuidv4(), name: "?", isGuest: true },
-					player2: { id: uuidv4(), name: "?", isGuest: true },
-					round,
-					winner: null,
-				});
-			}
-		}
-
-		return matches;
-	};
-
-	const getMinPlayers = (max: number) => max - 1;
-
-	const createTournament = () => {
-		const filledPlayers = players.filter((p) => p.name.trim() !== "");
-		const minPlayers = getMinPlayers(maxPlayers);
-
-		if (filledPlayers.length < minPlayers) {
+		if (validPlayers.length < 4 - 1) {
 			setError(
 				t("tournaments.minPlayersError")
-					.replace("{0}", minPlayers.toString())
-					.replace("{1}", maxPlayers.toString()),
+					.replace("{0}", (4 - 1).toString())
+					.replace("{1}", "4"),
 			);
 			return;
 		}
 
-		const playerNames = filledPlayers.map((p) => p.name.toLowerCase());
+		const playerNames = validPlayers.map((p) => p.toLowerCase());
 		const uniqueNames = new Set(playerNames);
 		if (uniqueNames.size !== playerNames.length) {
 			setError(t("tournaments.createError"));
 			return;
 		}
 
-		const newTournament: Tournament = {
-			id: uuidv4(),
-			players: filledPlayers,
-			matches: generateMatches(filledPlayers),
-			maxPlayers,
-			status: "pending",
-		};
+		try {
+			await createTournament(user.uuid, validPlayers);
 
-		setTournament(newTournament);
-		setError("");
+			setError("");
+			setGuestPlayers([]);
+
+			await fetchUserTournaments(user.uuid);
+		} catch (err) {
+			console.error("Erreur lors de la création du tournoi:", err);
+			setError(
+				err instanceof Error
+					? err.message
+					: "Une erreur est survenue lors de la création du tournoi",
+			);
+		}
 	};
 
 	return (
 		<div className={styles.container}>
+			{activeTournament && (
+				<div className={styles.activeTournament}>
+					<h2 className={`${styles.subtitle} ${getSizeTextStyle(size_text)}`}>
+						{t("tournaments.activeTournament")}
+					</h2>
+					<div
+						className={styles.tournamentActiveItem}
+						onClick={() =>
+							activeTournament.uuid &&
+							navigate(`/tournaments/${activeTournament.uuid}`)
+						}
+					>
+						<p
+							className={`${styles.tournamentId} ${getSizeTextStyle(size_text)}`}
+						>
+							Tournoi #{activeTournament.uuid?.substring(0, 8) || "N/A"}
+						</p>
+						<p className={getSizeTextStyle(size_text)}>
+							<span className={styles.labelText}>{t("tournaments.host")}:</span>{" "}
+							{activeTournament.host === user?.uuid
+								? t("tournaments.you")
+								: activeTournament.host?.substring(0, 8) || "N/A"}
+						</p>
+						<p className={getSizeTextStyle(size_text)}>
+							<span className={styles.labelText}>
+								{t("tournaments.players")}:
+							</span>{" "}
+							{activeTournament.players?.length || 0}
+						</p>
+						<p className={getSizeTextStyle(size_text)}>
+							<span className={styles.labelText}>
+								{t("tournaments.matches")}:
+							</span>{" "}
+							{activeTournament.match?.length || 0}
+						</p>
+						<p
+							className={`${styles.statusActive} ${getSizeTextStyle(size_text)}`}
+						>
+							{t("tournaments.active")}
+						</p>
+						<p
+							className={`${styles.viewBracket} ${getSizeTextStyle(size_text)}`}
+						>
+							{t("tournaments.viewBracket")} →
+						</p>
+					</div>
+				</div>
+			)}
+
 			<h1 className={`${styles.title} ${getSizeTextStyle(size_text)}`}>
 				{t("tournaments.createTournament")}
 			</h1>
 
 			<div className={styles.form}>
-				<select
-					className={`${styles.select}  ${getSizeTextStyle(size_text)}`}
-					value={maxPlayers}
-					onChange={(e) => setMaxPlayers(Number(e.target.value) as 4 | 6 | 8)}
-				>
-					<option value={4}>4 {t("tournaments.players")}</option>
-					<option value={6}>6 {t("tournaments.players")}</option>
-					<option value={8}>8 {t("tournaments.players")}</option>
-				</select>
-
-				{Array.from({ length: maxPlayers - 1 }).map((_, index) => (
+				{Array.from({ length: 4 - 1 }).map((_, index) => (
 					<input
 						key={index}
 						type="text"
 						className={`${styles.playerInput} ${getSizeTextStyle(size_text)}`}
 						placeholder={`${t("tournaments.playerName")} ${index + 2}`}
-						onChange={(e) => handleAddPlayer(index + 1, e.target.value)}
-						value={players[index + 1]?.name || ""}
+						onChange={(e) => handleAddPlayer(index, e.target.value)}
+						value={guestPlayers[index] || ""}
 					/>
 				))}
 
 				{error && <p className={styles.error}>{error}</p>}
+				{tournamentError && <p className={styles.error}>{tournamentError}</p>}
 
 				<button
 					className={`
 						${
-							players.filter((p) => p.name.trim() !== "").length <
-							getMinPlayers(maxPlayers)
+							guestPlayers.filter((p) => p && p.trim() !== "").length <
+							getRequiredGuestPlayers(4)
 								? styles.buttonDisabled
 								: styles.button
 						} ${getSizeTextStyle(size_text)}
 					`}
-					onClick={createTournament}
+					onClick={handleCreateTournament}
 					disabled={
-						players.filter((p) => p.name.trim() !== "").length <
-						getMinPlayers(maxPlayers)
+						loading ||
+						guestPlayers.filter((p) => p && p.trim() !== "").length <
+							getRequiredGuestPlayers(4)
 					}
 				>
-					{t("tournaments.createButton")}
+					{loading ? t("tournaments.creating") : t("tournaments.createButton")}
 				</button>
 			</div>
 
-			{tournament && (
-				<div className={styles.tournament.container}>
-					<h2
-						className={`${styles.tournament.roundTitle} ${getSizeTextStyle(size_text)}`}
-					>
-						{t("tournaments.tournamentTree")}
+			{tournaments && tournaments.length > 0 && (
+				<div className={styles.tournamentList}>
+					<h2 className={`${styles.subtitle} ${getSizeTextStyle(size_text)}`}>
+						{t("tournaments.yourTournaments")}
 					</h2>
-					<div className={styles.tournament.bracket}>
-						{Array.from({ length: Math.ceil(Math.log2(maxPlayers)) }).map(
-							(_, roundIndex) => {
-								const roundNumber = roundIndex + 1;
-								const roundMatches = tournament.matches.filter(
-									(match) => match.round === roundNumber,
-								);
-
-								return (
-									<div key={roundNumber} className={styles.tournament.round}>
-										{roundMatches.map((match) => (
-											<div key={match.id} className={styles.tournament.match}>
-												<div
-													className={`${styles.tournament.player}  ${getSizeTextStyle(size_text)} ${match.winner?.id === match.player1.id ? styles.tournament.winner : ""}`}
-												>
-													{match.player1.name}
-												</div>
-												<div
-													className={`${styles.tournament.player}  ${getSizeTextStyle(size_text)} ${match.winner?.id === match.player2.id ? styles.tournament.winner : ""}`}
-												>
-													{match.player2.name}
-												</div>
-												<div className={styles.tournament.matchId}>
-													<span className={getSizeTextStyle(size_text)}>
-														ID: {match.id.slice(0, 8)}...
-													</span>
-													<button
-														className={styles.tournament.copyButton}
-														onClick={() => {
-															navigator.clipboard.writeText(match.id);
-														}}
-														title={t("tournaments.copyId")}
-													>
-														📋
-													</button>
-												</div>
-											</div>
-										))}
-									</div>
-								);
-							},
-						)}
+					<div className={styles.tabContainer}>
+						<div
+							className={activeTab === "active" ? styles.activeTab : styles.tab}
+							onClick={() => setActiveTab("active")}
+						>
+							{t("tournaments.activeTournaments")}
+						</div>
+						<div
+							className={
+								activeTab === "finished" ? styles.activeTab : styles.tab
+							}
+							onClick={() => setActiveTab("finished")}
+						>
+							{t("tournaments.finishedTournaments")}
+						</div>
 					</div>
+
+					{filteredTournaments.length > 0 ? (
+						filteredTournaments.map((tournament) => (
+							<div
+								key={tournament.uuid}
+								className={styles.tournamentItem}
+								onClick={() =>
+									tournament.uuid && navigate(`/tournaments/${tournament.uuid}`)
+								}
+								style={{ cursor: "pointer" }}
+							>
+								<p className={getSizeTextStyle(size_text)}>
+									Tournoi #{tournament.uuid?.substring(0, 8) || "N/A"}
+								</p>
+								<p className={getSizeTextStyle(size_text)}>
+									{t("tournaments.players")}: {tournament.players?.length || 0}
+								</p>
+								<p className={getSizeTextStyle(size_text)}>
+									{t("tournaments.status")}:{" "}
+									{tournament.finished === 1
+										? t("tournaments.finished")
+										: t("tournaments.inProgress")}
+								</p>
+								{tournament.winner && (
+									<p className={getSizeTextStyle(size_text)}>
+										{t("tournaments.winner")}: {tournament.winner}
+									</p>
+								)}
+								<p
+									className={`${styles.viewBracket} ${getSizeTextStyle(size_text)}`}
+								>
+									{t("tournaments.viewBracket")} →
+								</p>
+							</div>
+						))
+					) : (
+						<p className={styles.noTournaments}>
+							{t("tournaments.noTournaments")}
+						</p>
+					)}
 				</div>
 			)}
 		</div>

@@ -33,6 +33,7 @@ export type ScoreOverlayProps = {
 	editViewMode: boolean;
 	currentView: number;
 	getViewName: (viewIdx: number) => string;
+	playerNames?: { player1: string; player2: string };
 };
 
 export type PauseMenuProps = {

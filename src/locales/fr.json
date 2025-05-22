@@ -55,6 +55,13 @@
 		"vsAI": "VS IA",
 		"vsPlayers": "VS Joueurs",
 		"score": "Score",
+		"winRate": "Taux de victoire",
+		"lossRate": "Taux de défaite",
+		"versus": "contre",
+		"dateRange": "Période",
+		"lastWeek": "7 derniers jours",
+		"lastMonth": "30 derniers jours",
+		"allTime": "Tout",
 		"noGames": "Aucune partie trouvée"
 	},
 	"auth": {
@@ -157,6 +164,8 @@
 		"gameCustom": "Jeu personnalisé"
 	},
 	"tournaments": {
+		"title": "Tournois",
+		"congratulations": "Félicitations à {{winner}} pour avoir remporté le tournoi !",
 		"createTournament": "Créer un tournoi",
 		"players": "joueurs",
 		"playerName": "Nom du joueur",
@@ -164,8 +173,35 @@
 		"duplicateNameError": "Ce nom est déjà utilisé par un autre joueur",
 		"createError": "Impossible de créer le tournoi : certains joueurs ont le même nom",
 		"createButton": "Créer le tournoi",
+		"creating": "Création en cours...",
 		"tournamentTree": "Arbre du tournoi",
-		"copyId": "Copier l'ID"
+		"copyId": "Copier l'ID",
+		"yourTournaments": "Vos tournois",
+		"status": "Statut",
+		"finished": "Terminé",
+		"inProgress": "En cours",
+		"active": "Actif",
+		"activeTournament": "Votre tournoi en cours",
+		"host": "Hôte",
+		"you": "Vous",
+		"matches": "Matchs",
+		"winner": "Gagnant",
+		"viewBracket": "Voir l'arbre du tournoi",
+		"noMatches": "Pas de matchs disponibles",
+		"idCopied": "ID copié dans le presse-papier",
+		"loading": "Chargement...",
+		"round": "Round",
+		"final": "Finale",
+		"semifinal": "Demi-finale",
+		"quarterfinal": "Quart de finale",
+		"mobileView": "Pour une meilleure expérience, faites défiler pour voir tous les rounds du tournoi",
+		"cancelTournament": "Annuler le tournoi",
+		"cancelConfirmation": "Êtes-vous sûr de vouloir annuler ce tournoi ? Cette action est irréversible.",
+		"cancelSuccess": "Le tournoi a été annulé avec succès",
+		"cancelError": "Une erreur est survenue lors de l'annulation du tournoi",
+		"activeTournaments": "Tournois actifs",
+		"finishedTournaments": "Tournois terminés",
+		"noTournaments": "Aucun tournoi trouvé"
 	},
 	"pong": {
 		"startGame": "Commencer la partie",
@@ -207,6 +243,10 @@
 		"matchId": "ID du match",
 		"enterMatchId": "Entrer l'ID du match",
 		"startTournamentMatch": "Commencer le match",
-		"cancel": "Annuler"
+		"cancel": "Annuler",
+		"matchError": "Erreur lors du démarrage du match de tournoi",
+		"matchNotFound": "Match de tournoi non trouvé",
+		"matchAlreadyFinished": "Ce match est déjà terminé",
+		"matchCompleted": "Match de tournoi terminé avec succès"
 	}
 }

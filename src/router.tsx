@@ -10,6 +10,7 @@ import Profile from "./pages/Profile/Profile.tsx";
 import ProfileFriend from "./pages/ProfileFriend/ProfileFriend.tsx";
 import Dashboard from "./pages/Dashboard/Dashboard.tsx";
 import Tournaments from "./pages/Tournaments/Tournaments.tsx";
+import TournamentBracket from "./pages/Tournaments/TournamentBracket.tsx";
 import Friends from "./pages/Friends/Friends.tsx";
 
 const router = createBrowserRouter([
@@ -50,6 +51,11 @@ const router = createBrowserRouter([
 			{
 				path: "/tournaments",
 				element: <Tournaments />,
+				children: [],
+			},
+			{
+				path: "/tournaments/:id",
+				element: <TournamentBracket />,
 				children: [],
 			},
 			{

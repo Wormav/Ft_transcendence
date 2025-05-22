@@ -1,21 +1,17 @@
-export type Player = {
-	id: string;
-	name: string;
-	isGuest: boolean;
-};
-
-export type Match = {
-	id: string;
-	player1: Player;
-	player2: Player;
-	winner?: Player | null;
+export type TournamentMatchData = {
+	uuid: string;
 	round: number;
+	player1?: string;
+	player2?: string;
+	winner?: string;
+	finished?: 0 | 1;
 };
 
 export type Tournament = {
-	id: string;
-	players: Player[];
-	matches: Match[];
-	maxPlayers: 4 | 6 | 8;
-	status: "pending" | "in_progress" | "completed";
+	uuid: string;
+	host: string;
+	players: string[];
+	match: TournamentMatchData[];
+	winner?: string | null;
+	finished: 0 | 1;
 };
