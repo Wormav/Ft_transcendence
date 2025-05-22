@@ -21,7 +21,7 @@ const Tournaments: React.FC = () => {
 		createTournament,
 		fetchUserTournaments,
 	} = useTournament();
-	const [maxPlayers, setMaxPlayers] = useState<4 | 6 | 8>(4);
+	const [maxPlayers, setMaxPlayers] = useState<4 | 8>(4);
 	const [guestPlayers, setGuestPlayers] = useState<string[]>([]);
 	const [activeTournament, setActiveTournament] = useState<Tournament | null>(
 		null,
@@ -30,10 +30,8 @@ const Tournaments: React.FC = () => {
 	const [activeTab, setActiveTab] = useState<TabType>("active");
 	const { size_text } = useSettings();
 
-	// Recherche le dernier tournoi actif à chaque changement de la liste des tournois
 	useEffect(() => {
 		const findActiveTournament = () => {
-			// Rechercher le premier tournoi avec finished === 0
 			if (!tournaments) {
 				setActiveTournament(null);
 				return;
@@ -53,7 +51,6 @@ const Tournaments: React.FC = () => {
 		}
 	}, [user, fetchUserTournaments]);
 
-	// Filtrer les tournois en fonction de l'onglet actif
 	const filteredTournaments = useMemo(() => {
 		if (!tournaments) return [];
 
@@ -88,7 +85,8 @@ const Tournaments: React.FC = () => {
 		}
 	};
 
-	const getMinPlayers = (max: number) => max - 1;
+	const getRequiredGuestPlayers = (maxPlayerCount: number) =>
+		maxPlayerCount - 1;
 
 	const handleCreateTournament = async () => {
 		if (!user?.uuid) {
@@ -96,20 +94,19 @@ const Tournaments: React.FC = () => {
 			return;
 		}
 
-		// Filtrer les joueurs vides
-		const validPlayers = guestPlayers.filter((p) => p && p.trim() !== "");
-		const minPlayers = getMinPlayers(maxPlayers);
+		const validPlayers = guestPlayers
+			.filter((p) => p && p.trim() !== "")
+			.map((p) => p.trim());
 
-		if (validPlayers.length < minPlayers) {
+		if (validPlayers.length < maxPlayers - 1) {
 			setError(
 				t("tournaments.minPlayersError")
-					.replace("{0}", minPlayers.toString())
+					.replace("{0}", (maxPlayers - 1).toString())
 					.replace("{1}", maxPlayers.toString()),
 			);
 			return;
 		}
 
-		// Vérifier les noms dupliqués
 		const playerNames = validPlayers.map((p) => p.toLowerCase());
 		const uniqueNames = new Set(playerNames);
 		if (uniqueNames.size !== playerNames.length) {
@@ -117,11 +114,18 @@ const Tournaments: React.FC = () => {
 			return;
 		}
 
+		console.log("Création d'un tournoi avec l'hôte:", user.uuid);
+		console.log("Et les invités:", validPlayers);
+
 		try {
 			await createTournament(user.uuid, validPlayers);
+
 			setError("");
-			// Après la création, les tournois sont récupérés dans la fonction createTournament
+			setGuestPlayers([]);
+
+			await fetchUserTournaments(user.uuid);
 		} catch (err) {
+			console.error("Erreur lors de la création du tournoi:", err);
 			setError(
 				err instanceof Error
 					? err.message
@@ -132,7 +136,6 @@ const Tournaments: React.FC = () => {
 
 	return (
 		<div className={styles.container}>
-			{/* Affichage du tournoi actif */}
 			{activeTournament && (
 				<div className={styles.activeTournament}>
 					<h2 className={`${styles.subtitle} ${getSizeTextStyle(size_text)}`}>
@@ -190,10 +193,9 @@ const Tournaments: React.FC = () => {
 				<select
 					className={`${styles.select}  ${getSizeTextStyle(size_text)}`}
 					value={maxPlayers}
-					onChange={(e) => setMaxPlayers(Number(e.target.value) as 4 | 6 | 8)}
+					onChange={(e) => setMaxPlayers(Number(e.target.value) as 4 | 8)}
 				>
 					<option value={4}>4 {t("tournaments.players")}</option>
-					<option value={6}>6 {t("tournaments.players")}</option>
 					<option value={8}>8 {t("tournaments.players")}</option>
 				</select>
 
@@ -215,7 +217,7 @@ const Tournaments: React.FC = () => {
 					className={`
 						${
 							guestPlayers.filter((p) => p && p.trim() !== "").length <
-							getMinPlayers(maxPlayers)
+							getRequiredGuestPlayers(maxPlayers)
 								? styles.buttonDisabled
 								: styles.button
 						} ${getSizeTextStyle(size_text)}
@@ -224,7 +226,7 @@ const Tournaments: React.FC = () => {
 					disabled={
 						loading ||
 						guestPlayers.filter((p) => p && p.trim() !== "").length <
-							getMinPlayers(maxPlayers)
+							getRequiredGuestPlayers(maxPlayers)
 					}
 				>
 					{loading ? t("tournaments.creating") : t("tournaments.createButton")}
@@ -236,8 +238,6 @@ const Tournaments: React.FC = () => {
 					<h2 className={`${styles.subtitle} ${getSizeTextStyle(size_text)}`}>
 						{t("tournaments.yourTournaments")}
 					</h2>
-
-					{/* Onglets pour filtrer les tournois actifs/terminés */}
 					<div className={styles.tabContainer}>
 						<div
 							className={activeTab === "active" ? styles.activeTab : styles.tab}
@@ -255,7 +255,6 @@ const Tournaments: React.FC = () => {
 						</div>
 					</div>
 
-					{/* Affichage des tournois filtrés */}
 					{filteredTournaments.length > 0 ? (
 						filteredTournaments.map((tournament) => (
 							<div

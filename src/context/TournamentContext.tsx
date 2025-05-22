@@ -70,15 +70,17 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 	);
 
 	const createTournament = useCallback(
-		async (hostUuid: string, players: string[]): Promise<void> => {
+		async (hostUuid: string, guestPlayers: string[]): Promise<void> => {
 			setLoading(true);
 			setError(null);
 
 			try {
-				const totalPlayers = players.length + 1;
-				if (![4, 6, 8].includes(totalPlayers)) {
+				// L'hôte est le premier joueur, puis on ajoute les invités
+				const players = [hostUuid, ...guestPlayers];
+
+				if (![4, 8].includes(players.length)) {
 					throw new Error(
-						"Le nombre de joueurs doit être de 4, 6 ou 8 (en comptant l'hôte)",
+						"Le nombre de joueurs doit être de 4 ou 8 (en comptant l'hôte)",
 					);
 				}
 
@@ -89,12 +91,13 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 
 				const tournamentData = {
 					host: hostUuid,
-					players: [hostUuid, ...players],
+					players: players, // L'hôte est déjà inclus en première position
 				};
 
 				console.log("Creating tournament with data:", tournamentData);
 
-				const response = await customFetch("/api/game/tournament/", {
+				const response = await customFetch("/api/game/tournament", {
+					// Supprimé le slash final
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
@@ -107,6 +110,16 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 					throw new Error("Erreur lors de la création du tournoi");
 				}
 
+				// Récupérer le nouveau tournoi créé
+				const newTournament = await response.json();
+
+				// Mettre à jour le state local avec le nouveau tournoi
+				setTournaments((prevTournaments) => [
+					newTournament,
+					...prevTournaments,
+				]);
+
+				// Rafraîchir également les tournois de l'utilisateur depuis le serveur
 				await fetchUserTournaments(hostUuid);
 			} catch (err) {
 				setError(
