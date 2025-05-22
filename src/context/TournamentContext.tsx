@@ -183,6 +183,57 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 		}
 	}, []);
 
+	const updateTournament = useCallback(
+		async (
+			tournamentId: string,
+			data: { winner?: string; finished?: 0 | 1 },
+		): Promise<Tournament> => {
+			try {
+				const token = getJwtToken();
+
+				if (Object.keys(data).length === 0) {
+					throw new Error("Aucune donnée fournie pour la mise à jour");
+				}
+
+				console.log("Updating tournament:", tournamentId, "with data:", data);
+
+				const response = await customFetch(
+					`/api/game/tournament/${tournamentId}`,
+					{
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+						body: JSON.stringify(data),
+					},
+				);
+
+				if (!response.ok) {
+					throw new Error("Erreur lors de la mise à jour du tournoi");
+				}
+
+				const updatedTournament = await response.json();
+
+				setTournaments((prevTournaments) =>
+					prevTournaments.map((tournament) =>
+						tournament.uuid === tournamentId ? updatedTournament : tournament,
+					),
+				);
+
+				return updatedTournament;
+			} catch (err) {
+				setError(
+					err instanceof Error
+						? err.message
+						: "Une erreur est survenue lors de la mise à jour du tournoi",
+				);
+				throw err;
+			}
+		},
+		[],
+	);
+
 	const value: TournamentContextType = {
 		tournaments,
 		loading,
@@ -191,6 +242,7 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 		createTournament,
 		getTournamentById,
 		getMatchById,
+		updateTournament,
 	};
 
 	return (

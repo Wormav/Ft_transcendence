@@ -37,7 +37,7 @@ const styles = {
 	copyButton:
 		"bg-primary hover:bg-opacity-80 text-white py-1 px-3 rounded-md mt-3 self-start transition-all duration-200 flex items-center gap-1 cursor-pointer z-10 hover:translate-y-[-1px] hover:shadow-md",
 	button:
-		"bg-primary hover:bg-opacity-80 text-white py-2 px-6 rounded-md mt-6 transition font-medium",
+		"bg-primary hover:bg-opacity-80 text-white py-2 px-6 rounded-md mt-6 transition font-medium cursor-pointer",
 	error: "text-red-500 dark:text-red-400 text-center mb-4",
 	noMatches: "text-center text-gray-600 dark:text-gray-300 py-8",
 };

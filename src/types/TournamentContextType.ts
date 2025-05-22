@@ -9,6 +9,13 @@ export interface TournamentContextType {
 	createTournament: (hostUuid: string, players: string[]) => Promise<void>;
 	getTournamentById: (id: string) => Promise<Tournament>;
 	getMatchById: (id: string) => Promise<any>;
+	updateTournament: (
+		tournamentId: string,
+		data: {
+			winner?: string;
+			finished?: 0 | 1;
+		},
+	) => Promise<Tournament>;
 }
 
 export type TournamentProviderProps = {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./TournamentsStyle";
 import type { Tournament } from "../../types/Tournament";
@@ -7,6 +7,8 @@ import { useSettings } from "../../context/SettingsContext";
 import { getSizeTextStyle } from "../../globalStyle";
 import { useTournament } from "../../context/TournamentContext";
 import { useUserContext } from "../../context/UserContext";
+
+type TabType = "active" | "finished";
 
 const Tournaments: React.FC = () => {
 	const { t } = useTranslation();
@@ -25,6 +27,7 @@ const Tournaments: React.FC = () => {
 		null,
 	);
 	const [error, setError] = useState<string>("");
+	const [activeTab, setActiveTab] = useState<TabType>("active");
 	const { size_text } = useSettings();
 
 	// Recherche le dernier tournoi actif à chaque changement de la liste des tournois
@@ -49,6 +52,19 @@ const Tournaments: React.FC = () => {
 			fetchUserTournaments(user.uuid);
 		}
 	}, [user, fetchUserTournaments]);
+
+	// Filtrer les tournois en fonction de l'onglet actif
+	const filteredTournaments = useMemo(() => {
+		if (!tournaments) return [];
+
+		return tournaments.filter((tournament) => {
+			if (activeTab === "active") {
+				return tournament.finished === 0;
+			} else {
+				return tournament.finished === 1;
+			}
+		});
+	}, [tournaments, activeTab]);
 
 	const handleAddPlayer = (index: number, name: string) => {
 		const newPlayers = [...guestPlayers];
@@ -220,39 +236,65 @@ const Tournaments: React.FC = () => {
 					<h2 className={`${styles.subtitle} ${getSizeTextStyle(size_text)}`}>
 						{t("tournaments.yourTournaments")}
 					</h2>
-					{tournaments.map((tournament) => (
+
+					{/* Onglets pour filtrer les tournois actifs/terminés */}
+					<div className={styles.tabContainer}>
 						<div
-							key={tournament.uuid}
-							className={styles.tournamentItem}
-							onClick={() =>
-								tournament.uuid && navigate(`/tournaments/${tournament.uuid}`)
-							}
-							style={{ cursor: "pointer" }}
+							className={activeTab === "active" ? styles.activeTab : styles.tab}
+							onClick={() => setActiveTab("active")}
 						>
-							<p className={getSizeTextStyle(size_text)}>
-								Tournoi #{tournament.uuid?.substring(0, 8) || "N/A"}
-							</p>
-							<p className={getSizeTextStyle(size_text)}>
-								{t("tournaments.players")}: {tournament.players?.length || 0}
-							</p>
-							<p className={getSizeTextStyle(size_text)}>
-								{t("tournaments.status")}:{" "}
-								{tournament.finished === 1
-									? t("tournaments.finished")
-									: t("tournaments.inProgress")}
-							</p>
-							{tournament.winner && (
-								<p className={getSizeTextStyle(size_text)}>
-									{t("tournaments.winner")}: {tournament.winner}
-								</p>
-							)}
-							<p
-								className={`${styles.viewBracket} ${getSizeTextStyle(size_text)}`}
-							>
-								{t("tournaments.viewBracket")} →
-							</p>
+							{t("tournaments.activeTournaments")}
 						</div>
-					))}
+						<div
+							className={
+								activeTab === "finished" ? styles.activeTab : styles.tab
+							}
+							onClick={() => setActiveTab("finished")}
+						>
+							{t("tournaments.finishedTournaments")}
+						</div>
+					</div>
+
+					{/* Affichage des tournois filtrés */}
+					{filteredTournaments.length > 0 ? (
+						filteredTournaments.map((tournament) => (
+							<div
+								key={tournament.uuid}
+								className={styles.tournamentItem}
+								onClick={() =>
+									tournament.uuid && navigate(`/tournaments/${tournament.uuid}`)
+								}
+								style={{ cursor: "pointer" }}
+							>
+								<p className={getSizeTextStyle(size_text)}>
+									Tournoi #{tournament.uuid?.substring(0, 8) || "N/A"}
+								</p>
+								<p className={getSizeTextStyle(size_text)}>
+									{t("tournaments.players")}: {tournament.players?.length || 0}
+								</p>
+								<p className={getSizeTextStyle(size_text)}>
+									{t("tournaments.status")}:{" "}
+									{tournament.finished === 1
+										? t("tournaments.finished")
+										: t("tournaments.inProgress")}
+								</p>
+								{tournament.winner && (
+									<p className={getSizeTextStyle(size_text)}>
+										{t("tournaments.winner")}: {tournament.winner}
+									</p>
+								)}
+								<p
+									className={`${styles.viewBracket} ${getSizeTextStyle(size_text)}`}
+								>
+									{t("tournaments.viewBracket")} →
+								</p>
+							</div>
+						))
+					) : (
+						<p className={styles.noTournaments}>
+							{t("tournaments.noTournaments")}
+						</p>
+					)}
 				</div>
 			)}
 		</div>

@@ -190,7 +190,14 @@
 		"final": "Final",
 		"semifinal": "Semifinal",
 		"quarterfinal": "Quarterfinal",
-		"mobileView": "For a better experience, scroll to see all tournament rounds"
+		"mobileView": "For a better experience, scroll to see all tournament rounds",
+		"cancelTournament": "Cancel tournament",
+		"cancelConfirmation": "Are you sure you want to cancel this tournament? This action cannot be undone.",
+		"cancelSuccess": "The tournament has been successfully cancelled",
+		"cancelError": "An error occurred while cancelling the tournament",
+		"activeTournaments": "Active Tournaments",
+		"finishedTournaments": "Finished Tournaments",
+		"noTournaments": "No tournaments found"
 	},
 	"pong": {
 		"startGame": "Start Game",

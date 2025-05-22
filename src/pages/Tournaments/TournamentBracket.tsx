@@ -8,31 +8,22 @@ import { getSizeTextStyle } from "../../globalStyle";
 import styles from "./TournamentBracketStyle";
 import { useToast } from "../../context/ToastContext";
 import type { Tournament, TournamentMatchData } from "../../types/Tournament";
-
-interface MatchDetail {
-	uuid: string;
-	player: string | null;
-	guest: string | null;
-	guest2: string | null;
-	tournament: string;
-	score1: number;
-	score2: number;
-	finished: 0 | 1;
-	starttime: string | null;
-	endtime: string | null;
-}
+import type { MatchDetail } from "../../types/TournamentMatch";
 
 const TournamentBracket: React.FC = () => {
-	// 1. Tous les hooks d'abord, groupés ensemble
 	const { t } = useTranslation();
 	const { size_text } = useSettings();
 	const { showToast } = useToast();
 	const navigate = useNavigate();
 	const { user } = useUserContext();
 	const { id } = useParams<{ id: string }>();
-	const { getTournamentById, getMatchById } = useTournament();
+	const {
+		getTournamentById,
+		getMatchById,
+		updateTournament,
+		fetchUserTournaments,
+	} = useTournament();
 
-	// 2. Tous les états ensemble
 	const [tournament, setTournament] = useState<Tournament | null>(null);
 	const [matchDetails, setMatchDetails] = useState<Record<string, MatchDetail>>(
 		{},
@@ -40,16 +31,13 @@ const TournamentBracket: React.FC = () => {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 
-	// Fonction pour obtenir le nom d'affichage (username si c'est l'utilisateur connecté, sinon l'UUID)
 	const getPlayerDisplayName = (playerId: string | null): string => {
 		if (!playerId) return "TBD";
 
-		// Si c'est l'utilisateur connecté, afficher son nom d'utilisateur
 		if (user && user.uuid === playerId) {
 			return user.username || "Vous";
 		}
 
-		// Sinon, afficher l'UUID tronqué
 		return playerId.substring(0, 8) || "TBD";
 	};
 
@@ -65,7 +53,6 @@ const TournamentBracket: React.FC = () => {
 				const tournamentData = await getTournamentById(id);
 				setTournament(tournamentData);
 
-				// Récupérer les détails de chaque match
 				if (tournamentData.match && tournamentData.match.length > 0) {
 					const detailsPromises = tournamentData.match.map(async (match) => {
 						if (match.uuid) {
@@ -123,8 +110,32 @@ const TournamentBracket: React.FC = () => {
 		navigate(-1);
 	};
 
-	// 3. Tous les calculs basés sur des hooks ensemble (avant les conditions)
-	// Organiser les matchs par rounds et obtenir les informations nécessaires pour l'affichage
+	const handleCancelTournament = async () => {
+		if (!tournament || !tournament.uuid || !user) return;
+
+		try {
+			// Afficher une confirmation
+			if (!window.confirm(t("tournaments.cancelConfirmation"))) {
+				return;
+			}
+
+			// Mettre à jour le tournoi avec finished = 1
+			await updateTournament(tournament.uuid, { finished: 1 });
+
+			// Rafraîchir les données du tournoi
+			const updatedTournament = await getTournamentById(tournament.uuid);
+			setTournament(updatedTournament);
+
+			// Rafraîchir la liste des tournois de l'utilisateur
+			await fetchUserTournaments(user.uuid);
+
+			showToast(t("tournaments.cancelSuccess"), "success");
+		} catch (err) {
+			console.error("Erreur lors de l'annulation du tournoi:", err);
+			showToast(t("tournaments.cancelError"), "error");
+		}
+	};
+
 	const tournamentData = useMemo(() => {
 		const emptyResult = {
 			matchesByRound: {} as Record<number, TournamentMatchData[]>,
@@ -135,19 +146,16 @@ const TournamentBracket: React.FC = () => {
 			return emptyResult;
 		}
 
-		// Créer un objet où les clés sont les numéros de round et les valeurs sont les matchs de ce round
 		const roundsMap: Record<number, TournamentMatchData[]> = {};
 
-		// Pour chaque match, l'ajouter au bon round
 		tournament.match.forEach((match) => {
-			const roundNumber = match.round || 1; // Si round n'est pas défini, considérer comme round 1
+			const roundNumber = match.round || 1;
 			if (!roundsMap[roundNumber]) {
 				roundsMap[roundNumber] = [];
 			}
 			roundsMap[roundNumber].push(match);
 		});
 
-		// Calculer le nombre total de rounds
 		const rounds = Object.keys(roundsMap).map(Number);
 		const maxRound = rounds.length > 0 ? Math.max(...rounds) : 0;
 
@@ -157,11 +165,8 @@ const TournamentBracket: React.FC = () => {
 		};
 	}, [tournament]);
 
-	// Extraire les données du useMemo pour plus de clarté
 	const { matchesByRound, totalRounds } = tournamentData;
 
-	// 4. Fonctions auxiliaires qui ne sont pas des hooks
-	// Fonction pour obtenir le nom du round
 	const getRoundName = (roundNumber: number): string => {
 		switch (roundNumber) {
 			case totalRounds:
@@ -175,7 +180,6 @@ const TournamentBracket: React.FC = () => {
 		}
 	};
 
-	// 5. Conditions de rendu après tous les hooks
 	if (loading) {
 		return (
 			<div className={styles.container}>
@@ -252,11 +256,37 @@ const TournamentBracket: React.FC = () => {
 								</strong>
 							</p>
 						)}
+
+						{/* Bouton d'annulation du tournoi - uniquement visible pour l'hôte si le tournoi n'est pas encore terminé */}
+						{user &&
+							tournament.host === user.uuid &&
+							tournament.finished !== 1 && (
+								<button
+									className="mt-3 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md transition-colors flex items-center gap-1 text-sm"
+									onClick={handleCancelTournament}
+									type="button"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										className="h-4 w-4"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M6 18L18 6M6 6l12 12"
+										/>
+									</svg>
+									{t("tournaments.cancelTournament")}
+								</button>
+							)}
 					</div>
 				</div>
 			</div>
 
-			{/* Message d'aide pour mobile */}
 			<div className="md:hidden bg-slate-50 p-4 rounded-lg mb-6 text-center">
 				<p className={getSizeTextStyle(size_text)}>
 					{t("tournaments.mobileView")}
@@ -266,8 +296,6 @@ const TournamentBracket: React.FC = () => {
 			<div className={styles.bracketContainer}>
 				{tournament.match && tournament.match.length > 0 ? (
 					<div className={styles.bracketTree}>
-						{/* Afficher les matchs organisés par rounds dans l'ordre inverse pour desktop (de la finale au premier round)
-						et dans l'ordre normal pour mobile (du premier round à la finale) */}
 						{Object.entries(matchesByRound)
 							.sort(([roundA], [roundB]) => parseInt(roundA) - parseInt(roundB))
 							.map(([round, matches]) => (
@@ -283,10 +311,14 @@ const TournamentBracket: React.FC = () => {
 												<p
 													className={`${styles.matchId} ${getSizeTextStyle(size_text)}`}
 												>
-													Match #{match.uuid?.substring(0, 8) || "N/A"}
+													{tournament.finished !== 1 &&
+														`Match #${match.uuid?.substring(0, 8) || "N/A"}`}
 													{matchDetails[match.uuid] && (
-														<span className={styles.matchStatus}>
-															{matchDetails[match.uuid].finished === 1
+														<span
+															className={`${styles.matchStatus} ${tournament.finished === 1 ? "ml-0" : ""}`}
+														>
+															{tournament.finished === 1 ||
+															matchDetails[match.uuid].finished === 1
 																? t("tournaments.finished")
 																: t("tournaments.inProgress")}
 														</span>
@@ -309,7 +341,8 @@ const TournamentBracket: React.FC = () => {
 																		matchDetails[match.uuid].player,
 																	)}
 																</span>
-																{matchDetails[match.uuid].finished === 1 && (
+																{(tournament.finished === 1 ||
+																	matchDetails[match.uuid].finished === 1) && (
 																	<span
 																		className={`${
 																			matchDetails[match.uuid].score1 >
@@ -318,7 +351,7 @@ const TournamentBracket: React.FC = () => {
 																				: styles.score
 																		}`}
 																	>
-																		{matchDetails[match.uuid].score1}
+																		{matchDetails[match.uuid].score1 || 0}
 																	</span>
 																)}
 															</div>
@@ -342,7 +375,8 @@ const TournamentBracket: React.FC = () => {
 																				matchDetails[match.uuid].guest2,
 																			)}
 																</span>
-																{matchDetails[match.uuid].finished === 1 && (
+																{(tournament.finished === 1 ||
+																	matchDetails[match.uuid].finished === 1) && (
 																	<span
 																		className={`${
 																			matchDetails[match.uuid].score2 >
@@ -351,7 +385,7 @@ const TournamentBracket: React.FC = () => {
 																				: styles.score
 																		}`}
 																	>
-																		{matchDetails[match.uuid].score2}
+																		{matchDetails[match.uuid].score2 || 0}
 																	</span>
 																)}
 															</div>
@@ -364,7 +398,8 @@ const TournamentBracket: React.FC = () => {
 												</div>
 
 												{matchDetails[match.uuid] &&
-													matchDetails[match.uuid].finished === 1 && (
+													(tournament.finished === 1 ||
+														matchDetails[match.uuid].finished === 1) && (
 														<p
 															className={`${styles.winner} ${getSizeTextStyle(size_text)}`}
 														>
@@ -383,24 +418,26 @@ const TournamentBracket: React.FC = () => {
 														</p>
 													)}
 
-												<button
-													className={`${styles.copyButton} ${getSizeTextStyle(size_text)}`}
-													onClick={() => copyMatchId(match.uuid || "")}
-													type="button"
-													role="button"
-													aria-label={t("tournaments.copyId")}
-												>
-													{t("tournaments.copyId")}
-													<svg
-														xmlns="http://www.w3.org/2000/svg"
-														className="h-4 w-4"
-														viewBox="0 0 20 20"
-														fill="currentColor"
+												{tournament.finished !== 1 && (
+													<button
+														className={`${styles.copyButton} ${getSizeTextStyle(size_text)}`}
+														onClick={() => copyMatchId(match.uuid || "")}
+														type="button"
+														role="button"
+														aria-label={t("tournaments.copyId")}
 													>
-														<path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
-														<path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
-													</svg>
-												</button>
+														{t("tournaments.copyId")}
+														<svg
+															xmlns="http://www.w3.org/2000/svg"
+															className="h-4 w-4"
+															viewBox="0 0 20 20"
+															fill="currentColor"
+														>
+															<path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+															<path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+														</svg>
+													</button>
+												)}
 											</div>
 										))}
 									</div>

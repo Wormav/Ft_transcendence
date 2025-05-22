@@ -19,9 +19,15 @@ const TournamentsStyle = {
 	labelText: "font-medium text-gray-700",
 	statusActive: "mt-2 font-bold text-green-600",
 	viewBracket: "text-primary/80 italic mt-3 text-sm text-right",
-	tournamentList: "mt-8 bg-white-custom p-6 rounded-xl shadow-lg",
+	tournamentList: "mt-8 bg-white-custom p-4 md:p-6 rounded-xl shadow-lg",
 	tournamentItem:
 		"border border-gray-300 rounded-lg p-4 mb-4 hover:shadow-md transition-shadow bg-white",
+	tabContainer:
+		"flex flex-col md:flex-row border-b border-gray-300 mb-6 gap-2 md:gap-0",
+	tab: "py-3 md:py-2 px-6 text-gray-600 cursor-pointer transition-all hover:bg-gray-100 border border-gray-200 md:border-b-0 rounded-md md:rounded-t-md md:rounded-b-none w-full md:w-auto text-center",
+	activeTab:
+		"py-3 md:py-2 px-6 text-primary font-medium border-2 border-primary md:border-b-0 cursor-pointer transition-all rounded-md md:rounded-t-md md:rounded-b-none bg-gray-100 w-full md:w-auto text-center",
+	noTournaments: "text-gray-500 text-center py-8 italic",
 	tournament: {
 		container: "mt-8 bg-white p-6 rounded-xl shadow-lg",
 		roundTitle: "text-xl font-semibold mb-4 text-primary",
