@@ -12,7 +12,7 @@ export interface TournamentContextType {
 	updateTournament: (
 		tournamentId: string,
 		data: {
-			winner?: string;
+			winner?: string | null;
 			finished?: 0 | 1;
 		},
 	) => Promise<Tournament>;

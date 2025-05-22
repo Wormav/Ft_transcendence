@@ -185,76 +185,223 @@ const TournamentBracket: React.FC = () => {
 
 	useEffect(() => {
 		const updateNextMatch = async () => {
-			if (!tournament?.match) {
+			if (!tournament?.match || !tournament.uuid) {
 				console.log("Pas de matchs dans le tournoi");
 				return;
 			}
 
-			// Récupérer les matchs du premier tour
-			const round1Matches = tournament.match.filter(
-				(match) => match.round === 1,
-			);
-			if (round1Matches.length < 2) {
-				console.log("Pas assez de matchs dans le round 1");
-				return;
+			// Récupérer tous les matchs par round
+			const matchesByRound: Record<number, any[]> = {};
+			tournament.match.forEach((match) => {
+				const round = match.round || 1;
+				if (!matchesByRound[round]) {
+					matchesByRound[round] = [];
+				}
+				matchesByRound[round].push(match);
+			});
+
+			// Vérifier si la finale est terminée
+			const maxRound = Math.max(...Object.keys(matchesByRound).map(Number));
+			const finalMatch = matchesByRound[maxRound]?.[0];
+			if (
+				finalMatch?.uuid &&
+				matchDetails[finalMatch.uuid]?.finished === 1 &&
+				tournament.finished !== 1
+			) {
+				console.log("Finale terminée, mise à jour du statut du tournoi");
+				const finalMatchDetails = matchDetails[finalMatch.uuid];
+				const winner =
+					finalMatchDetails.score1 > finalMatchDetails.score2
+						? finalMatchDetails.player || finalMatchDetails.guest
+						: finalMatchDetails.guest2 || finalMatchDetails.guest;
+
+				try {
+					await updateTournament(tournament.uuid, {
+						finished: 1,
+						winner: winner,
+					});
+					const updatedTournament = await getTournamentById(tournament.uuid);
+					setTournament(updatedTournament);
+
+					// Afficher le message de félicitations
+					const winnerName = getPlayerDisplayName(
+						winner,
+						winner === finalMatchDetails.player,
+					);
+					showToast(
+						`Félicitations à ${winnerName} pour avoir remporté le tournoi !`,
+						"success",
+					);
+				} catch (error) {
+					console.error(
+						"Erreur lors de la mise à jour du statut du tournoi:",
+						error,
+					);
+				}
 			}
 
-			// Vérifier si le match du deuxième tour existe
-			const round2Match = tournament.match.find((match) => match.round === 2);
-			if (!round2Match?.uuid) {
-				console.log("Pas de match dans le round 2");
-				return;
-			}
+			// Pour chaque round sauf le dernier
+			for (let round = 1; round < Object.keys(matchesByRound).length; round++) {
+				const currentRoundMatches = matchesByRound[round] || [];
+				const nextRoundMatches = matchesByRound[round + 1] || [];
 
-			console.log("État des matchs du premier tour :", round1Matches);
+				// Vérifier si on peut mettre à jour le prochain match
+				for (let i = 0; i < currentRoundMatches.length; i += 2) {
+					const match1 = currentRoundMatches[i];
+					const match2 = currentRoundMatches[i + 1];
+					if (!match1?.uuid || !match2?.uuid) continue;
 
-			const match1Details = matchDetails[round1Matches[0].uuid || ""];
-			const match2Details = matchDetails[round1Matches[1].uuid || ""];
+					const match1Details = matchDetails[match1.uuid];
+					const match2Details = matchDetails[match2.uuid];
 
-			// Vérification explicite que les deux matchs sont terminés
-			if (!match1Details?.finished || !match2Details?.finished) {
-				console.log("Les deux matchs ne sont pas encore terminés:");
-				console.log("Match 1 terminé:", match1Details?.finished);
-				console.log("Match 2 terminé:", match2Details?.finished);
-				return;
-			}
+					// Si les deux matchs sont terminés
+					if (match1Details?.finished === 1 && match2Details?.finished === 1) {
+						const nextRoundMatch = nextRoundMatches[i / 2];
+						if (!nextRoundMatch?.uuid) continue;
 
-			console.log(
-				"Les deux matchs sont terminés, détermination des gagnants...",
-			);
-			const winners = determineWinners(match1Details, match2Details);
-			if (!winners) {
-				console.log("Impossible de déterminer les gagnants");
-				return;
-			}
+						// Si le match suivant n'est pas déjà mis à jour
+						const nextMatchDetails = matchDetails[nextRoundMatch.uuid];
+						if (!nextMatchDetails?.finished) {
+							console.log(
+								`Mise à jour du match ${nextRoundMatch.uuid} du round ${round + 1}`,
+							);
 
-			const updateData = {
-				player: winners.player || null,
-				guest: winners.guest || null,
-				guest2: winners.guest2 || null,
-			};
+							const winners = determineWinners(match1Details, match2Details);
+							if (!winners) {
+								console.log("Impossible de déterminer les gagnants");
+								continue;
+							}
 
-			try {
-				const token = getJwtToken();
-				console.log("Mise à jour du match du round 2 avec:", updateData);
+							const updateData = {
+								player: winners.player || null,
+								guest: winners.guest || null,
+								guest2: winners.guest2 || null,
+							};
 
-				await customFetch(`/api/game/match/${round2Match.uuid}`, {
-					method: "PUT",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${token}`,
-					},
-					body: JSON.stringify(updateData),
-				});
+							try {
+								const token = getJwtToken();
+								await customFetch(`/api/game/match/${nextRoundMatch.uuid}`, {
+									method: "PUT",
+									headers: {
+										"Content-Type": "application/json",
+										Authorization: `Bearer ${token}`,
+									},
+									body: JSON.stringify(updateData),
+								});
 
-				console.log("Match du round 2 mis à jour avec succès");
-			} catch (err) {
-				console.error("Erreur lors de la mise à jour du match:", err);
+								// Recharger les détails du match après la mise à jour
+								const updatedMatch = await getMatchById(nextRoundMatch.uuid);
+								setMatchDetails((prev) => ({
+									...prev,
+									[nextRoundMatch.uuid]: updatedMatch,
+								}));
+							} catch (err) {
+								console.error(
+									`Erreur lors de la mise à jour du match ${nextRoundMatch.uuid}:`,
+									err,
+								);
+							}
+						}
+					}
+				}
 			}
 		};
 
-		updateNextMatch();
-	}, [tournament, matchDetails]);
+		// Mettre à jour les matchs chaque fois que l'état change
+		const timeoutId = setTimeout(updateNextMatch, 1000);
+		return () => clearTimeout(timeoutId);
+	}, [
+		tournament,
+		matchDetails,
+		getMatchById,
+		updateTournament,
+		getTournamentById,
+		getPlayerDisplayName,
+		showToast,
+	]);
+
+	// Ajout d'un effet pour surveiller les mises à jour des matchs
+	useEffect(() => {
+		let timeoutId: NodeJS.Timeout;
+
+		const checkAndUpdateMatches = async () => {
+			if (!tournament?.match) return;
+
+			const matchesByRound: Record<number, any[]> = {};
+			tournament.match.forEach((match) => {
+				const round = match.round || 1;
+				if (!matchesByRound[round]) matchesByRound[round] = [];
+				matchesByRound[round].push(match);
+			});
+
+			for (let round = 1; round < Object.keys(matchesByRound).length; round++) {
+				const currentMatches = matchesByRound[round] || [];
+				const nextMatches = matchesByRound[round + 1] || [];
+
+				for (let i = 0; i < currentMatches.length; i += 2) {
+					const match1 = currentMatches[i];
+					const match2 = currentMatches[i + 1];
+					if (!match1?.uuid || !match2?.uuid) continue;
+
+					const match1Details = matchDetails[match1.uuid];
+					const match2Details = matchDetails[match2.uuid];
+
+					if (match1Details?.finished === 1 && match2Details?.finished === 1) {
+						const nextMatch = nextMatches[i / 2];
+						if (!nextMatch?.uuid) continue;
+
+						if (!matchDetails[nextMatch.uuid]?.finished) {
+							const winners = determineWinners(match1Details, match2Details);
+							if (!winners) continue;
+
+							const updateData = {
+								player: winners.player || null,
+								guest: winners.guest || null,
+								guest2: winners.guest2 || null,
+							};
+
+							try {
+								const token = getJwtToken();
+								await customFetch(`/api/game/match/${nextMatch.uuid}`, {
+									method: "PUT",
+									headers: {
+										"Content-Type": "application/json",
+										Authorization: `Bearer ${token}`,
+									},
+									body: JSON.stringify(updateData),
+								});
+
+								// Actualiser les détails après la mise à jour
+								const updatedMatch = await getMatchById(nextMatch.uuid);
+								setMatchDetails((prev) => ({
+									...prev,
+									[nextMatch.uuid]: updatedMatch,
+								}));
+							} catch (err) {
+								console.error(
+									`Erreur de mise à jour du match ${nextMatch.uuid}:`,
+									err,
+								);
+							}
+						}
+					}
+				}
+			}
+		};
+
+		const startPolling = () => {
+			timeoutId = setTimeout(async () => {
+				await checkAndUpdateMatches();
+				startPolling();
+			}, 2000);
+		};
+
+		startPolling();
+
+		return () => {
+			if (timeoutId) clearTimeout(timeoutId);
+		};
+	}, [tournament, matchDetails, determineWinners, getMatchById]);
 
 	const tournamentData = useMemo(() => {
 		const emptyResult = {
@@ -416,180 +563,193 @@ const TournamentBracket: React.FC = () => {
 					<div className={styles.bracketTree}>
 						{Object.entries(matchesByRound)
 							.sort(([roundA], [roundB]) => parseInt(roundA) - parseInt(roundB))
-							.map(([round, matches]) => (
-								<div key={round} className={styles.roundContainer}>
-									<h3
-										className={`${styles.roundTitle} ${getSizeTextStyle(size_text)}`}
-									>
-										{getRoundName(parseInt(round))}
-									</h3>
-									<div className={styles.roundMatches}>
-										{matches.map((match) => (
-											<div key={match.uuid} className={styles.matchCard}>
-												<p
-													className={`${styles.matchId} ${getSizeTextStyle(size_text)}`}
-												>
-													{tournament.finished !== 1 &&
-														`Match #${match.uuid?.substring(0, 8) || "N/A"}`}
-													{matchDetails[match.uuid] && (
-														<span
-															className={`${styles.matchStatus} ${tournament.finished === 1 ? "ml-0" : ""}`}
-														>
-															{tournament.finished === 1 ||
-															matchDetails[match.uuid].finished === 1
-																? t("tournaments.finished")
-																: t("tournaments.inProgress")}
-														</span>
-													)}
-												</p>
-												<div className={styles.players}>
-													{matchDetails[match.uuid] ? (
-														<>
-															<div className={styles.playerRow}>
-																<span
-																	className={`${styles.playerName} ${getSizeTextStyle(size_text)} ${
-																		user &&
-																		matchDetails[match.uuid].player ===
-																			user.uuid
-																			? styles.currentPlayer
-																			: ""
-																	}`}
-																>
-																	{/* Si player est null mais qu'il y a un score,
-																	utiliser guest à la place de "Guest1" */}
-																	{!matchDetails[match.uuid].player &&
-																	matchDetails[match.uuid].guest
-																		? getPlayerDisplayName(
-																				matchDetails[match.uuid].guest,
-																				false,
-																			)
-																		: getPlayerDisplayName(
-																				matchDetails[match.uuid].player,
-																				true,
-																			)}
-																</span>
-																{(tournament.finished === 1 ||
-																	matchDetails[match.uuid].finished === 1) && (
+							.map(([round, matches]) => {
+								const currentRoundNum = parseInt(round);
+								if (currentRoundNum > 1) {
+									const previousRoundMatches =
+										matchesByRound[currentRoundNum - 1] || [];
+									const allPreviousMatchesFinished = previousRoundMatches.every(
+										(match) => matchDetails[match.uuid]?.finished === 1,
+									);
+									if (!allPreviousMatchesFinished) return null;
+								}
+								return (
+									<div key={round} className={styles.roundContainer}>
+										<h3
+											className={`${styles.roundTitle} ${getSizeTextStyle(size_text)}`}
+										>
+											{getRoundName(parseInt(round))}
+										</h3>
+										<div className={styles.roundMatches}>
+											{matches.map((match) => (
+												<div key={match.uuid} className={styles.matchCard}>
+													<p
+														className={`${styles.matchId} ${getSizeTextStyle(size_text)}`}
+													>
+														{tournament.finished !== 1 &&
+															`Match #${match.uuid?.substring(0, 8) || "N/A"}`}
+														{matchDetails[match.uuid] && (
+															<span
+																className={`${styles.matchStatus} ${tournament.finished === 1 ? "ml-0" : ""}`}
+															>
+																{tournament.finished === 1 ||
+																matchDetails[match.uuid].finished === 1
+																	? t("tournaments.finished")
+																	: t("tournaments.inProgress")}
+															</span>
+														)}
+													</p>
+													<div className={styles.players}>
+														{matchDetails[match.uuid] ? (
+															<>
+																<div className={styles.playerRow}>
 																	<span
-																		className={`${
-																			matchDetails[match.uuid].score1 >
-																			matchDetails[match.uuid].score2
-																				? styles.scoreHighlight
-																				: styles.score
+																		className={`${styles.playerName} ${getSizeTextStyle(size_text)} ${
+																			user &&
+																			matchDetails[match.uuid].player ===
+																				user.uuid
+																				? styles.currentPlayer
+																				: ""
 																		}`}
 																	>
-																		{matchDetails[match.uuid].score1 || 0}
-																	</span>
-																)}
-															</div>
-															<div className={styles.playerRow}>
-																<span
-																	className={`${styles.playerName} ${getSizeTextStyle(size_text)} ${
-																		user &&
-																		(matchDetails[match.uuid].guest ===
-																			user.uuid ||
-																			matchDetails[match.uuid].guest2 ===
-																				user.uuid)
-																			? styles.currentPlayer
-																			: ""
-																	}`}
-																>
-																	{matchDetails[match.uuid].guest2
-																		? getPlayerDisplayName(
-																				matchDetails[match.uuid].guest2,
-																				false,
-																			)
-																		: !matchDetails[match.uuid].player &&
-																			  matchDetails[match.uuid].guest
-																			? "Guest2"
-																			: getPlayerDisplayName(
+																		{/* Si player est null mais qu'il y a un score,
+																		utiliser guest à la place de "Guest1" */}
+																		{!matchDetails[match.uuid].player &&
+																		matchDetails[match.uuid].guest
+																			? getPlayerDisplayName(
 																					matchDetails[match.uuid].guest,
 																					false,
+																				)
+																			: getPlayerDisplayName(
+																					matchDetails[match.uuid].player,
+																					true,
 																				)}
-																</span>
-																{(tournament.finished === 1 ||
-																	matchDetails[match.uuid].finished === 1) && (
+																	</span>
+																	{(tournament.finished === 1 ||
+																		matchDetails[match.uuid].finished ===
+																			1) && (
+																		<span
+																			className={`${
+																				matchDetails[match.uuid].score1 >
+																				matchDetails[match.uuid].score2
+																					? styles.scoreHighlight
+																					: styles.score
+																			}`}
+																		>
+																			{matchDetails[match.uuid].score1 || 0}
+																		</span>
+																	)}
+																</div>
+																<div className={styles.playerRow}>
 																	<span
-																		className={`${
-																			matchDetails[match.uuid].score2 >
-																			matchDetails[match.uuid].score1
-																				? styles.scoreHighlight
-																				: styles.score
+																		className={`${styles.playerName} ${getSizeTextStyle(size_text)} ${
+																			user &&
+																			(matchDetails[match.uuid].guest ===
+																				user.uuid ||
+																				matchDetails[match.uuid].guest2 ===
+																					user.uuid)
+																				? styles.currentPlayer
+																				: ""
 																		}`}
 																	>
-																		{matchDetails[match.uuid].score2 || 0}
+																		{matchDetails[match.uuid].guest2
+																			? getPlayerDisplayName(
+																					matchDetails[match.uuid].guest2,
+																					false,
+																				)
+																			: !matchDetails[match.uuid].player &&
+																				  matchDetails[match.uuid].guest
+																				? "Guest2"
+																				: getPlayerDisplayName(
+																						matchDetails[match.uuid].guest,
+																						false,
+																					)}
 																	</span>
-																)}
-															</div>
-														</>
-													) : (
-														<p className={getSizeTextStyle(size_text)}>
-															{t("tournaments.loading")}
-														</p>
+																	{(tournament.finished === 1 ||
+																		matchDetails[match.uuid].finished ===
+																			1) && (
+																		<span
+																			className={`${
+																				matchDetails[match.uuid].score2 >
+																				matchDetails[match.uuid].score1
+																					? styles.scoreHighlight
+																					: styles.score
+																			}`}
+																		>
+																			{matchDetails[match.uuid].score2 || 0}
+																		</span>
+																	)}
+																</div>
+															</>
+														) : (
+															<p className={getSizeTextStyle(size_text)}>
+																{t("tournaments.loading")}
+															</p>
+														)}
+													</div>
+
+													{matchDetails[match.uuid] &&
+														(tournament.finished === 1 ||
+															matchDetails[match.uuid].finished === 1) && (
+															<p
+																className={`${styles.winner} ${getSizeTextStyle(size_text)}`}
+															>
+																{t("tournaments.winner")}:{" "}
+																<strong>
+																	{matchDetails[match.uuid].score1 >
+																	matchDetails[match.uuid].score2
+																		? !matchDetails[match.uuid].player &&
+																			matchDetails[match.uuid].guest
+																			? getPlayerDisplayName(
+																					matchDetails[match.uuid].guest,
+																					false,
+																				)
+																			: getPlayerDisplayName(
+																					matchDetails[match.uuid].player,
+																					true,
+																				)
+																		: matchDetails[match.uuid].guest2
+																			? getPlayerDisplayName(
+																					matchDetails[match.uuid].guest2,
+																					false,
+																				)
+																			: !matchDetails[match.uuid].player &&
+																				  matchDetails[match.uuid].guest
+																				? "Guest2"
+																				: getPlayerDisplayName(
+																						matchDetails[match.uuid].guest,
+																						false,
+																					)}
+																</strong>
+															</p>
+														)}
+
+													{tournament.finished !== 1 && (
+														<button
+															className={`${styles.copyButton} ${getSizeTextStyle(size_text)}`}
+															onClick={() => copyMatchId(match.uuid || "")}
+															type="button"
+															role="button"
+															aria-label={t("tournaments.copyId")}
+														>
+															{t("tournaments.copyId")}
+															<svg
+																xmlns="http://www.w3.org/2000/svg"
+																className="h-4 w-4"
+																viewBox="0 0 20 20"
+																fill="currentColor"
+															>
+																<path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+																<path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+															</svg>
+														</button>
 													)}
 												</div>
-
-												{matchDetails[match.uuid] &&
-													(tournament.finished === 1 ||
-														matchDetails[match.uuid].finished === 1) && (
-														<p
-															className={`${styles.winner} ${getSizeTextStyle(size_text)}`}
-														>
-															{t("tournaments.winner")}:{" "}
-															<strong>
-																{matchDetails[match.uuid].score1 >
-																matchDetails[match.uuid].score2
-																	? !matchDetails[match.uuid].player &&
-																		matchDetails[match.uuid].guest
-																		? getPlayerDisplayName(
-																				matchDetails[match.uuid].guest,
-																				false,
-																			)
-																		: getPlayerDisplayName(
-																				matchDetails[match.uuid].player,
-																				true,
-																			)
-																	: matchDetails[match.uuid].guest2
-																		? getPlayerDisplayName(
-																				matchDetails[match.uuid].guest2,
-																				false,
-																			)
-																		: !matchDetails[match.uuid].player &&
-																			  matchDetails[match.uuid].guest
-																			? "Guest2"
-																			: getPlayerDisplayName(
-																					matchDetails[match.uuid].guest,
-																					false,
-																				)}
-															</strong>
-														</p>
-													)}
-
-												{tournament.finished !== 1 && (
-													<button
-														className={`${styles.copyButton} ${getSizeTextStyle(size_text)}`}
-														onClick={() => copyMatchId(match.uuid || "")}
-														type="button"
-														role="button"
-														aria-label={t("tournaments.copyId")}
-													>
-														{t("tournaments.copyId")}
-														<svg
-															xmlns="http://www.w3.org/2000/svg"
-															className="h-4 w-4"
-															viewBox="0 0 20 20"
-															fill="currentColor"
-														>
-															<path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
-															<path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
-														</svg>
-													</button>
-												)}
-											</div>
-										))}
+											))}
+										</div>
 									</div>
-								</div>
-							))}
+								);
+							})}
 					</div>
 				) : (
 					<div className={styles.noMatches}>
