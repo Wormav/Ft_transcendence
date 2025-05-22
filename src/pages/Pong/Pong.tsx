@@ -509,13 +509,7 @@ export default function Pong() {
 
 						// Mise à jour du match
 						updateMatch(currentMatchUuid, endGameOptions)
-							.then((result) => {
-								console.log("Match terminé avec succès:", result);
-								// Afficher un message à l'utilisateur
-								if (tournamentMatchSettings.isInTournament) {
-									alert(t("tournaments.matchCompleted"));
-								}
-							})
+							.then(() => {})
 							.catch((err) =>
 								console.error(
 									"Erreur lors de la mise à jour du score et fin de partie:",
@@ -1153,8 +1147,6 @@ export default function Pong() {
 				if (matchDetails.finished === 1) {
 					throw new Error("Ce match de tournoi est déjà terminé");
 				}
-
-				console.log("Match de tournoi récupéré:", matchDetails);
 
 				// Gérer le cas spécial où il n'y a pas de player mais deux guests
 				const playerLeft =

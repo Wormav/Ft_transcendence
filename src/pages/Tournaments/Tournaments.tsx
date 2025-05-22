@@ -113,9 +113,6 @@ const Tournaments: React.FC = () => {
 			return;
 		}
 
-		console.log("Création d'un tournoi avec l'hôte:", user.uuid);
-		console.log("Et les invités:", validPlayers);
-
 		try {
 			await createTournament(user.uuid, validPlayers);
 

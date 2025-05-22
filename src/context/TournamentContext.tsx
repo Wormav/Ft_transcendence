@@ -56,7 +56,6 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 				}
 
 				const data = await response.json();
-				console.log("Tournaments data:", data);
 				setTournaments(data);
 			} catch (err) {
 				setError(
@@ -93,8 +92,6 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 					host: hostUuid,
 					players: players, // L'hôte est déjà inclus en première position
 				};
-
-				console.log("Creating tournament with data:", tournamentData);
 
 				const response = await customFetch("/api/game/tournament", {
 					// Supprimé le slash final
@@ -207,8 +204,6 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 				if (Object.keys(data).length === 0) {
 					throw new Error("Aucune donnée fournie pour la mise à jour");
 				}
-
-				console.log("Updating tournament:", tournamentId, "with data:", data);
 
 				const response = await customFetch(
 					`/api/game/tournament/${tournamentId}`,

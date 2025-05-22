@@ -9,6 +9,8 @@ import styles from "./TournamentBracketStyle";
 import { useToast } from "../../context/ToastContext";
 import type { Tournament, TournamentMatchData } from "../../types/Tournament";
 import type { MatchDetail } from "../../types/TournamentMatch";
+import { customFetch } from "../../utils/customFetch";
+import { getJwtToken } from "../../utils/getJwtToken";
 
 const TournamentBracket: React.FC = () => {
 	const { t } = useTranslation();
@@ -31,6 +33,50 @@ const TournamentBracket: React.FC = () => {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 
+	const determineWinners = (
+		match1: MatchDetail | undefined,
+		match2: MatchDetail | undefined,
+	) => {
+		if (!match1 || !match2) return null;
+
+		console.log("Match 1:", match1);
+		console.log("Match 2:", match2);
+
+		// Déterminer les gagnants de chaque match
+		const winner1 =
+			match1.score1 > match1.score2
+				? match1.player || match1.guest
+				: match1.guest2 || match1.guest;
+
+		const winner2 =
+			match2.score1 > match2.score2
+				? match2.player || match2.guest
+				: match2.guest2 || match2.guest;
+
+		console.log("Winner 1:", winner1);
+		console.log("Winner 2:", winner2);
+
+		// Si aucun des gagnants n'était un player, on retourne guest et guest2
+		if (winner1 !== match1.player && winner2 !== match2.player) {
+			const result = {
+				player: null,
+				guest: winner1,
+				guest2: winner2,
+			};
+			console.log("Result guest vs guest:", result);
+			return result;
+		}
+
+		// Si l'un des gagnants était un player
+		const result = {
+			player: winner1 === match1.player ? winner1 : winner2,
+			guest: winner1 === match1.player ? winner2 : winner1,
+			guest2: null,
+		};
+		console.log("Result with player:", result);
+		return result;
+	};
+
 	const getPlayerDisplayName = (
 		playerId: string | null,
 		isPlayer: boolean = true,
@@ -44,6 +90,43 @@ const TournamentBracket: React.FC = () => {
 		}
 
 		return playerId.substring(0, 8);
+	};
+
+	const handleBackClick = () => {
+		navigate(-1);
+	};
+
+	const copyMatchId = (matchId: string) => {
+		navigator.clipboard
+			.writeText(matchId)
+			.then(() => {
+				showToast(t("tournaments.idCopied"), "success");
+			})
+			.catch(() => {
+				showToast(t("error.unknown"), "error");
+			});
+	};
+
+	const handleCancelTournament = async () => {
+		if (!tournament || !tournament.uuid || !user) return;
+
+		try {
+			if (!window.confirm(t("tournaments.cancelConfirmation"))) {
+				return;
+			}
+
+			await updateTournament(tournament.uuid, { finished: 1 });
+
+			const updatedTournament = await getTournamentById(tournament.uuid);
+			setTournament(updatedTournament);
+
+			await fetchUserTournaments(user.uuid);
+
+			showToast(t("tournaments.cancelSuccess"), "success");
+		} catch (err) {
+			console.error("Erreur lors de l'annulation du tournoi:", err);
+			showToast(t("tournaments.cancelError"), "error");
+		}
 	};
 
 	useEffect(() => {
@@ -100,48 +183,78 @@ const TournamentBracket: React.FC = () => {
 		fetchTournament();
 	}, [id, getTournamentById, getMatchById]);
 
-	// --- Nouvelle fonction d'assignation automatique ---
-
-	const copyMatchId = (matchId: string) => {
-		navigator.clipboard
-			.writeText(matchId)
-			.then(() => {
-				showToast(t("tournaments.idCopied"), "success");
-			})
-			.catch(() => {
-				showToast(t("error.unknown"), "error");
-			});
-	};
-
-	const handleBackClick = () => {
-		navigate(-1);
-	};
-
-	const handleCancelTournament = async () => {
-		if (!tournament || !tournament.uuid || !user) return;
-
-		try {
-			// Afficher une confirmation
-			if (!window.confirm(t("tournaments.cancelConfirmation"))) {
+	useEffect(() => {
+		const updateNextMatch = async () => {
+			if (!tournament?.match) {
+				console.log("Pas de matchs dans le tournoi");
 				return;
 			}
 
-			// Mettre à jour le tournoi avec finished = 1
-			await updateTournament(tournament.uuid, { finished: 1 });
+			// Récupérer les matchs du premier tour
+			const round1Matches = tournament.match.filter(
+				(match) => match.round === 1,
+			);
+			if (round1Matches.length < 2) {
+				console.log("Pas assez de matchs dans le round 1");
+				return;
+			}
 
-			// Rafraîchir les données du tournoi
-			const updatedTournament = await getTournamentById(tournament.uuid);
-			setTournament(updatedTournament);
+			// Vérifier si le match du deuxième tour existe
+			const round2Match = tournament.match.find((match) => match.round === 2);
+			if (!round2Match?.uuid) {
+				console.log("Pas de match dans le round 2");
+				return;
+			}
 
-			// Rafraîchir la liste des tournois de l'utilisateur
-			await fetchUserTournaments(user.uuid);
+			console.log("État des matchs du premier tour :", round1Matches);
 
-			showToast(t("tournaments.cancelSuccess"), "success");
-		} catch (err) {
-			console.error("Erreur lors de l'annulation du tournoi:", err);
-			showToast(t("tournaments.cancelError"), "error");
-		}
-	};
+			const match1Details = matchDetails[round1Matches[0].uuid || ""];
+			const match2Details = matchDetails[round1Matches[1].uuid || ""];
+
+			// Vérification explicite que les deux matchs sont terminés
+			if (!match1Details?.finished || !match2Details?.finished) {
+				console.log("Les deux matchs ne sont pas encore terminés:");
+				console.log("Match 1 terminé:", match1Details?.finished);
+				console.log("Match 2 terminé:", match2Details?.finished);
+				return;
+			}
+
+			console.log(
+				"Les deux matchs sont terminés, détermination des gagnants...",
+			);
+			const winners = determineWinners(match1Details, match2Details);
+			if (!winners) {
+				console.log("Impossible de déterminer les gagnants");
+				return;
+			}
+
+			const updateData = {
+				player: winners.player || null,
+				guest: winners.guest || null,
+				guest2: winners.guest2 || null,
+			};
+
+			try {
+				const token = getJwtToken();
+				console.log("Mise à jour du match du round 2 avec:", updateData);
+
+				await customFetch(`/api/game/match/${round2Match.uuid}`, {
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+					body: JSON.stringify(updateData),
+				});
+
+				console.log("Match du round 2 mis à jour avec succès");
+			} catch (err) {
+				console.error("Erreur lors de la mise à jour du match:", err);
+			}
+		};
+
+		updateNextMatch();
+	}, [tournament, matchDetails]);
 
 	const tournamentData = useMemo(() => {
 		const emptyResult = {
@@ -263,8 +376,6 @@ const TournamentBracket: React.FC = () => {
 								</strong>
 							</p>
 						)}
-
-						{/* Bouton d'annulation du tournoi - uniquement visible pour l'hôte si le tournoi n'est pas encore terminé */}
 						{user &&
 							tournament.host === user.uuid &&
 							tournament.finished !== 1 && (
@@ -383,8 +494,6 @@ const TournamentBracket: React.FC = () => {
 																			: ""
 																	}`}
 																>
-																	{/* Utiliser guest2 si disponible, sinon guest si player est non null,
-																	sinon utiliser "Guest2" */}
 																	{matchDetails[match.uuid].guest2
 																		? getPlayerDisplayName(
 																				matchDetails[match.uuid].guest2,
