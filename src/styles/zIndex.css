@@ -5,6 +5,9 @@
 	.z-modal {
 		z-index: 999999;
 	}
+	.z-toast {
+		z-index: 9999999;
+	}
 	.z-game-content {
 		z-index: 1;
 	}

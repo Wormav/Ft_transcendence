@@ -1,5 +1,5 @@
 export const ToastStyles = {
-	toast: `fixed bottom-5 right-5 flex items-center w-full max-w-xs p-4 mb-4 rounded-lg shadow z-50
+	toast: `fixed bottom-5 right-5 flex items-center w-full max-w-xs p-4 mb-4 rounded-lg shadow z-toast
           transition-opacity duration-300`,
 	visible: "opacity-100",
 	hidden: "opacity-0",
