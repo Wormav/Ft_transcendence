@@ -31,22 +31,18 @@ const TournamentBracket: React.FC = () => {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 
-	// Fonction pour obtenir le nom d'affichage d'un joueur
 	const getPlayerDisplayName = (
 		playerId: string | null,
 		isPlayer: boolean = true,
 	): string => {
-		// Si l'id est null, on retourne "Guest1" pour un player et "Guest2" pour un guest
 		if (!playerId) {
 			return isPlayer ? "Guest1" : "Guest2";
 		}
 
-		// Si c'est l'utilisateur courant
 		if (user && user.uuid === playerId) {
 			return user.username || "Vous";
 		}
 
-		// Sinon on retourne les 8 premiers caractères de l'id
 		return playerId.substring(0, 8);
 	};
 
@@ -103,6 +99,8 @@ const TournamentBracket: React.FC = () => {
 
 		fetchTournament();
 	}, [id, getTournamentById, getMatchById]);
+
+	// --- Nouvelle fonction d'assignation automatique ---
 
 	const copyMatchId = (matchId: string) => {
 		navigator.clipboard

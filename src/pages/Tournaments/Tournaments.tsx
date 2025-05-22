@@ -21,7 +21,6 @@ const Tournaments: React.FC = () => {
 		createTournament,
 		fetchUserTournaments,
 	} = useTournament();
-	const [maxPlayers, setMaxPlayers] = useState<4 | 8>(4);
 	const [guestPlayers, setGuestPlayers] = useState<string[]>([]);
 	const [activeTournament, setActiveTournament] = useState<Tournament | null>(
 		null,
@@ -98,11 +97,11 @@ const Tournaments: React.FC = () => {
 			.filter((p) => p && p.trim() !== "")
 			.map((p) => p.trim());
 
-		if (validPlayers.length < maxPlayers - 1) {
+		if (validPlayers.length < 4 - 1) {
 			setError(
 				t("tournaments.minPlayersError")
-					.replace("{0}", (maxPlayers - 1).toString())
-					.replace("{1}", maxPlayers.toString()),
+					.replace("{0}", (4 - 1).toString())
+					.replace("{1}", "4"),
 			);
 			return;
 		}
@@ -190,16 +189,7 @@ const Tournaments: React.FC = () => {
 			</h1>
 
 			<div className={styles.form}>
-				<select
-					className={`${styles.select}  ${getSizeTextStyle(size_text)}`}
-					value={maxPlayers}
-					onChange={(e) => setMaxPlayers(Number(e.target.value) as 4 | 8)}
-				>
-					<option value={4}>4 {t("tournaments.players")}</option>
-					<option value={8}>8 {t("tournaments.players")}</option>
-				</select>
-
-				{Array.from({ length: maxPlayers - 1 }).map((_, index) => (
+				{Array.from({ length: 4 - 1 }).map((_, index) => (
 					<input
 						key={index}
 						type="text"
@@ -217,7 +207,7 @@ const Tournaments: React.FC = () => {
 					className={`
 						${
 							guestPlayers.filter((p) => p && p.trim() !== "").length <
-							getRequiredGuestPlayers(maxPlayers)
+							getRequiredGuestPlayers(4)
 								? styles.buttonDisabled
 								: styles.button
 						} ${getSizeTextStyle(size_text)}
@@ -226,7 +216,7 @@ const Tournaments: React.FC = () => {
 					disabled={
 						loading ||
 						guestPlayers.filter((p) => p && p.trim() !== "").length <
-							getRequiredGuestPlayers(maxPlayers)
+							getRequiredGuestPlayers(4)
 					}
 				>
 					{loading ? t("tournaments.creating") : t("tournaments.createButton")}
