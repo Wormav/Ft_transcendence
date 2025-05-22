@@ -467,10 +467,12 @@ export default function Pong() {
 
 		const scoreLimit = field.width / 2 + 1;
 		if (ball.position.x < -scoreLimit) {
-			handleScore("player2");
+			// Quand la balle sort à gauche, le joueur de gauche (player1) marque
+			handleScore("player1");
 			resetBall();
 		} else if (ball.position.x > scoreLimit) {
-			handleScore("player1");
+			// Quand la balle sort à droite, le joueur de droite (player2) marque
+			handleScore("player2");
 			resetBall();
 		}
 	}, [resetBall, score]);
@@ -484,8 +486,14 @@ export default function Pong() {
 				};
 
 				if (currentMatchUuid) {
-					const scoreUpdate =
-						player === "player1"
+					// Dans un match de tournoi, le score1 correspond à player et score2 à guest
+					// Dans notre interface, player1 est à gauche et player2 à droite
+					// Donc on doit mapper correctement les scores
+					const scoreUpdate = tournamentMatchSettings.isInTournament
+						? player === "player1"
+							? { score2: newScore.player1 } // player1 (gauche) correspond à guest (score2)
+							: { score1: newScore.player2 } // player2 (droite) correspond à player (score1)
+						: player === "player1"
 							? { score1: newScore.player1 }
 							: { score2: newScore.player2 };
 
@@ -652,7 +660,7 @@ export default function Pong() {
 					scene,
 				);
 				particleSystem.particleTexture = new BABYLON.Texture(
-					"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAFFmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIiB4bXA6Q3JlYXRlRGF0ZT0iMjAyMC0wMy0yNlQyMTowNzozOSswMTowMCIgeG1wOk1vZGlmeURhdGU9IjIwMjAtMDMtMjZUMjE6NTE6NTcrMDE6MDAiIHhtcDpNZXRhZGF0YURhdGU9IjIwMjAtMDMtMjZUMjE6NTE6NTcrMDE6MDAiIGRjOmZvcm1hdD0iaW1hZ2UvcG5nIiBwaG90b3Nob3A6Q29sb3JNb2RlPSIzIiBwaG90b3Nob3A6SUNDUHJvZmlsZT0ic1JHQiBJRUM2MTk2Ni0yLjEiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6ZjI0YzMxMDctMGZlZi0zZDRh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",
+					"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAFFmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIiB4bXBuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIiB4bXA6Q3JlYXRlRGF0ZT0iMjAyMC0wMy0yNlQyMTowNzozOSswMTowMCIgeG1wOk1vZGlmeURhdGU9IjIwMjAtMDMtMjZUMjE6NTE6NTcrMDE6MDAiIHhtcDpNZXRhZGF0YURhdGU9IjIwMjAtMDMtMjZUMjE6NTE6NTcrMDE6MDAiIGRjOmZvcm1hdD0iaW1hZ2UvcG5nIiBwaG90b3Nob3A6Q29sb3JNb2RlPSIzIiBwaG90b3Nob3A6SUNDUHJvZmlsZT0ic1JHQiBJRUM2MTk2Ni0yLjEiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6ZjI0YzMxMDctMGZlZi0zZDRh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",
 					scene,
 				);
 
@@ -1148,14 +1156,14 @@ export default function Pong() {
 
 				console.log("Match de tournoi récupéré:", matchDetails);
 
-				// Extraire les noms des joueurs (ou utiliser des valeurs par défaut)
-				const player1Name = matchDetails.player
+				// Le player est à gauche, et le guest (ou guest2) à droite
+				const playerLeft = matchDetails.player
 					? user && matchDetails.player === user.uuid
 						? user.username || "Vous"
 						: matchDetails.player.substring(0, 8)
 					: t("pong.player1");
 
-				const player2Name = matchDetails.guest
+				const playerRight = matchDetails.guest
 					? matchDetails.guest.substring(0, 8)
 					: matchDetails.guest2
 						? matchDetails.guest2.substring(0, 8)
@@ -1163,8 +1171,8 @@ export default function Pong() {
 
 				// Mettre à jour les noms des joueurs
 				setPlayerNames({
-					player1: player1Name,
-					player2: player2Name,
+					player1: playerLeft, // Joueur de gauche
+					player2: playerRight, // Joueur de droite
 				});
 
 				// Stocker l'ID du match pour les mises à jour futures
