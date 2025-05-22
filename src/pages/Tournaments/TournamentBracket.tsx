@@ -39,10 +39,6 @@ const TournamentBracket: React.FC = () => {
 	) => {
 		if (!match1 || !match2) return null;
 
-		console.log("Match 1:", match1);
-		console.log("Match 2:", match2);
-
-		// Déterminer les gagnants de chaque match
 		const winner1 =
 			match1.score1 > match1.score2
 				? match1.player || match1.guest
@@ -53,27 +49,20 @@ const TournamentBracket: React.FC = () => {
 				? match2.player || match2.guest
 				: match2.guest2 || match2.guest;
 
-		console.log("Winner 1:", winner1);
-		console.log("Winner 2:", winner2);
-
-		// Si aucun des gagnants n'était un player, on retourne guest et guest2
 		if (winner1 !== match1.player && winner2 !== match2.player) {
 			const result = {
 				player: null,
 				guest: winner1,
 				guest2: winner2,
 			};
-			console.log("Result guest vs guest:", result);
 			return result;
 		}
 
-		// Si l'un des gagnants était un player
 		const result = {
 			player: winner1 === match1.player ? winner1 : winner2,
 			guest: winner1 === match1.player ? winner2 : winner1,
 			guest2: null,
 		};
-		console.log("Result with player:", result);
 		return result;
 	};
 
@@ -186,11 +175,9 @@ const TournamentBracket: React.FC = () => {
 	useEffect(() => {
 		const updateNextMatch = async () => {
 			if (!tournament?.match || !tournament.uuid) {
-				console.log("Pas de matchs dans le tournoi");
 				return;
 			}
 
-			// Récupérer tous les matchs par round
 			const matchesByRound: Record<number, any[]> = {};
 			tournament.match.forEach((match) => {
 				const round = match.round || 1;
@@ -200,7 +187,6 @@ const TournamentBracket: React.FC = () => {
 				matchesByRound[round].push(match);
 			});
 
-			// Vérifier si la finale est terminée
 			const maxRound = Math.max(...Object.keys(matchesByRound).map(Number));
 			const finalMatch = matchesByRound[maxRound]?.[0];
 			if (
@@ -208,7 +194,6 @@ const TournamentBracket: React.FC = () => {
 				matchDetails[finalMatch.uuid]?.finished === 1 &&
 				tournament.finished !== 1
 			) {
-				console.log("Finale terminée, mise à jour du statut du tournoi");
 				const finalMatchDetails = matchDetails[finalMatch.uuid];
 				const winner =
 					finalMatchDetails.score1 > finalMatchDetails.score2
@@ -223,7 +208,6 @@ const TournamentBracket: React.FC = () => {
 					const updatedTournament = await getTournamentById(tournament.uuid);
 					setTournament(updatedTournament);
 
-					// Afficher le message de félicitations
 					const winnerName = getPlayerDisplayName(
 						winner,
 						winner === finalMatchDetails.player,
@@ -240,12 +224,10 @@ const TournamentBracket: React.FC = () => {
 				}
 			}
 
-			// Pour chaque round sauf le dernier
 			for (let round = 1; round < Object.keys(matchesByRound).length; round++) {
 				const currentRoundMatches = matchesByRound[round] || [];
 				const nextRoundMatches = matchesByRound[round + 1] || [];
 
-				// Vérifier si on peut mettre à jour le prochain match
 				for (let i = 0; i < currentRoundMatches.length; i += 2) {
 					const match1 = currentRoundMatches[i];
 					const match2 = currentRoundMatches[i + 1];
@@ -254,21 +236,14 @@ const TournamentBracket: React.FC = () => {
 					const match1Details = matchDetails[match1.uuid];
 					const match2Details = matchDetails[match2.uuid];
 
-					// Si les deux matchs sont terminés
 					if (match1Details?.finished === 1 && match2Details?.finished === 1) {
 						const nextRoundMatch = nextRoundMatches[i / 2];
 						if (!nextRoundMatch?.uuid) continue;
 
-						// Si le match suivant n'est pas déjà mis à jour
 						const nextMatchDetails = matchDetails[nextRoundMatch.uuid];
 						if (!nextMatchDetails?.finished) {
-							console.log(
-								`Mise à jour du match ${nextRoundMatch.uuid} du round ${round + 1}`,
-							);
-
 							const winners = determineWinners(match1Details, match2Details);
 							if (!winners) {
-								console.log("Impossible de déterminer les gagnants");
 								continue;
 							}
 
@@ -289,7 +264,6 @@ const TournamentBracket: React.FC = () => {
 									body: JSON.stringify(updateData),
 								});
 
-								// Recharger les détails du match après la mise à jour
 								const updatedMatch = await getMatchById(nextRoundMatch.uuid);
 								setMatchDetails((prev) => ({
 									...prev,
@@ -307,7 +281,6 @@ const TournamentBracket: React.FC = () => {
 			}
 		};
 
-		// Mettre à jour les matchs chaque fois que l'état change
 		const timeoutId = setTimeout(updateNextMatch, 1000);
 		return () => clearTimeout(timeoutId);
 	}, [
@@ -320,7 +293,6 @@ const TournamentBracket: React.FC = () => {
 		showToast,
 	]);
 
-	// Ajout d'un effet pour surveiller les mises à jour des matchs
 	useEffect(() => {
 		let timeoutId: NodeJS.Timeout;
 
@@ -371,7 +343,6 @@ const TournamentBracket: React.FC = () => {
 									body: JSON.stringify(updateData),
 								});
 
-								// Actualiser les détails après la mise à jour
 								const updatedMatch = await getMatchById(nextMatch.uuid);
 								setMatchDetails((prev) => ({
 									...prev,

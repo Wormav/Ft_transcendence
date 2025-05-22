@@ -17,7 +17,6 @@ export const ScoreOverlay: React.FC<ScoreOverlayProps> = ({
 	const { size_text } = useSettings();
 	if (!gameStarted || showMenu) return null;
 
-	// Définir des noms par défaut si non fournis
 	const player1 = playerNames?.player1 || t("pong.player1");
 	const player2 = playerNames?.player2 || t("pong.player2");
 

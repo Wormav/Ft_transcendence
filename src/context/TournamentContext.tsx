@@ -74,7 +74,6 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 			setError(null);
 
 			try {
-				// L'hôte est le premier joueur, puis on ajoute les invités
 				const players = [hostUuid, ...guestPlayers];
 
 				if (![4, 8].includes(players.length)) {
@@ -90,11 +89,10 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 
 				const tournamentData = {
 					host: hostUuid,
-					players: players, // L'hôte est déjà inclus en première position
+					players: players,
 				};
 
 				const response = await customFetch("/api/game/tournament", {
-					// Supprimé le slash final
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
@@ -107,16 +105,13 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 					throw new Error("Erreur lors de la création du tournoi");
 				}
 
-				// Récupérer le nouveau tournoi créé
 				const newTournament = await response.json();
 
-				// Mettre à jour le state local avec le nouveau tournoi
 				setTournaments((prevTournaments) => [
 					newTournament,
 					...prevTournaments,
 				]);
 
-				// Rafraîchir également les tournois de l'utilisateur depuis le serveur
 				await fetchUserTournaments(hostUuid);
 			} catch (err) {
 				setError(
@@ -196,7 +191,7 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 	const updateTournament = useCallback(
 		async (
 			tournamentId: string,
-			data: { winner?: string; finished?: 0 | 1 },
+			data: { winner?: string | null; finished?: 0 | 1 },
 		): Promise<Tournament> => {
 			try {
 				const token = getJwtToken();

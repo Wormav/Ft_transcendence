@@ -21,7 +21,6 @@ import { useTranslation } from "../../context/TranslationContext";
 import { useSettings } from "../../context/SettingsContext";
 import type { GameSpeedType } from "../../types/SettingsTypes";
 import { useTournament } from "../../context/TournamentContext";
-import type { MatchDetail } from "../../types/TournamentMatch";
 
 const SCALE_FACTOR = 10;
 let BALL_SPEED_INCREASE = 1.05;
@@ -80,7 +79,6 @@ export default function Pong() {
 
 	const [currentMatchUuid, setCurrentMatchUuid] = useState<string | null>(null);
 
-	// Noms des joueurs pour les matchs de tournoi
 	const [playerNames, setPlayerNames] = useState<{
 		player1: string;
 		player2: string;
@@ -467,11 +465,9 @@ export default function Pong() {
 
 		const scoreLimit = field.width / 2 + 1;
 		if (ball.position.x < -scoreLimit) {
-			// Quand la balle sort à gauche, le joueur de gauche (player1) marque
 			handleScore("player1");
 			resetBall();
 		} else if (ball.position.x > scoreLimit) {
-			// Quand la balle sort à droite, le joueur de droite (player2) marque
 			handleScore("player2");
 			resetBall();
 		}
@@ -486,13 +482,10 @@ export default function Pong() {
 				};
 
 				if (currentMatchUuid) {
-					// Dans un match de tournoi, le score1 correspond à player et score2 à guest
-					// Dans notre interface, player1 est à gauche et player2 à droite
-					// Donc on doit mapper correctement les scores
 					const scoreUpdate = tournamentMatchSettings.isInTournament
 						? player === "player1"
-							? { score1: newScore.player1 } // player1 (gauche) correspond à guest1 (score1)
-							: { score2: newScore.player2 } // player2 (droite) correspond à guest2 (score2)
+							? { score1: newScore.player1 }
+							: { score2: newScore.player2 }
 						: player === "player1"
 							? { score1: newScore.player1 }
 							: { score2: newScore.player2 };
@@ -500,14 +493,12 @@ export default function Pong() {
 					if (newScore[player] >= MAX_SCORE) {
 						const now = new Date().toISOString();
 
-						// Options de fin de partie
 						const endGameOptions = {
 							...scoreUpdate,
 							finished: 1,
 							endtime: now,
 						};
 
-						// Mise à jour du match
 						updateMatch(currentMatchUuid, endGameOptions)
 							.then(() => {})
 							.catch((err) =>
@@ -520,7 +511,6 @@ export default function Pong() {
 						setGameStarted(false);
 						setShowMenu(true);
 					} else {
-						// Mise à jour du score en cours de partie
 						updateMatch(currentMatchUuid, scoreUpdate).catch((err) =>
 							console.error("Erreur lors de la mise à jour du score:", err),
 						);
@@ -1136,19 +1126,16 @@ export default function Pong() {
 	const startTournamentMatch = useCallback(
 		async (matchId: string) => {
 			try {
-				// Récupérer les détails du match de tournoi depuis l'API
 				const matchDetails = await getMatchById(matchId);
 
 				if (!matchDetails) {
 					throw new Error("Match de tournoi non trouvé");
 				}
 
-				// Vérifier que le match n'est pas déjà terminé
 				if (matchDetails.finished === 1) {
 					throw new Error("Ce match de tournoi est déjà terminé");
 				}
 
-				// Gérer le cas spécial où il n'y a pas de player mais deux guests
 				const playerLeft =
 					!matchDetails.player && matchDetails.guest
 						? matchDetails.guest.substring(0, 8)
@@ -1165,17 +1152,14 @@ export default function Pong() {
 							? matchDetails.guest.substring(0, 8)
 							: t("pong.player2");
 
-				// Mettre à jour les noms des joueurs
 				setPlayerNames({
 					player1: playerLeft,
 					player2: playerRight,
 				});
 
-				// Stocker l'ID du match pour les mises à jour futures
 				setCurrentMatchUuid(matchId);
 				setTournamentMatchSettings({ matchId, isInTournament: true });
 
-				// Réinitialiser le score et la vue
 				setScore({ player1: 0, player2: 0 });
 				setEditViewMode(false);
 				setCurrentView(0);
@@ -1189,7 +1173,6 @@ export default function Pong() {
 			} catch (error) {
 				console.error("Erreur lors du démarrage du match de tournoi:", error);
 				alert(t("tournaments.matchError"));
-				// Revenir à l'état normal du jeu
 				setTournamentMatchSettings({ matchId: null, isInTournament: false });
 			}
 		},
