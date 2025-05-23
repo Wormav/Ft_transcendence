@@ -4,6 +4,10 @@
 		"noResults": "Aucun utilisateur trouvé",
 		"enterQuery": "Entrez un nom pour rechercher un utilisateur"
 	},
+	"common": {
+		"cancel": "Annuler",
+		"save": "Enregistrer"
+	},
 	"loading": "Chargement...",
 	"addFriend": "Ajouter",
 	"removeFriend": "Supprimer",
@@ -103,6 +107,11 @@
 			"networkError": "Erreur de connexion au serveur"
 		}
 	},
+	"notFound": {
+		"title": "Page non trouvée",
+		"description": "Désolé, la page que vous recherchez n'existe pas ou a été déplacée.",
+		"backHome": "Retour à l'accueil"
+	},
 	"menu": {
 		"home": "Accueil",
 		"profile": "Profil",
@@ -113,7 +122,8 @@
 		"settings": "Paramètres",
 		"test_text_size": "Test Taille Texte",
 		"addFriend": "Ajouter un ami",
-		"friends": "Amis"
+		"friends": "Amis",
+		"close": "Fermer"
 	},
 	"home": {
 		"welcom": "Bienvenue sur",
@@ -164,8 +174,14 @@
 		"accessibility": "Accessibilité",
 		"previewText": "Aperçu du texte",
 		"sampleText": "Ceci est un exemple de texte pour voir la taille sélectionnée",
-		"history": "Historique de",
-		"friendProfile": "Profil de"
+		"friendProfile": "Profil de",
+		"enter_new_username": "Entrer un nouveau nom d'utilisateur",
+		"edit_email": "Modifier l'email",
+		"enter_new_email": "Entrer un nouvel email",
+		"enter_old_password": "Entrer l'ancien mot de passe",
+		"enter_new_password": "Entrer le nouveau mot de passe",
+		"confirm_new_password": "Confirmer le nouveau mot de passe",
+		"history": "historique"
 	},
 	"game": {
 		"gameCustom": "Jeu personnalisé"

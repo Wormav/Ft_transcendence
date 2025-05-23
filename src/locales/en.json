@@ -4,6 +4,10 @@
 		"noResults": "No users found",
 		"enterQuery": "Enter a name to search for a user"
 	},
+	"common": {
+		"cancel": "Cancel",
+		"save": "Save"
+	},
 	"loading": "Loading...",
 	"addFriend": "Add",
 	"removeFriend": "Remove",
@@ -68,7 +72,8 @@
 		"dateRange": "Date Range",
 		"lastWeek": "Last 7 days",
 		"lastMonth": "Last 30 days",
-		"allTime": "All Time"
+		"allTime": "All Time",
+		"noGames": "No games"
 	},
 	"auth": {
 		"login": {
@@ -102,6 +107,11 @@
 			"networkError": "Server connection error"
 		}
 	},
+	"notFound": {
+		"title": "Page Not Found",
+		"description": "Sorry, the page you are looking for doesn't exist or has been moved.",
+		"backHome": "Back to Home"
+	},
 	"menu": {
 		"home": "Home",
 		"profile": "Profile",
@@ -112,7 +122,8 @@
 		"settings": "Settings",
 		"test_text_size": "Text Size Test",
 		"addFriend": "Add Friend",
-		"friends": "Friends"
+		"friends": "Friends",
+		"close": "Close"
 	},
 	"home": {
 		"welcom": "Welcome to",
@@ -163,7 +174,14 @@
 		"accessibility": "Accessibility",
 		"previewText": "Text preview",
 		"sampleText": "This is a sample text to see the selected size",
-		"friendProfile": "Profile of"
+		"friendProfile": "Profile of",
+		"enter_new_username": "Enter new username",
+		"edit_email": "Edit email",
+		"enter_new_email": "Enter new email",
+		"enter_old_password": "Enter old password",
+		"enter_new_password": "Enter new password",
+		"confirm_new_password": "Confirm new password",
+		"history": "history"
 	},
 	"game": {
 		"gameCustom": "Custom game"

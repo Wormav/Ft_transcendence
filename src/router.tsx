@@ -13,6 +13,8 @@ import Tournaments from "./pages/Tournaments/Tournaments.tsx";
 import TournamentBracket from "./pages/Tournaments/TournamentBracket.tsx";
 import Friends from "./pages/Friends/Friends.tsx";
 
+import NotFound from "./pages/NotFound/NotFound";
+
 const router = createBrowserRouter([
 	{
 		path: "/",
@@ -22,6 +24,10 @@ const router = createBrowserRouter([
 				path: "/",
 				element: <Home />,
 				children: [],
+			},
+			{
+				path: "*",
+				element: <NotFound />,
 			},
 			{
 				path: "/settings",
