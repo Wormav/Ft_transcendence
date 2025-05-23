@@ -91,6 +91,8 @@ export default function Signup() {
 				} else {
 					if (data.error === "Email already used") {
 						setEmailError(t("auth.signup.emailAlreadyUsed"));
+					} else if (response.status === 400) {
+						setEmailError(t("auth.signup.emailAlreadyUsed"));
 					}
 				}
 			} catch (error) {
@@ -98,6 +100,10 @@ export default function Signup() {
 				setEmailError(t("auth.signup.networkError"));
 			}
 		}
+	};
+
+	const handleGoogleLogin = () => {
+		window.location.href = `http://localhost:${import.meta.env.VITE_BACKEND_PORT}/auth/google/login`;
 	};
 
 	return (
@@ -181,7 +187,11 @@ export default function Signup() {
 							{t("auth.signup.haveAccount")}
 						</Link>
 
-						<button type="button" className={SignupStyle.googleButton}>
+						<button
+							type="button"
+							className={SignupStyle.googleButton}
+							onClick={handleGoogleLogin}
+						>
 							<img
 								src="https://accounts.google.com/favicon.ico"
 								alt="Google"

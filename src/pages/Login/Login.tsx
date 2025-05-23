@@ -47,15 +47,19 @@ export default function Login() {
 				document.cookie = `jwt=${data.token}; path=/; secure; samesite=strict`;
 				window.location.href = "/";
 			} else {
-				if (data.error === "Invalid credentials") {
+				if (response.status === 401) {
 					setLoginError(t("auth.login.invalidCredentials"));
 				} else {
 					setLoginError(t("auth.login.networkError"));
 				}
 			}
-		} catch (error) {
+		} catch (error: any) {
 			console.error("Error during login:", error);
-			setLoginError(t("auth.login.networkError"));
+			if (error instanceof Error && error.message === "Unauthorized") {
+				setLoginError(t("auth.login.invalidCredentials"));
+			} else {
+				setLoginError(t("auth.login.networkError"));
+			}
 		}
 	};
 
