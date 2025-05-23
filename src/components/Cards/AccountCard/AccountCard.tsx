@@ -1,13 +1,23 @@
 import Card from "../../Card/Card";
 import { useTranslation } from "../../../context/TranslationContext";
 import globalStyle from "../../../globalStyle";
-import { Link } from "react-router-dom";
 import BugerMenuStyles from "../../BugerMenu/BugerMenuStyles";
 import { useLogout } from "../../../hooks/useLogout";
+import { useUserContext } from "../../../context/UserContext";
 
 export default function AccountCard() {
 	const { t } = useTranslation();
 	const handleLogout = useLogout();
+	const { deleteAccount } = useUserContext();
+
+	const handleDeleteAccount = async () => {
+		if (window.confirm(t("profile.confirmDelete"))) {
+			const success = await deleteAccount();
+			if (!success) {
+				alert(t("profile.deleteError"));
+			}
+		}
+	};
 
 	return (
 		<Card>
@@ -51,8 +61,8 @@ export default function AccountCard() {
 				</svg>
 				<span className={globalStyle.spanAlert}>{t("profile.logout")}</span>
 			</button>
-			<Link
-				to="/delete-account"
+			<button
+				onClick={handleDeleteAccount}
 				className={`${BugerMenuStyles.logoutButton} pl-4 mt-2`}
 			>
 				<svg
@@ -88,7 +98,7 @@ export default function AccountCard() {
 					/>
 				</svg>
 				<span className={globalStyle.spanAlert}>{t("profile.delete")}</span>
-			</Link>
+			</button>
 		</Card>
 	);
 }

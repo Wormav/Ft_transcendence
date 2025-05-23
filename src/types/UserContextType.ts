@@ -18,4 +18,5 @@ export type UserContextType = {
 	updateUsername: (username: string) => Promise<boolean>;
 	updateEmail: (email: string) => Promise<boolean>;
 	updateAvatar: (avatar: string) => Promise<boolean>;
+	deleteAccount: () => Promise<boolean>;
 };
