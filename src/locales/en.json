@@ -41,6 +41,12 @@
 		"previewText": "Text preview",
 		"sampleText": "This is a sample text to see the selected size"
 	},
+	"tournament": {
+		"title": "Tournament",
+		"round": "Round",
+		"matchId": "Match ID",
+		"noTournaments": "No tournaments available"
+	},
 	"dashboard": {
 		"title": "Dashboard",
 		"statistics": "Statistics",
@@ -58,6 +64,7 @@
 		"winRate": "Win Rate",
 		"lossRate": "Loss Rate",
 		"versus": "versus",
+		"noData": "No data available",
 		"dateRange": "Date Range",
 		"lastWeek": "Last 7 days",
 		"lastMonth": "Last 30 days",

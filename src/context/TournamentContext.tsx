@@ -51,12 +51,14 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 					},
 				);
 
-				if (!response.ok) {
+				if (response.ok) {
+					const data = await response.json();
+					setTournaments(data);
+				} else if (response.status === 404) {
+					setTournaments([]);
+				} else {
 					throw new Error("Erreur lors de la récupération des tournois");
 				}
-
-				const data = await response.json();
-				setTournaments(data);
 			} catch (err) {
 				setError(
 					err instanceof Error ? err.message : "Une erreur est survenue",

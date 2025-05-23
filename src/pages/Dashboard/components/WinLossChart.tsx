@@ -9,7 +9,7 @@ const WinLossChart: React.FC<WinLossChartProps> = ({ games }) => {
 	const windowSize = useWindowSize();
 
 	useEffect(() => {
-		if (!canvasRef.current || games.length === 0) return;
+		if (!canvasRef.current) return;
 
 		const canvas = canvasRef.current;
 		const ctx = canvas.getContext("2d");
@@ -28,6 +28,17 @@ const WinLossChart: React.FC<WinLossChartProps> = ({ games }) => {
 		ctx.scale(dpr, dpr);
 		canvas.style.width = `${rect.width}px`;
 		canvas.style.height = `${rect.height}px`;
+
+		ctx.clearRect(0, 0, rect.width, rect.height);
+
+		if (games.length === 0) {
+			ctx.fillStyle = "#6B7280";
+			ctx.font = "16px sans-serif";
+			ctx.textAlign = "center";
+			ctx.textBaseline = "middle";
+			ctx.fillText(t("dashboard.noData"), rect.width / 2, rect.height / 2);
+			return;
+		}
 
 		const wins = games.filter(
 			(game) => game.score_player1 > game.score_player2,

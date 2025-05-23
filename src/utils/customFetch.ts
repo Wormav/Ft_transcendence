@@ -3,6 +3,8 @@ export async function customFetch(
 	options: RequestInit,
 ): Promise<Response> {
 	const response = await fetch(url, options);
+
+	// Gérer uniquement les erreurs 401 pour la redirection
 	if (response.status === 401) {
 		if (
 			typeof window !== "undefined" &&
@@ -12,5 +14,6 @@ export async function customFetch(
 		}
 		throw new Error("Unauthorized");
 	}
+
 	return response;
 }

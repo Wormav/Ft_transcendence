@@ -41,6 +41,12 @@
 		"previewText": "Aperçu du texte",
 		"sampleText": "Ceci est un exemple de texte pour voir la taille sélectionnée"
 	},
+	"tournament": {
+		"title": "Tournoi",
+		"round": "Round",
+		"matchId": "ID du match",
+		"noTournaments": "Aucun tournoi disponible"
+	},
 	"dashboard": {
 		"title": "Tableau de bord",
 		"statistics": "Statistiques",
@@ -58,6 +64,7 @@
 		"winRate": "Taux de victoire",
 		"lossRate": "Taux de défaite",
 		"versus": "contre",
+		"noData": "Aucune donnée disponible",
 		"dateRange": "Période",
 		"lastWeek": "7 derniers jours",
 		"lastMonth": "30 derniers jours",
