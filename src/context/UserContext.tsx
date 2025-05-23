@@ -11,6 +11,7 @@ const UserContext = createContext<UserContextType>({
 	updateUsername: async () => false,
 	updateEmail: async () => false,
 	updateAvatar: async () => false,
+	deleteAccount: async () => false,
 });
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -191,6 +192,39 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 		}
 	};
 
+	const deleteAccount = async (): Promise<boolean> => {
+		try {
+			const token = getJwtToken();
+
+			const response = await customFetch("/api/auth/account", {
+				method: "DELETE",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({}),
+			});
+
+			if (!response.ok) {
+				throw new Error(
+					`Échec de la suppression du compte: ${response.status}`,
+				);
+			}
+
+			if (typeof window !== "undefined") {
+				window.location.href = "/login";
+			}
+			return true;
+		} catch (err: any) {
+			console.error("Erreur lors de la suppression du compte:", err);
+			setError(
+				err.message ||
+					"Une erreur est survenue lors de la suppression du compte",
+			);
+			return false;
+		}
+	};
+
 	return (
 		<UserContext.Provider
 			value={{
@@ -201,6 +235,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 				updateAvatar,
 				updateEmail,
 				updateUsername,
+				deleteAccount,
 			}}
 		>
 			{children}
