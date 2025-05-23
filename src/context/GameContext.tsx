@@ -43,6 +43,13 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 				},
 			});
 
+			// Si la réponse est 404, on considère que c'est un cas normal (pas de matchs)
+			if (response.status === 404) {
+				setMatches([]);
+				setActiveMatches([]);
+				return;
+			}
+
 			if (!response.ok) {
 				throw new Error(`Error retrieving matches data: ${response.status}`);
 			}
@@ -58,13 +65,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 			setMatches(finishedMatches);
 			setActiveMatches(currentActiveMatches);
 		} catch (err: any) {
+			// Ne pas afficher l'erreur dans la console si c'est un 404
 			if (err.status !== 404) {
 				console.error("Error in fetchUserMatches:", err);
+				setError(
+					err.message ||
+						"Une erreur est survenue lors de la récupération des données de match",
+				);
 			}
-			setError(
-				err.message ||
-					"Une erreur est survenue lors de la récupération des données de match",
-			);
 		} finally {
 			setLoading(false);
 		}

@@ -57,32 +57,34 @@ export default function ProfileFriend() {
 					);
 				}
 
-				const matchesResponse = await customFetch(
-					`/api/game/match/user/${uuid}`,
-					{
-						method: "GET",
-						headers: {
-							Authorization: `Bearer ${token}`,
-							"Content-Type": "application/json",
-						},
-					},
-				);
-
-				if (!matchesResponse.ok) {
-					throw new Error(
-						`Erreur lors de la récupération des matchs: ${matchesResponse.status}`,
-					);
-				}
-
 				const profileData = await profileResponse.json();
-				const matchesData = await matchesResponse.json();
-
-				const finishedMatches = matchesData.filter(
-					(match: MatchData) => match.finished === 1,
-				);
-
 				setFriendProfile(profileData);
-				setMatches(finishedMatches);
+
+				try {
+					const matchesResponse = await customFetch(
+						`/api/game/match/user/${uuid}`,
+						{
+							method: "GET",
+							headers: {
+								Authorization: `Bearer ${token}`,
+								"Content-Type": "application/json",
+							},
+						},
+					);
+
+					if (matchesResponse.ok) {
+						const matchesData = await matchesResponse.json();
+						const finishedMatches = matchesData.filter(
+							(match: MatchData) => match.finished === 1,
+						);
+						setMatches(finishedMatches);
+					} else {
+						setMatches([]);
+					}
+				} catch (matchError) {
+					console.log("No matches found for this user");
+					setMatches([]);
+				}
 			} catch (err: any) {
 				console.error("Error loading friend profile:", err);
 				setError(err.message || "Une erreur est survenue");
@@ -136,41 +138,31 @@ export default function ProfileFriend() {
 		<div className={globalStyle.cardContainer}>
 			<ProfilHomeCard home={false} friendProfile={friendProfile} />
 
-			{games.length > 0 ? (
-				<>
-					<Card>
-						<div className={globalStyle.row}>
-							<span className={globalStyle.span}>
-								{t("dashboard.scoreEvolution")}
-							</span>
-						</div>
-						<div className={globalStyle.separator}></div>
-						<div className="w-full h-[300px]">
-							<LineChart games={games} />
-						</div>
-					</Card>
+			<Card>
+				<div className={globalStyle.row}>
+					<span className={globalStyle.span}>
+						{t("dashboard.scoreEvolution")}
+					</span>
+				</div>
+				<div className={globalStyle.separator}></div>
+				<div className="w-full h-[300px]">
+					<LineChart games={games} />
+				</div>
+			</Card>
 
-					<Card>
-						<div className={globalStyle.row}>
-							<span className={globalStyle.span}>
-								{t("dashboard.winLossRatio")}
-							</span>
-						</div>
-						<div className={globalStyle.separator}></div>
-						<div className="w-full h-[300px]">
-							<WinLossChart games={games} />
-						</div>
-					</Card>
+			<Card>
+				<div className={globalStyle.row}>
+					<span className={globalStyle.span}>
+						{t("dashboard.winLossRatio")}
+					</span>
+				</div>
+				<div className={globalStyle.separator}></div>
+				<div className="w-full h-[300px]">
+					<WinLossChart games={games} />
+				</div>
+			</Card>
 
-					<ResultsCard friendUuid={uuid} />
-				</>
-			) : (
-				<Card>
-					<div className="flex justify-center items-center p-6">
-						<p>{t("dashboard.noGames")}</p>
-					</div>
-				</Card>
-			)}
+			<ResultsCard friendUuid={uuid} />
 		</div>
 	);
 }

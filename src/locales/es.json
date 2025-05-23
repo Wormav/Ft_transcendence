@@ -4,6 +4,10 @@
 		"noResults": "No se encontraron usuarios",
 		"enterQuery": "Ingresa un nombre para buscar un usuario"
 	},
+	"common": {
+		"cancel": "Cancelar",
+		"save": "Guardar"
+	},
 	"loading": "Cargando...",
 	"addFriend": "Añadir",
 	"removeFriend": "Eliminar",
@@ -41,6 +45,12 @@
 		"previewText": "Vista previa del texto",
 		"sampleText": "Este es un texto de ejemplo para ver el tamaño seleccionado"
 	},
+	"tournament": {
+		"title": "Torneo",
+		"round": "Ronda",
+		"matchId": "ID del partido",
+		"noTournaments": "No hay torneos disponibles"
+	},
 	"dashboard": {
 		"title": "Panel de Control",
 		"statistics": "Estadísticas",
@@ -58,10 +68,12 @@
 		"winRate": "Tasa de Victoria",
 		"lossRate": "Tasa de Derrota",
 		"versus": "contra",
+		"noData": "No hay datos disponibles",
 		"dateRange": "Periodo",
 		"lastWeek": "Últimos 7 días",
 		"lastMonth": "Últimos 30 días",
-		"allTime": "Todo"
+		"allTime": "Todo",
+		"noGames": "No se encontraron partidas"
 	},
 	"auth": {
 		"login": {
@@ -95,6 +107,11 @@
 			"networkError": "Error de conexión con el servidor"
 		}
 	},
+	"notFound": {
+		"title": "Página no encontrada",
+		"description": "Lo sentimos, la página que buscas no existe o ha sido movida.",
+		"backHome": "Volver al inicio"
+	},
 	"menu": {
 		"home": "Inicio",
 		"profile": "Perfil",
@@ -105,7 +122,8 @@
 		"settings": "Ajustes",
 		"test_text_size": "Prueba Tamaño Texto",
 		"addFriend": "Agregar Amigo",
-		"friends": "Amigos"
+		"friends": "Amigos",
+		"close": "Cerrar"
 	},
 	"home": {
 		"welcom": "Bienvenido a",
@@ -156,8 +174,14 @@
 		"accessibility": "Accesibilidad",
 		"previewText": "Vista previa del texto",
 		"sampleText": "Este es un texto de ejemplo para ver el tamaño seleccionado",
-		"history": "Historial de",
-		"friendProfile": "Perfil de"
+		"friendProfile": "Perfil de",
+		"enter_new_username": "Ingresa un nuevo nombre de usuario",
+		"edit_email": "Editar correo electrónico",
+		"enter_new_email": "Ingresa un nuevo correo electrónico",
+		"enter_old_password": "Ingresa la contraseña anterior",
+		"enter_new_password": "Ingresa la nueva contraseña",
+		"confirm_new_password": "Confirma la nueva contraseña",
+		"history": "historial"
 	},
 	"game": {
 		"gameCustom": "Juego personalizado"
