@@ -34,7 +34,7 @@ const ProfilHomeCard: React.FC<ProfilHomeCardProps> = ({
 						src={
 							profileToDisplay.avatar && profileToDisplay.avatar !== ""
 								? profileToDisplay.avatar
-								: "/default.JPG"
+								: "/default.png"
 						}
 						alt="Profile"
 						className={HomeStyle.img}
@@ -43,7 +43,7 @@ const ProfilHomeCard: React.FC<ProfilHomeCardProps> = ({
 				</>
 			) : (
 				<>
-					<img src="/default.JPG" alt="Profile" className={HomeStyle.img} />
+					<img src="/default.png" alt="Profile" className={HomeStyle.img} />
 					<span className={globalStyle.span}>Non connecté</span>
 				</>
 			)}

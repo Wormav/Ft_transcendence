@@ -19,7 +19,7 @@ const YourPictureCard: React.FC = () => {
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const avatarSrc =
-		user?.avatar && user.avatar !== "" ? user.avatar : "/default.JPG";
+		user?.avatar && user.avatar !== "" ? user.avatar : "/default.png";
 
 	const openModal = () => {
 		setIsModalOpen(true);

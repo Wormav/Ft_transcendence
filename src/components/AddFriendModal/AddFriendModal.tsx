@@ -259,7 +259,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({
 													/>
 												) : (
 													<img
-														src="/default.JPG"
+														src="/default.png"
 														alt={user.username}
 														className={AddFriendModalStyles.userAvatarImg}
 													/>

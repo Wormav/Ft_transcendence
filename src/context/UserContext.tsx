@@ -82,8 +82,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 				filteredUserData.avatar &&
 				filteredUserData.avatar.startsWith("https://lh3.googleusercontent.com/")
 			) {
-				await updateAvatar("/default.JPG");
-				filteredUserData.avatar = "/default.JPG";
+				await updateAvatar("/default.png");
+				filteredUserData.avatar = "/default.png";
 			}
 
 			setUser(filteredUserData);
@@ -165,7 +165,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 			const finalAvatar = avatar.startsWith(
 				"https://lh3.googleusercontent.com/",
 			)
-				? "/default.JPG"
+				? "/default.png"
 				: avatar;
 
 			const token = getJwtToken();

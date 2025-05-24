@@ -5,7 +5,7 @@ import type { ButtonProfilProps } from "../../types/ButtonProfilProps";
 const ButtonProfil: React.FC<ButtonProfilProps> = ({ onClick }) => {
 	const { user } = useUserContext();
 	const avatarSrc =
-		user?.avatar && user.avatar !== "" ? user.avatar : "/default.JPG";
+		user?.avatar && user.avatar !== "" ? user.avatar : "/default.png";
 
 	return (
 		<button

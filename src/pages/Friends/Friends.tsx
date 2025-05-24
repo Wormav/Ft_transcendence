@@ -327,7 +327,7 @@ const Friends = () => {
 													/>
 												) : (
 													<img
-														src="/default.JPG"
+														src="/default.png"
 														alt={friendDetails.username || "User"}
 														className={FriendsStyle.avatarImg}
 													/>
@@ -408,7 +408,7 @@ const Friends = () => {
 													/>
 												) : (
 													<img
-														src="/default.JPG"
+														src="/default.png"
 														alt="User"
 														className={FriendsStyle.avatarImg}
 													/>
