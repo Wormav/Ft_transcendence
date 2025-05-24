@@ -1,19 +1,16 @@
+import globalStyle from "../../../globalStyle";
+import Card, { Space } from "../../Card/Card";
+import LineHistory from "../../LineHistory/LineHistory";
 import { useState, useEffect } from "react";
 import { useTranslation } from "../../../context/TranslationContext";
 import { useGameContext } from "../../../context/GameContext";
 import { useUserContext } from "../../../context/UserContext";
 import { customFetch } from "../../../utils/customFetch";
 import { getJwtToken } from "../../../utils/getJwtToken";
-import globalStyle from "../../../globalStyle";
-import Card, { Space } from "../../Card/Card";
-import LineHistory from "../../LineHistory/LineHistory";
 import type { MatchData } from "../../../types/GameContextType";
+import type { ResultsCardProps } from "../../../types/ResultsCardProps";
 
-type ResultsCardProps = {
-	friendUuid?: string;
-};
-
-export default function ResultsCard({ friendUuid }: ResultsCardProps) {
+const ResultsCard: React.FC<ResultsCardProps> = ({ friendUuid }) => {
 	const { t } = useTranslation();
 	const { matches } = useGameContext();
 	const { user } = useUserContext();
@@ -44,7 +41,7 @@ export default function ResultsCard({ friendUuid }: ResultsCardProps) {
 
 				if (!matchesResponse.ok) {
 					throw new Error(
-						`Erreur lors de la récupération des matchs: ${matchesResponse.status}`,
+						`Error retrieving matches: ${matchesResponse.status}`,
 					);
 				}
 
@@ -58,7 +55,7 @@ export default function ResultsCard({ friendUuid }: ResultsCardProps) {
 
 				if (!profileResponse.ok) {
 					throw new Error(
-						`Erreur lors de la récupération du profil: ${profileResponse.status}`,
+						`Error retrieving profile: ${profileResponse.status}`,
 					);
 				}
 
@@ -72,10 +69,7 @@ export default function ResultsCard({ friendUuid }: ResultsCardProps) {
 				setFriendMatches(finishedMatches);
 				setFriendUsername(profileData.username || "");
 			} catch (error) {
-				console.error(
-					"Erreur lors de la récupération des matchs de l'ami:",
-					error,
-				);
+				console.error("Error retrieving friend's matches:", error);
 			}
 		};
 
@@ -147,4 +141,6 @@ export default function ResultsCard({ friendUuid }: ResultsCardProps) {
 			)}
 		</Card>
 	);
-}
+};
+
+export default ResultsCard;

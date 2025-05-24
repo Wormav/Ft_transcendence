@@ -1,14 +1,14 @@
 import { useSettings } from "../../context/SettingsContext";
 import { useTranslation } from "../../context/TranslationContext";
 import globalStyle, { getSizeTextStyle } from "../../globalStyle";
-import type { LineHistoryProps } from "../../types/LineHistoryProps";
 import { Space } from "../Card/Card";
+import type { LineHistoryProps } from "../../types/LineHistoryProps";
 
-export default function LineHistory({
+const LineHistory: React.FC<LineHistoryProps> = ({
 	username,
 	versus,
 	win,
-}: LineHistoryProps) {
+}: LineHistoryProps) => {
 	const { t } = useTranslation();
 
 	const { size_text } = useSettings();
@@ -34,4 +34,6 @@ export default function LineHistory({
 			</span>
 		</div>
 	);
-}
+};
+
+export default LineHistory;

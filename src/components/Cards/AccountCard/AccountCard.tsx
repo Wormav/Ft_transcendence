@@ -1,11 +1,11 @@
 import Card from "../../Card/Card";
-import { useTranslation } from "../../../context/TranslationContext";
-import globalStyle from "../../../globalStyle";
 import BugerMenuStyles from "../../BugerMenu/BugerMenuStyles";
+import globalStyle from "../../../globalStyle";
+import { useTranslation } from "../../../context/TranslationContext";
 import { useLogout } from "../../../hooks/useLogout";
 import { useUserContext } from "../../../context/UserContext";
 
-export default function AccountCard() {
+const AccountCard: React.FC = () => {
 	const { t } = useTranslation();
 	const handleLogout = useLogout();
 	const { deleteAccount } = useUserContext();
@@ -101,4 +101,6 @@ export default function AccountCard() {
 			</button>
 		</Card>
 	);
-}
+};
+
+export default AccountCard;

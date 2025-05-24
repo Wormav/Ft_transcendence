@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
-import LayoutStyles from "./LayoutStyles";
 import BurgerMenu from "../BugerMenu/BurgerMenu";
 import NavBar from "../NavBar/NavBar";
 import Menu from "../Menu/Menu";
+import LayoutStyles from "./LayoutStyles";
 import globalStyle, { getSizeTextStyle } from "../../globalStyle";
+import { useState, useEffect } from "react";
+import { Outlet } from "react-router-dom";
 import { useSettings } from "../../context/SettingsContext";
 
 const Layout: React.FC = () => {

@@ -1,13 +1,13 @@
 import { createContext, useState, useContext, useEffect } from "react";
+import { customFetch } from "../utils/customFetch";
+import { getJwtToken } from "../utils/getJwtToken";
+import { useUserContext } from "./UserContext";
 import type {
 	GameContextType,
 	MatchData,
 	CreateMatchParams,
 	UpdateMatchParams,
 } from "../types/GameContextType";
-import { customFetch } from "../utils/customFetch";
-import { getJwtToken } from "../utils/getJwtToken";
-import { useUserContext } from "./UserContext";
 
 const GameContext = createContext<GameContextType>({
 	matches: [],
@@ -69,8 +69,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 			if (err.status !== 404) {
 				console.error("Error in fetchUserMatches:", err);
 				setError(
-					err.message ||
-						"Une erreur est survenue lors de la récupération des données de match",
+					err.message || "An error occurred while retrieving match data",
 				);
 			}
 		} finally {
@@ -109,9 +108,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 			return newMatch;
 		} catch (err: any) {
 			console.error("Error creating match:", err);
-			setError(
-				err.message || "Une erreur est survenue lors de la création du match",
-			);
+			setError(err.message || "An error occurred while creating the match");
 			return null;
 		} finally {
 			setLoading(false);
@@ -156,10 +153,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 			return updatedMatch;
 		} catch (err: any) {
 			console.error("Error updating match:", err);
-			setError(
-				err.message ||
-					"Une erreur est survenue lors de la mise à jour du match",
-			);
+			setError(err.message || "An error occurred while updating the match");
 			return null;
 		} finally {
 			setLoading(false);

@@ -118,9 +118,7 @@ const Friends = () => {
 			});
 
 			if (!response.ok) {
-				throw new Error(
-					`Erreur lors de la récupération des détails de l'utilisateur: ${response.status}`,
-				);
+				throw new Error(`Error retrieving user details: ${response.status}`);
 			}
 
 			const userData: FriendProfile = await response.json();
@@ -129,7 +127,6 @@ const Friends = () => {
 				console.warn(`Données invalides pour l'utilisateur ${uuid}:`, userData);
 			}
 
-			// Utiliser la fonction isUserOnline pour définir le statut en fonction de last_seen
 			const userWithStatus: FriendProfile = {
 				...userData,
 				status: isUserOnline(userData.last_seen) ? "online" : "offline",

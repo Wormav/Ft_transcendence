@@ -2,13 +2,13 @@ import Card, { Space } from "../../Card/Card";
 import globalStyle from "../../../globalStyle";
 import { useTranslation } from "../../../context/TranslationContext";
 import HomeStyle from "../../../pages/Home/HomeStyle";
-import type { ProfilHomeCardProps } from "../../../types/ProfilHomeCardProps";
 import { useUserContext } from "../../../context/UserContext";
+import type { ProfilHomeCardProps } from "../../../types/ProfilHomeCardProps";
 
-export default function ProfilHomeCard({
+const ProfilHomeCard: React.FC<ProfilHomeCardProps> = ({
 	home = false,
 	friendProfile,
-}: ProfilHomeCardProps) {
+}) => {
 	const { t } = useTranslation();
 	const { user, loading, error } = useUserContext();
 
@@ -59,4 +59,6 @@ export default function ProfilHomeCard({
 			)}
 		</Card>
 	);
-}
+};
+
+export default ProfilHomeCard;

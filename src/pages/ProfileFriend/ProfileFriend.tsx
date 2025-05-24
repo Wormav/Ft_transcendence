@@ -38,7 +38,7 @@ export default function ProfileFriend() {
 				}
 
 				if (!uuid) {
-					setError("UUID manquant");
+					setError("Missing UUID");
 					setLoading(false);
 					return;
 				}
@@ -53,7 +53,7 @@ export default function ProfileFriend() {
 
 				if (!profileResponse.ok) {
 					throw new Error(
-						`Erreur lors de la récupération du profil: ${profileResponse.status}`,
+						`Error retrieving profile: ${profileResponse.status}`,
 					);
 				}
 
@@ -87,7 +87,7 @@ export default function ProfileFriend() {
 				}
 			} catch (err: any) {
 				console.error("Error loading friend profile:", err);
-				setError(err.message || "Une erreur est survenue");
+				setError(err.message || "An error occurred");
 			} finally {
 				setLoading(false);
 			}

@@ -1,5 +1,4 @@
 import { createContext, useState, useContext, useEffect } from "react";
-
 import frTranslations from "../locales/fr.json";
 import enTranslations from "../locales/en.json";
 import esTranslations from "../locales/es.json";

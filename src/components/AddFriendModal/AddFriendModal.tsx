@@ -1,19 +1,22 @@
+import AddFriendModalStyles from "./AddFriendModalStyles";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
-import AddFriendModalStyles from "./AddFriendModalStyles";
 import { useTranslation } from "../../context/TranslationContext";
 import { useUserContext } from "../../context/UserContext";
 import { useFriendContext } from "../../context/FriendContext";
 import { useToast } from "../../context/ToastContext";
 import { customFetch } from "../../utils/customFetch";
 import { getJwtToken } from "../../utils/getJwtToken";
-import type { AddFriendModalProps } from "../../types/AddFreindModalProps";
-import type { UserSearchResult } from "../../types/UserSearchResult";
 import { useSettings } from "../../context/SettingsContext";
 import { getSizeTextStyle } from "../../globalStyle";
+import type { AddFriendModalProps } from "../../types/AddFreindModalProps";
+import type { UserSearchResult } from "../../types/UserSearchResult";
 
-const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
+const AddFriendModal: React.FC<AddFriendModalProps> = ({
+	isOpen,
+	onClose,
+}): React.ReactElement | null => {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [users, setUsers] = useState<UserSearchResult[]>([]);
 	const [loading, setLoading] = useState(false);
@@ -139,9 +142,9 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 	};
 
 	return createPortal(
-		<div className="fixed inset-0 isolate" style={{ zIndex: 99999 }}>
+		<div className={AddFriendModalStyles.overlay} style={{ zIndex: 99999 }}>
 			<div
-				className="fixed inset-0 bg-black/25 backdrop-blur flex items-center justify-center min-h-screen min-w-screen overflow-hidden"
+				className={AddFriendModalStyles.overlayInner}
 				onClick={handleOverlayClick}
 			>
 				<div className={AddFriendModalStyles.modal}>
@@ -214,35 +217,35 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 					<div className={AddFriendModalStyles.results}>
 						{loading ? (
 							<div
-								className={`text-center py-4 ${getSizeTextStyle(size_text)}`}
+								className={`${AddFriendModalStyles.messageContainer} ${getSizeTextStyle(size_text)}`}
 							>
 								{t("loading")}
 							</div>
 						) : error ? (
 							<div
-								className={`text-red-500 text-center py-4 ${getSizeTextStyle(size_text)}`}
+								className={`${AddFriendModalStyles.errorMessage} ${getSizeTextStyle(size_text)}`}
 							>
 								{error}
 							</div>
 						) : searchQuery.trim() === "" ? (
 							<div
-								className={`text-center py-4 ${getSizeTextStyle(size_text)}`}
+								className={`${AddFriendModalStyles.messageContainer} ${getSizeTextStyle(size_text)}`}
 							>
 								{t("search.enterQuery")}
 							</div>
 						) : filteredUsers.length === 0 ? (
 							<div
-								className={`text-center py-4 ${getSizeTextStyle(size_text)}`}
+								className={`${AddFriendModalStyles.messageContainer} ${getSizeTextStyle(size_text)}`}
 							>
 								{t("search.noResults")}
 							</div>
 						) : (
-							<ul className="divide-y divide-gray-200">
+							<ul className={AddFriendModalStyles.resultsList}>
 								{filteredUsers.map((user) => (
 									<li key={user.uuid} className={AddFriendModalStyles.userItem}>
 										<div className={AddFriendModalStyles.userInfo}>
 											<div
-												className="h-10 w-10 rounded-full overflow-hidden bg-gray-200 cursor-pointer"
+												className={AddFriendModalStyles.userAvatar}
 												onClick={() => {
 													navigate(`/profile/${user.uuid}`);
 													onClose();
@@ -252,25 +255,25 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 													<img
 														src={user.avatar}
 														alt={user.username}
-														className="h-full w-full object-cover"
+														className={AddFriendModalStyles.userAvatarImg}
 													/>
 												) : (
 													<img
 														src="/default.JPG"
 														alt={user.username}
-														className={`h-full w-full object-cover`}
+														className={AddFriendModalStyles.userAvatarImg}
 													/>
 												)}
 											</div>
 											<div
-												className="ml-3 cursor-pointer"
+												className={AddFriendModalStyles.userName}
 												onClick={() => {
 													navigate(`/profile/${user.uuid}`);
 													onClose();
 												}}
 											>
 												<p
-													className={`text-sm font-medium text-gray-900 ${getSizeTextStyle(size_text)}`}
+													className={`${AddFriendModalStyles.userNameText} ${getSizeTextStyle(size_text)}`}
 												>
 													{user.username}
 												</p>
@@ -296,7 +299,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 													return (
 														<button
 															onClick={() => handleRemoveFriend(user.uuid)}
-															className={`w-full sm:w-auto px-3 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700  ${getSizeTextStyle(size_text)}`}
+															className={`${AddFriendModalStyles.removeFriendButton} ${getSizeTextStyle(size_text)}`}
 														>
 															{t("removeFriend")}
 														</button>
@@ -341,7 +344,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 																	showToast(t("notifications.error"), "error");
 																}
 															}}
-															className={`w-full sm:w-auto px-3 py-1 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600  ${getSizeTextStyle(size_text)}`}
+															className={`${AddFriendModalStyles.pendingButton} ${getSizeTextStyle(size_text)}`}
 														>
 															{t("pendingRequest")}
 														</button>
@@ -386,7 +389,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 																	showToast(t("notifications.error"), "error");
 																}
 															}}
-															className="w-full sm:w-auto px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700"
+															className={`${AddFriendModalStyles.acceptButton} ${getSizeTextStyle(size_text)}`}
 														>
 															{t("acceptRequest")}
 														</button>
@@ -418,7 +421,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({ isOpen, onClose }) => {
 																	showToast(t("notifications.error"), "error");
 																}
 															}}
-															className={`w-full sm:w-auto px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700  ${getSizeTextStyle(size_text)}`}
+															className={`${AddFriendModalStyles.addFriendButton} ${getSizeTextStyle(size_text)}`}
 														>
 															{t("addFriend")}
 														</button>

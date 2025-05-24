@@ -1,11 +1,11 @@
+import AccessibilityCardStyle from "./AccessibilityCardStyle";
+import Card, { Space } from "../../Card/Card";
 import { useTranslation } from "../../../context/TranslationContext";
 import { useSettings } from "../../../context/SettingsContext";
 import globalStyle from "../../../globalStyle";
-import Card, { Space } from "../../Card/Card";
-import AccessibilityCardStyle from "./AccessibilityCardStyle";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export default function AccessibilityCard() {
+const AccessibilityCard: React.FC = () => {
 	const { t } = useTranslation();
 	const { size_text, setSizeText } = useSettings();
 	const [localSizeText, setLocalSizeText] = useState(size_text);
@@ -103,4 +103,6 @@ export default function AccessibilityCard() {
 			</div>
 		</Card>
 	);
-}
+};
+
+export default AccessibilityCard;

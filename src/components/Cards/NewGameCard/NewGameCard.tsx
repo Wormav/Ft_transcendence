@@ -1,13 +1,13 @@
 import Card from "../../Card/Card";
+import CustomBtn from "../../CustomBtn/CustomBtn";
+import globalStyle from "../../../globalStyle";
 import { useTranslation } from "../../../context/TranslationContext";
 import { FaGamepad } from "react-icons/fa6";
-import globalStyle from "../../../globalStyle";
-import CustomBtn from "../../CustomBtn/CustomBtn";
 import { MdSupervisorAccount } from "react-icons/md";
 import type { NewGameCardProps } from "../../../types/NewGameCardProps";
 import { useNavigate } from "react-router-dom";
 
-export default function NewGameCard({ ai = false }: NewGameCardProps) {
+const NewGameCard: React.FC<NewGameCardProps> = ({ ai = false }) => {
 	const { t } = useTranslation();
 	const navigate = useNavigate();
 
@@ -37,4 +37,6 @@ export default function NewGameCard({ ai = false }: NewGameCardProps) {
 			)}
 		</Card>
 	);
-}
+};
+
+export default NewGameCard;

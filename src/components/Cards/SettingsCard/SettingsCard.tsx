@@ -1,16 +1,16 @@
+import SettingsCardStyle from "./SettingsCardStyle";
+import Card from "../../Card/Card";
+import CustomBtn from "../../CustomBtn/CustomBtn";
 import { FaPen } from "react-icons/fa";
 import { useTranslation } from "../../../context/TranslationContext";
 import globalStyle from "../../../globalStyle";
-import Card from "../../Card/Card";
-import CustomBtn from "../../CustomBtn/CustomBtn";
 import { useUserContext } from "../../../context/UserContext";
 import { useState } from "react";
 import { Modal } from "../../Modal/Modal";
-import SettingsCardStyle from "./SettingsCardStyle";
 import { customFetch } from "../../../utils/customFetch";
 import { getJwtToken } from "../../../utils/getJwtToken";
 
-export default function SettingsCard() {
+const SettingsCard: React.FC = () => {
 	const { t, locale, setLocale } = useTranslation();
 	const { user, loading, updateUsername, updateEmail } = useUserContext();
 	const [isEditPseudoModalOpen, setIsEditPseudoModalOpen] = useState(false);
@@ -378,4 +378,6 @@ export default function SettingsCard() {
 			</Modal>
 		</Card>
 	);
-}
+};
+
+export default SettingsCard;

@@ -1,8 +1,8 @@
 import NavBarStyles from "./NavBarStyles";
-import type { NavBarProps } from "../../types/NavBarProps";
 import ButtonSettings from "../ButtonSettings/ButtonSettings";
 import ButtonProfil from "../ButtonProfil/ButtonProfil";
 import { useNavigate } from "react-router-dom";
+import type { NavBarProps } from "../../types/NavBarProps";
 
 const NavBar: React.FC<NavBarProps> = ({ onMenuClick }) => {
 	const navigate = useNavigate();

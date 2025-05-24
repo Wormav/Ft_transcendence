@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import type { ModalProps } from "../../types/ModalProps";
 import { createPortal } from "react-dom";
 import { ModalStyles } from "./ModalStyles";
 import { getSizeTextStyle } from "../../globalStyle";
 import { useSettings } from "../../context/SettingsContext";
+import type { ModalProps } from "../../types/ModalProps";
 
 export const Modal: React.FC<ModalProps> = ({
 	isOpen,
