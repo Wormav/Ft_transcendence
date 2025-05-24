@@ -239,7 +239,7 @@ export default function Pong() {
 					if (currentMatchUuid) {
 						const now = new Date().toISOString();
 						updateMatch(currentMatchUuid, { starttime: now }).catch((err) =>
-							console.error("Erreur lors de la mise à jour du starttime:", err),
+							console.error("Error updating starttime:", err),
 						);
 					}
 
@@ -262,7 +262,7 @@ export default function Pong() {
 					setCurrentMatchUuid(newMatch.uuid);
 				}
 			} catch (error) {
-				console.error("Erreur lors de la création du match:", error);
+				console.error("Error creating match:", error);
 			}
 		}
 
@@ -502,17 +502,14 @@ export default function Pong() {
 						updateMatch(currentMatchUuid, endGameOptions)
 							.then(() => {})
 							.catch((err) =>
-								console.error(
-									"Erreur lors de la mise à jour du score et fin de partie:",
-									err,
-								),
+								console.error("Error updating score and ending game:", err),
 							);
 
 						setGameStarted(false);
 						setShowMenu(true);
 					} else {
 						updateMatch(currentMatchUuid, scoreUpdate).catch((err) =>
-							console.error("Erreur lors de la mise à jour du score:", err),
+							console.error("Error updating score:", err),
 						);
 					}
 				}
@@ -809,7 +806,7 @@ export default function Pong() {
 					);
 				}
 			} catch (error) {
-				console.error("Erreur lors de la mise à jour des raquettes:", error);
+				console.error("Error updating paddles:", error);
 			}
 		}
 
@@ -827,14 +824,14 @@ export default function Pong() {
 					}
 				}
 			} catch (error) {
-				console.error("Erreur lors de la mise à jour du plateau:", error);
+				console.error("Error updating ground:", error);
 			}
 		}
 
 		try {
 			updateBallSpeed(speed_moves);
 		} catch (error) {
-			console.error("Erreur lors de la mise à jour de la vitesse:", error);
+			console.error("Error updating speed:", error);
 		}
 	};
 
@@ -1129,11 +1126,11 @@ export default function Pong() {
 				const matchDetails = await getMatchById(matchId);
 
 				if (!matchDetails) {
-					throw new Error("Match de tournoi non trouvé");
+					throw new Error("Tournament match not found");
 				}
 
 				if (matchDetails.finished === 1) {
-					throw new Error("Ce match de tournoi est déjà terminé");
+					throw new Error("This tournament match is already finished");
 				}
 
 				const playerLeft =
@@ -1171,7 +1168,7 @@ export default function Pong() {
 					cameraRef.current.beta = Math.PI / 4;
 				}
 			} catch (error) {
-				console.error("Erreur lors du démarrage du match de tournoi:", error);
+				console.error("Error starting tournament match:", error);
 				alert(t("tournaments.matchError"));
 				setTournamentMatchSettings({ matchId: null, isInTournament: false });
 			}

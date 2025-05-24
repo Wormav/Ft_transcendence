@@ -1,11 +1,11 @@
-import type { CustomBtnProps } from "../../types/CustomBtnProps";
 import CustomBtnStyle from "./CustomBtnStyle";
+import type { CustomBtnProps } from "../../types/CustomBtnProps";
 
-export default function CustomBtn({
+const CustomBtn: React.FC<CustomBtnProps> = ({
 	text,
 	onClick,
 	disabled = false,
-}: CustomBtnProps) {
+}: CustomBtnProps) => {
 	return (
 		<button
 			className={`${CustomBtnStyle.button} ${
@@ -17,4 +17,6 @@ export default function CustomBtn({
 			{text}
 		</button>
 	);
-}
+};
+
+export default CustomBtn;

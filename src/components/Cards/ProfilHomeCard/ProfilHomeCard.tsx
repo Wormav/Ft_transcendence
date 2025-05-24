@@ -2,13 +2,13 @@ import Card, { Space } from "../../Card/Card";
 import globalStyle from "../../../globalStyle";
 import { useTranslation } from "../../../context/TranslationContext";
 import HomeStyle from "../../../pages/Home/HomeStyle";
-import type { ProfilHomeCardProps } from "../../../types/ProfilHomeCardProps";
 import { useUserContext } from "../../../context/UserContext";
+import type { ProfilHomeCardProps } from "../../../types/ProfilHomeCardProps";
 
-export default function ProfilHomeCard({
+const ProfilHomeCard: React.FC<ProfilHomeCardProps> = ({
 	home = false,
 	friendProfile,
-}: ProfilHomeCardProps) {
+}) => {
 	const { t } = useTranslation();
 	const { user, loading, error } = useUserContext();
 
@@ -34,7 +34,7 @@ export default function ProfilHomeCard({
 						src={
 							profileToDisplay.avatar && profileToDisplay.avatar !== ""
 								? profileToDisplay.avatar
-								: "/default.JPG"
+								: "/default.png"
 						}
 						alt="Profile"
 						className={HomeStyle.img}
@@ -43,7 +43,7 @@ export default function ProfilHomeCard({
 				</>
 			) : (
 				<>
-					<img src="/default.JPG" alt="Profile" className={HomeStyle.img} />
+					<img src="/default.png" alt="Profile" className={HomeStyle.img} />
 					<span className={globalStyle.span}>Non connecté</span>
 				</>
 			)}
@@ -59,4 +59,6 @@ export default function ProfilHomeCard({
 			)}
 		</Card>
 	);
-}
+};
+
+export default ProfilHomeCard;

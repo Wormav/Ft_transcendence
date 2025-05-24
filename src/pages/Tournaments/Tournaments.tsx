@@ -89,7 +89,7 @@ const Tournaments: React.FC = () => {
 
 	const handleCreateTournament = async () => {
 		if (!user?.uuid) {
-			setError("Vous devez être connecté pour créer un tournoi");
+			setError("You must be logged in to create a tournament");
 			return;
 		}
 
@@ -121,11 +121,11 @@ const Tournaments: React.FC = () => {
 
 			await fetchUserTournaments(user.uuid);
 		} catch (err) {
-			console.error("Erreur lors de la création du tournoi:", err);
+			console.error("Error creating tournament:", err);
 			setError(
 				err instanceof Error
 					? err.message
-					: "Une erreur est survenue lors de la création du tournoi",
+					: "An error occurred while creating the tournament",
 			);
 		}
 	};

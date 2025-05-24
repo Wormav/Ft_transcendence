@@ -1,11 +1,11 @@
+import AddFriendModal from "../AddFriendModal/AddFriendModal";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { BugerMenuStyles } from "./BugerMenuStyles";
-import type { BurgerMenuProps } from "../../types/BurgerMenuProps";
 import { useTranslation } from "../../context/TranslationContext";
 import { useSettings } from "../../context/SettingsContext";
 import { getSizeTextStyle } from "../../globalStyle";
-import AddFriendModal from "../AddFriendModal/AddFriendModal";
+import type { BurgerMenuProps } from "../../types/BurgerMenuProps";
 
 const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose }) => {
 	const location = useLocation();

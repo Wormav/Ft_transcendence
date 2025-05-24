@@ -1,11 +1,11 @@
 import React, { createContext, useState, useContext, useCallback } from "react";
+import { getJwtToken } from "../utils/getJwtToken";
+import { customFetch } from "../utils/customFetch";
+import type { Tournament } from "../types/Tournament";
 import {
 	type TournamentContextType,
 	type TournamentProviderProps,
 } from "../types/TournamentContextType";
-import type { Tournament } from "../types/Tournament";
-import { getJwtToken } from "../utils/getJwtToken";
-import { customFetch } from "../utils/customFetch";
 
 const TournamentContext = createContext<TournamentContextType | undefined>(
 	undefined,
@@ -14,9 +14,7 @@ const TournamentContext = createContext<TournamentContextType | undefined>(
 export const useTournament = (): TournamentContextType => {
 	const context = useContext(TournamentContext);
 	if (context === undefined) {
-		throw new Error(
-			"useTournament doit être utilisé à l'intérieur d'un TournamentProvider",
-		);
+		throw new Error("useTournament must be used within a TournamentProvider");
 	}
 	return context;
 };
@@ -36,10 +34,6 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 			try {
 				const token = getJwtToken();
 
-				if (!token) {
-					throw new Error("Utilisateur non authentifié");
-				}
-
 				const response = await customFetch(
 					`/api/game/tournament/user/${uuid}`,
 					{
@@ -57,12 +51,10 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 				} else if (response.status === 404) {
 					setTournaments([]);
 				} else {
-					throw new Error("Erreur lors de la récupération des tournois");
+					throw new Error("Error retrieving tournaments");
 				}
 			} catch (err) {
-				setError(
-					err instanceof Error ? err.message : "Une erreur est survenue",
-				);
+				setError(err instanceof Error ? err.message : "An error occurred");
 			} finally {
 				setLoading(false);
 			}
@@ -78,16 +70,11 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 			try {
 				const players = [hostUuid, ...guestPlayers];
 
-				if (![4, 8].includes(players.length)) {
-					throw new Error(
-						"Le nombre de joueurs doit être de 4 ou 8 (en comptant l'hôte)",
-					);
+				if (![4].includes(players.length)) {
+					throw new Error("Number of players must be 4");
 				}
 
 				const token = getJwtToken();
-				if (!token) {
-					throw new Error("Utilisateur non authentifié");
-				}
 
 				const tournamentData = {
 					host: hostUuid,
@@ -104,7 +91,7 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 				});
 
 				if (!response.ok) {
-					throw new Error("Erreur lors de la création du tournoi");
+					throw new Error("Error while creating tournament");
 				}
 
 				const newTournament = await response.json();
@@ -116,9 +103,7 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 
 				await fetchUserTournaments(hostUuid);
 			} catch (err) {
-				setError(
-					err instanceof Error ? err.message : "Une erreur est survenue",
-				);
+				setError(err instanceof Error ? err.message : "An error occurred");
 			} finally {
 				setLoading(false);
 			}
@@ -131,10 +116,6 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 			try {
 				const token = getJwtToken();
 
-				if (!token) {
-					throw new Error("Utilisateur non authentifié");
-				}
-
 				const response = await customFetch(`/api/game/tournament/${id}`, {
 					method: "GET",
 					headers: {
@@ -144,7 +125,7 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 				});
 
 				if (!response.ok) {
-					throw new Error("Erreur lors de la récupération du tournoi");
+					throw new Error("Error retrieving tournament");
 				}
 
 				const tournamentData = await response.json();
@@ -153,7 +134,7 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 				throw new Error(
 					err instanceof Error
 						? err.message
-						: "Une erreur est survenue lors de la récupération du tournoi",
+						: "An error occurred while retrieving the tournament",
 				);
 			}
 		},
@@ -164,10 +145,6 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 		try {
 			const token = getJwtToken();
 
-			if (!token) {
-				throw new Error("Utilisateur non authentifié");
-			}
-
 			const response = await customFetch(`/api/game/match/${id}`, {
 				method: "GET",
 				headers: {
@@ -177,7 +154,7 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 			});
 
 			if (!response.ok) {
-				throw new Error("Erreur lors de la récupération du match");
+				throw new Error("Error retrieving match");
 			}
 
 			return await response.json();
@@ -185,7 +162,7 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 			throw new Error(
 				err instanceof Error
 					? err.message
-					: "Une erreur est survenue lors de la récupération du match",
+					: "An error occurred while retrieving the match",
 			);
 		}
 	}, []);
@@ -199,7 +176,7 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 				const token = getJwtToken();
 
 				if (Object.keys(data).length === 0) {
-					throw new Error("Aucune donnée fournie pour la mise à jour");
+					throw new Error("No data provided for update");
 				}
 
 				const response = await customFetch(
@@ -215,7 +192,7 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 				);
 
 				if (!response.ok) {
-					throw new Error("Erreur lors de la mise à jour du tournoi");
+					throw new Error("Error while updating tournament");
 				}
 
 				const updatedTournament = await response.json();
@@ -231,7 +208,7 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 				setError(
 					err instanceof Error
 						? err.message
-						: "Une erreur est survenue lors de la mise à jour du tournoi",
+						: "An error occurred while updating the tournament",
 				);
 				throw err;
 			}

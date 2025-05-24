@@ -113,7 +113,7 @@ const TournamentBracket: React.FC = () => {
 
 			showToast(t("tournaments.cancelSuccess"), "success");
 		} catch (err) {
-			console.error("Erreur lors de l'annulation du tournoi:", err);
+			console.error("Error while canceling tournament:", err);
 			showToast(t("tournaments.cancelError"), "error");
 		}
 	};
@@ -121,7 +121,7 @@ const TournamentBracket: React.FC = () => {
 	useEffect(() => {
 		const fetchTournament = async () => {
 			if (!id) {
-				setError("ID de tournoi manquant");
+				setError("Missing tournament ID");
 				setLoading(false);
 				return;
 			}
@@ -138,7 +138,7 @@ const TournamentBracket: React.FC = () => {
 								return { uuid: match.uuid, details };
 							} catch (error) {
 								console.error(
-									`Erreur lors de la récupération du match ${match.uuid}:`,
+									`Error while fetching match ${match.uuid}:`,
 									error,
 								);
 								return null;
@@ -160,9 +160,7 @@ const TournamentBracket: React.FC = () => {
 				}
 			} catch (err) {
 				setError(
-					err instanceof Error
-						? err.message
-						: "Erreur lors du chargement du tournoi",
+					err instanceof Error ? err.message : "Error while loading tournament",
 				);
 			} finally {
 				setLoading(false);
@@ -213,14 +211,11 @@ const TournamentBracket: React.FC = () => {
 						winner === finalMatchDetails.player,
 					);
 					showToast(
-						`Félicitations à ${winnerName} pour avoir remporté le tournoi !`,
+						t("tournaments.winnerMessage").replace("{winner}", winnerName),
 						"success",
 					);
 				} catch (error) {
-					console.error(
-						"Erreur lors de la mise à jour du statut du tournoi:",
-						error,
-					);
+					console.error("Error updating tournament status:", error);
 				}
 			}
 
@@ -271,7 +266,7 @@ const TournamentBracket: React.FC = () => {
 								}));
 							} catch (err) {
 								console.error(
-									`Erreur lors de la mise à jour du match ${nextRoundMatch.uuid}:`,
+									`Error while updating match ${nextRoundMatch.uuid}:`,
 									err,
 								);
 							}
@@ -349,10 +344,7 @@ const TournamentBracket: React.FC = () => {
 									[nextMatch.uuid]: updatedMatch,
 								}));
 							} catch (err) {
-								console.error(
-									`Erreur de mise à jour du match ${nextMatch.uuid}:`,
-									err,
-								);
+								console.error(`Error updating match ${nextMatch.uuid}:`, err);
 							}
 						}
 					}
@@ -583,8 +575,6 @@ const TournamentBracket: React.FC = () => {
 																				: ""
 																		}`}
 																	>
-																		{/* Si player est null mais qu'il y a un score,
-																		utiliser guest à la place de "Guest1" */}
 																		{!matchDetails[match.uuid].player &&
 																		matchDetails[match.uuid].guest
 																			? getPlayerDisplayName(

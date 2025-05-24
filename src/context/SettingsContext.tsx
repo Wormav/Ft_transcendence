@@ -1,11 +1,11 @@
 import { createContext, useState, useContext, useEffect } from "react";
+import { useUserContext } from "./UserContext";
+import { customFetch } from "../utils/customFetch";
+import { getJwtToken } from "../utils/getJwtToken";
 import type {
 	SettingsContextType,
 	GameSpeedType,
 } from "../types/SettingsTypes";
-import { useUserContext } from "./UserContext";
-import { customFetch } from "../utils/customFetch";
-import { getJwtToken } from "../utils/getJwtToken";
 
 const SettingsContext = createContext<SettingsContextType>({
 	color_items: "#3498db",

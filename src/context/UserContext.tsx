@@ -1,7 +1,7 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import type { UserContextType, UserData } from "../types/UserContextType";
 import { customFetch } from "../utils/customFetch";
 import { getJwtToken } from "../utils/getJwtToken";
+import type { UserContextType, UserData } from "../types/UserContextType";
 
 const UserContext = createContext<UserContextType>({
 	user: null,
@@ -82,8 +82,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 				filteredUserData.avatar &&
 				filteredUserData.avatar.startsWith("https://lh3.googleusercontent.com/")
 			) {
-				await updateAvatar("/default.JPG");
-				filteredUserData.avatar = "/default.JPG";
+				await updateAvatar("/default.png");
+				filteredUserData.avatar = "/default.png";
 			}
 
 			setUser(filteredUserData);
@@ -165,7 +165,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 			const finalAvatar = avatar.startsWith(
 				"https://lh3.googleusercontent.com/",
 			)
-				? "/default.JPG"
+				? "/default.png"
 				: avatar;
 
 			const token = getJwtToken();
@@ -206,9 +206,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 			});
 
 			if (!response.ok) {
-				throw new Error(
-					`Échec de la suppression du compte: ${response.status}`,
-				);
+				throw new Error(`Failed to delete account: ${response.status}`);
 			}
 
 			if (typeof window !== "undefined") {
@@ -216,11 +214,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 			}
 			return true;
 		} catch (err: any) {
-			console.error("Erreur lors de la suppression du compte:", err);
-			setError(
-				err.message ||
-					"Une erreur est survenue lors de la suppression du compte",
-			);
+			console.error("Error deleting account:", err);
+			setError(err.message || "An error occurred while deleting the account");
 			return false;
 		}
 	};

@@ -1,11 +1,11 @@
-import { Link, useLocation } from "react-router-dom";
 import MenuStyles from "./MenuStyles";
+import AddFriendModal from "../AddFriendModal/AddFriendModal";
+import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "../../context/TranslationContext";
 import { useSettings } from "../../context/SettingsContext";
 import { getSizeTextStyle } from "../../globalStyle";
 import { useLogout } from "../../hooks/useLogout";
 import { useState } from "react";
-import AddFriendModal from "../AddFriendModal/AddFriendModal";
 
 const Menu: React.FC = () => {
 	const location = useLocation();

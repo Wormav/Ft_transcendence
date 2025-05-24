@@ -1,10 +1,10 @@
+import CustomBtn from "../../CustomBtn/CustomBtn";
+import globalStyle from "../../../globalStyle";
 import Card from "../../Card/Card";
 import { useTranslation } from "../../../context/TranslationContext";
-import globalStyle from "../../../globalStyle";
-import CustomBtn from "../../CustomBtn/CustomBtn";
 import { IoIosSettings } from "react-icons/io";
 
-export default function CustomGameCard() {
+const CustomGameCard: React.FC = () => {
 	const { t } = useTranslation();
 
 	return (
@@ -15,4 +15,6 @@ export default function CustomGameCard() {
 			<CustomBtn text={t("home.custom")} onClick={() => {}} />
 		</Card>
 	);
-}
+};
+
+export default CustomGameCard;

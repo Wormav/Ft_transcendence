@@ -1,7 +1,7 @@
 import type { ButtonSettingsProps } from "../../types/ButtonSettingsProps";
 import ButtonSettingsStyle from "./ButtonSettingsStyle";
 
-export default function ButtonSettings({ onClick }: ButtonSettingsProps) {
+const ButtonSettings: React.FC<ButtonSettingsProps> = ({ onClick }) => {
 	return (
 		<button
 			onClick={onClick}
@@ -26,4 +26,6 @@ export default function ButtonSettings({ onClick }: ButtonSettingsProps) {
 			</svg>
 		</button>
 	);
-}
+};
+
+export default ButtonSettings;

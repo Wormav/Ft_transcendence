@@ -1,3 +1,4 @@
+import YourPictureCardStyle from "./YourPictureCardStyle";
 import Card, { Space } from "../../Card/Card";
 import globalStyle from "../../../globalStyle";
 import { useTranslation } from "../../../context/TranslationContext";
@@ -6,9 +7,8 @@ import { useUserContext } from "../../../context/UserContext";
 import { useState, useRef } from "react";
 import type { ChangeEvent } from "react";
 import { Modal } from "../../Modal/Modal";
-import YourPictureCardStyle from "./YourPictureCardStyle";
 
-export default function YourPictureCard() {
+const YourPictureCard: React.FC = () => {
 	const { t } = useTranslation();
 	const { user, updateAvatar } = useUserContext();
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,7 +19,7 @@ export default function YourPictureCard() {
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const avatarSrc =
-		user?.avatar && user.avatar !== "" ? user.avatar : "/default.JPG";
+		user?.avatar && user.avatar !== "" ? user.avatar : "/default.png";
 
 	const openModal = () => {
 		setIsModalOpen(true);
@@ -228,4 +228,6 @@ export default function YourPictureCard() {
 			</Modal>
 		</Card>
 	);
-}
+};
+
+export default YourPictureCard;
