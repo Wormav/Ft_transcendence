@@ -1,54 +1,132 @@
-# React + TypeScript + Vite
+# 🎮 Ft_transcendence
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚀 Description
 
-Currently, two official plugins are available:
+Ft_transcendence is a modern web project that offers a real-time Pong gaming experience with an elegant user interface and social features, built as part of the 42 school curriculum.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## Expanding the ESLint configuration
+### 🕹️ Game
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 3D Pong powered by BabylonJS
+- Multiple game modes (normal, fast, turbo)
+- Matchmaking system
+- Customizable colors and game settings
+- Fullscreen gaming experience
 
-```js
-export default tseslint.config({
-	extends: [
-		// Remove ...tseslint.configs.recommended and replace with this
-		...tseslint.configs.recommendedTypeChecked,
-		// Alternatively, use this for stricter rules
-		...tseslint.configs.strictTypeChecked,
-		// Optionally, add this for stylistic rules
-		...tseslint.configs.stylisticTypeChecked,
-	],
-	languageOptions: {
-		// other options...
-		parserOptions: {
-			project: ['./tsconfig.node.json', './tsconfig.app.json'],
-			tsconfigRootDir: import.meta.dirname,
-		},
-	},
-});
+### 👥 Social
+
+- Friend system
+- User profiles
+- Real-time chat
+- Leaderboards
+- Tournament system
+
+### 🛠️ Technical
+
+- Modern and responsive UI
+- Multilingual support (en, fr, es)
+- Real-time notification system
+- Secure authentication
+- WebSocket integration
+
+## 🔧 Technology Stack
+
+- **Frontend:**
+  - React 19
+  - TypeScript
+  - BabylonJS
+  - TailwindCSS
+  - Vite
+
+## 🚦 Getting Started
+
+### Prerequisites
+
+- Node.js (latest LTS version)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository
+
+```bash
+git clone [repository-url]
+cd ft_transcendence
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Install dependencies
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
-
-export default tseslint.config({
-	plugins: {
-		// Add the react-x and react-dom plugins
-		'react-x': reactX,
-		'react-dom': reactDom,
-	},
-	rules: {
-		// other rules...
-		// Enable its recommended typescript rules
-		...reactX.configs['recommended-typescript'].rules,
-		...reactDom.configs.recommended.rules,
-	},
-});
+```bash
+npm install
 ```
+
+3. Start development server
+
+```bash
+npm run dev
+```
+
+4. For network access (development)
+
+```bash
+npm run host
+```
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run host` - Start server with network access
+- `npm run build` - Build project
+- `npm run lint` - Run linter
+- `npm run preview` - Preview production build
+- `npm run format` - Format code using Prettier
+
+## 🎯 Project Structure
+
+```
+src/
+├── components/     # Reusable components
+├── context/       # React contexts
+├── hooks/         # Custom hooks
+├── locales/       # Translation files
+├── pages/         # Application pages
+├── styles/        # Global styles
+├── types/         # TypeScript types
+└── utils/         # Utilities
+```
+
+## 🎨 Customization
+
+The game offers various customization options:
+
+- Paddle colors
+- Board color
+- Ball speed settings
+- Multiple camera views
+- Game difficulty levels
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to:
+
+1. Fork the project
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+## 📝 License
+
+This project is part of the 42 school curriculum.
+
+---
+
+## 👥 Team
+
+Made with ❤️ by the Ft_transcendence team
+
+- [Mastau](https://github.com/Mastau/cub3d)
+- [Wormav](https://github.com/Wormav)
+- [aauberti](https://github.com/aauberti)
+- [EricBrvs](https://github.com/EricBrvs)
