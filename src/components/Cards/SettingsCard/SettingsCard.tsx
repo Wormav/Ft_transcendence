@@ -144,17 +144,20 @@ const SettingsCard: React.FC = () => {
 		if (isValid) {
 			try {
 				const token = getJwtToken();
-				const response = await customFetch("/api/auth/update", {
-					method: "PUT",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${token}`,
+				const response = await customFetch(
+					`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/auth/update`,
+					{
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+						body: JSON.stringify({
+							new_password: newPassword,
+							old_password: oldPassword,
+						}),
 					},
-					body: JSON.stringify({
-						new_password: newPassword,
-						old_password: oldPassword,
-					}),
-				});
+				);
 
 				if (response.ok) {
 					closePasswordModal();

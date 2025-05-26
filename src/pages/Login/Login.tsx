@@ -30,16 +30,19 @@ export default function Login() {
 		}
 
 		try {
-			const response = await customFetch(`/api/auth/login`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
+			const response = await customFetch(
+				`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/auth/login`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						email,
+						password,
+					}),
 				},
-				body: JSON.stringify({
-					email,
-					password,
-				}),
-			});
+			);
 
 			const data = await response.json();
 

@@ -35,7 +35,7 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 				const token = getJwtToken();
 
 				const response = await customFetch(
-					`/api/game/tournament/user/${uuid}`,
+					`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/game/tournament/user/${uuid}`,
 					{
 						method: "GET",
 						headers: {
@@ -81,14 +81,17 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 					players: players,
 				};
 
-				const response = await customFetch("/api/game/tournament", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${token}`,
+				const response = await customFetch(
+					`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/game/tournament`,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+						body: JSON.stringify(tournamentData),
 					},
-					body: JSON.stringify(tournamentData),
-				});
+				);
 
 				if (!response.ok) {
 					throw new Error("Error while creating tournament");
@@ -116,13 +119,16 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 			try {
 				const token = getJwtToken();
 
-				const response = await customFetch(`/api/game/tournament/${id}`, {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${token}`,
+				const response = await customFetch(
+					`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/game/tournament/${id}`,
+					{
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
 					},
-				});
+				);
 
 				if (!response.ok) {
 					throw new Error("Error retrieving tournament");
@@ -145,13 +151,16 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 		try {
 			const token = getJwtToken();
 
-			const response = await customFetch(`/api/game/match/${id}`, {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
+			const response = await customFetch(
+				`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/game/match/${id}`,
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
 				},
-			});
+			);
 
 			if (!response.ok) {
 				throw new Error("Error retrieving match");
@@ -180,7 +189,7 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 				}
 
 				const response = await customFetch(
-					`/api/game/tournament/${tournamentId}`,
+					`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/game/tournament/${tournamentId}`,
 					{
 						method: "PUT",
 						headers: {

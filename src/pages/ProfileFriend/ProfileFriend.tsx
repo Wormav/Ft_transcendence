@@ -43,13 +43,16 @@ export default function ProfileFriend() {
 					return;
 				}
 
-				const profileResponse = await customFetch(`/api/user/${uuid}`, {
-					method: "GET",
-					headers: {
-						Authorization: `Bearer ${token}`,
-						"Content-Type": "application/json",
+				const profileResponse = await customFetch(
+					`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/user/${uuid}`,
+					{
+						method: "GET",
+						headers: {
+							Authorization: `Bearer ${token}`,
+							"Content-Type": "application/json",
+						},
 					},
-				});
+				);
 
 				if (!profileResponse.ok) {
 					throw new Error(
@@ -62,7 +65,7 @@ export default function ProfileFriend() {
 
 				try {
 					const matchesResponse = await customFetch(
-						`/api/game/match/user/${uuid}`,
+						`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/game/match/user/${uuid}`,
 						{
 							method: "GET",
 							headers: {

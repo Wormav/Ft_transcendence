@@ -36,13 +36,16 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 		try {
 			const token = getJwtToken();
 
-			const response = await customFetch(`/api/user/friends`, {
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
+			const response = await customFetch(
+				`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/user/friends`,
+				{
+					method: "GET",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
 				},
-			});
+			);
 
 			if (!response.ok) {
 				throw new Error(`Error while retrieving friends: ${response.status}`);
@@ -67,14 +70,17 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 		try {
 			const token = getJwtToken();
 
-			const response = await customFetch(`/api/user/friends/${uuid}`, {
-				method: "POST",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
+			const response = await customFetch(
+				`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/user/friends/${uuid}`,
+				{
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({}),
 				},
-				body: JSON.stringify({}),
-			});
+			);
 
 			if (!response.ok) {
 				throw new Error(`Error while adding friend: ${response.status}`);
@@ -94,14 +100,17 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 		try {
 			const token = getJwtToken();
 
-			const response = await customFetch(`/api/user/friends/${uuid}`, {
-				method: "PUT",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
+			const response = await customFetch(
+				`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/user/friends/${uuid}`,
+				{
+					method: "PUT",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ action: "accept" }),
 				},
-				body: JSON.stringify({ action: "accept" }),
-			});
+			);
 
 			if (!response.ok) {
 				throw new Error(
@@ -125,14 +134,17 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 		try {
 			const token = getJwtToken();
 
-			const response = await customFetch(`/api/user/friends/${uuid}`, {
-				method: "PUT",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
+			const response = await customFetch(
+				`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/user/friends/${uuid}`,
+				{
+					method: "PUT",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ action: "decline" }),
 				},
-				body: JSON.stringify({ action: "decline" }),
-			});
+			);
 
 			if (!response.ok) {
 				throw new Error(
@@ -156,14 +168,17 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 		try {
 			const token = getJwtToken();
 
-			const response = await customFetch(`/api/user/friends/${uuid}`, {
-				method: "DELETE",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
+			const response = await customFetch(
+				`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/user/friends/${uuid}`,
+				{
+					method: "DELETE",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({}),
 				},
-				body: JSON.stringify({}),
-			});
+			);
 
 			if (!response.ok) {
 				throw new Error(`Error while removing friend: ${response.status}`);

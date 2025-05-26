@@ -109,13 +109,16 @@ const Friends = () => {
 				return;
 			}
 
-			const response = await customFetch(`/api/user/${uuid}`, {
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
+			const response = await customFetch(
+				`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/user/${uuid}`,
+				{
+					method: "GET",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
 				},
-			});
+			);
 
 			if (!response.ok) {
 				throw new Error(`Error retrieving user details: ${response.status}`);

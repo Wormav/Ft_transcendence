@@ -48,13 +48,16 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 				return;
 			}
 
-			const response = await customFetch(`/api/user/me`, {
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
+			const response = await customFetch(
+				`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/user/me`,
+				{
+					method: "GET",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
 				},
-			});
+			);
 
 			if (!response.ok) {
 				if (response.status !== 401) {
@@ -112,14 +115,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 		try {
 			const token = getJwtToken();
 
-			const response = await customFetch("/api/user/update", {
-				method: "PUT",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
+			const response = await customFetch(
+				`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/user/update`,
+				{
+					method: "PUT",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ username }),
 				},
-				body: JSON.stringify({ username }),
-			});
+			);
 
 			if (!response.ok) {
 				throw new Error(`Failed to update username: ${response.status}`);
@@ -138,14 +144,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 		try {
 			const token = getJwtToken();
 
-			const response = await customFetch("/api/user/update", {
-				method: "PUT",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
+			const response = await customFetch(
+				"http://localhost:${import.meta.env.VITE_BACKEND_PORT}/user/update",
+				{
+					method: "PUT",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ email }),
 				},
-				body: JSON.stringify({ email }),
-			});
+			);
 
 			if (!response.ok) {
 				throw new Error(`Failed to update email: ${response.status}`);
@@ -170,14 +179,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
 			const token = getJwtToken();
 
-			const response = await customFetch("/api/user/update", {
-				method: "PUT",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
+			const response = await customFetch(
+				"http://localhost:${import.meta.env.VITE_BACKEND_PORT}/user/update",
+				{
+					method: "PUT",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ avatar: finalAvatar }),
 				},
-				body: JSON.stringify({ avatar: finalAvatar }),
-			});
+			);
 
 			if (!response.ok) {
 				throw new Error(`Failed to update avatar: ${response.status}`);
@@ -196,14 +208,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 		try {
 			const token = getJwtToken();
 
-			const response = await customFetch("/api/auth/account", {
-				method: "DELETE",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
+			const response = await customFetch(
+				"http://localhost:${import.meta.env.VITE_BACKEND_PORT}/auth/account",
+				{
+					method: "DELETE",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({}),
 				},
-				body: JSON.stringify({}),
-			});
+			);
 
 			if (!response.ok) {
 				throw new Error(`Failed to delete account: ${response.status}`);

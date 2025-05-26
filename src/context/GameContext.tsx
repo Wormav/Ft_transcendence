@@ -35,13 +35,16 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 		try {
 			const token = getJwtToken();
 
-			const response = await customFetch(`/api/game/match/user/${uuid}`, {
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
+			const response = await customFetch(
+				`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/game/match/user/${uuid}`,
+				{
+					method: "GET",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
 				},
-			});
+			);
 
 			// Si la réponse est 404, on considère que c'est un cas normal (pas de matchs)
 			if (response.status === 404) {
@@ -86,14 +89,17 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 		try {
 			const token = getJwtToken();
 
-			const response = await customFetch(`/api/game/match`, {
-				method: "POST",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
+			const response = await customFetch(
+				`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/game/match`,
+				{
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(params),
 				},
-				body: JSON.stringify(params),
-			});
+			);
 
 			if (!response.ok) {
 				throw new Error(`Error creating match: ${response.status}`);
@@ -131,14 +137,17 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 				return null;
 			}
 
-			const response = await customFetch(`/api/game/match/${matchUuid}`, {
-				method: "PUT",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
+			const response = await customFetch(
+				`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/game/match/${matchUuid}`,
+				{
+					method: "PUT",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(params),
 				},
-				body: JSON.stringify(params),
-			});
+			);
 
 			if (!response.ok) {
 				throw new Error(`Error updating match: ${response.status}`);

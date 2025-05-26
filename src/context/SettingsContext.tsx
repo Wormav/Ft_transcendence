@@ -47,15 +47,18 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
 	) => {
 		try {
 			const token = getJwtToken();
-			const response = await customFetch("/api/user/options", {
-				method: "PUT",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
+			const response = await customFetch(
+				`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/user/options`,
+				{
+					method: "PUT",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(options),
+					credentials: "include",
 				},
-				body: JSON.stringify(options),
-				credentials: "include",
-			});
+			);
 			if (!response.ok) {
 				throw new Error("Fail update settings user");
 			}

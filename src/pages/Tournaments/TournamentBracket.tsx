@@ -250,14 +250,17 @@ const TournamentBracket: React.FC = () => {
 
 							try {
 								const token = getJwtToken();
-								await customFetch(`/api/game/match/${nextRoundMatch.uuid}`, {
-									method: "PUT",
-									headers: {
-										"Content-Type": "application/json",
-										Authorization: `Bearer ${token}`,
+								await customFetch(
+									`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/game/match/${nextRoundMatch.uuid}`,
+									{
+										method: "PUT",
+										headers: {
+											"Content-Type": "application/json",
+											Authorization: `Bearer ${token}`,
+										},
+										body: JSON.stringify(updateData),
 									},
-									body: JSON.stringify(updateData),
-								});
+								);
 
 								const updatedMatch = await getMatchById(nextRoundMatch.uuid);
 								setMatchDetails((prev) => ({
@@ -329,14 +332,17 @@ const TournamentBracket: React.FC = () => {
 
 							try {
 								const token = getJwtToken();
-								await customFetch(`/api/game/match/${nextMatch.uuid}`, {
-									method: "PUT",
-									headers: {
-										"Content-Type": "application/json",
-										Authorization: `Bearer ${token}`,
+								await customFetch(
+									`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/game/match/${nextMatch.uuid}`,
+									{
+										method: "PUT",
+										headers: {
+											"Content-Type": "application/json",
+											Authorization: `Bearer ${token}`,
+										},
+										body: JSON.stringify(updateData),
 									},
-									body: JSON.stringify(updateData),
-								});
+								);
 
 								const updatedMatch = await getMatchById(nextMatch.uuid);
 								setMatchDetails((prev) => ({
