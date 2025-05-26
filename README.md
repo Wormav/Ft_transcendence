@@ -51,7 +51,7 @@ Ft_transcendence is a modern web project that offers a real-time Pong gaming exp
 1. Clone the repository
 
 ```bash
-git clone [repository-url]
+git clone https://github.com/Wormav/Ft_transcendence.git
 cd ft_transcendence
 ```
 
