@@ -46,6 +46,14 @@ Ft_transcendence is a modern web project that offers a real-time Pong gaming exp
 - Node.js (latest LTS version)
 - npm or yarn
 
+### Environment Setup
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+VITE_BACKEND_PORT=your_backend_port
+```
+
 ### Installation
 
 1. Clone the repository
