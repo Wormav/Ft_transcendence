@@ -1,5 +1,7 @@
 # 🎮 Ft_transcendence
 
+> ⚠️ **Important Notice**: This repository contains only the frontend part of the project. For the complete project including backend and Docker containers, please visit the main repository at [https://github.com/EricBrvs/ft_transcendance](https://github.com/EricBrvs/ft_transcendance)
+
 ## 🚀 Description
 
 Ft_transcendence is a modern web project that offers a real-time Pong gaming experience with an elegant user interface and social features, built as part of the 42 school curriculum.
@@ -113,16 +115,6 @@ The game offers various customization options:
 - Ball speed settings
 - Multiple camera views
 - Game difficulty levels
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to:
-
-1. Fork the project
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
 
 ## 📝 License
 
