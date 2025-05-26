@@ -1,5 +1,7 @@
 # 🎮 Ft_transcendence
 
+![Demo du projet](./demo/demo.gif)
+
 > ⚠️ **Important Notice**: This repository contains only the frontend part of the project. For the complete project including backend and Docker containers, please visit the main repository at [https://github.com/EricBrvs/ft_transcendance](https://github.com/EricBrvs/ft_transcendance)
 
 ## 🚀 Description
