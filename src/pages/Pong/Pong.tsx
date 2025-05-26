@@ -399,7 +399,7 @@ export default function Pong() {
 			return;
 
 		const paddleSpeed = gameFieldRef.current.height * 0.01;
-		const paddleLimit = gameFieldRef.current.height * 0.45;
+		const paddleLimit = gameFieldRef.current.height * 0.44;
 
 		if (keysPressed.current["w"] || keysPressed.current["W"]) {
 			paddleRightRef.current.position.z -= paddleSpeed;
@@ -437,7 +437,7 @@ export default function Pong() {
 			paddleLeft.getBoundingInfo().boundingBox.extendSize.z;
 
 		const wallLimit =
-			field.height / 2 - ball.getBoundingInfo().boundingSphere.radius;
+			(field.height / 2 - ball.getBoundingInfo().boundingSphere.radius) * 1.05;
 		if (ball.position.z <= -wallLimit || ball.position.z >= wallLimit) {
 			ballDirectionRef.current.z = -ballDirectionRef.current.z;
 		}
@@ -446,11 +446,14 @@ export default function Pong() {
 			const paddle = isPaddleLeft ? paddleLeft : paddleRight;
 			const paddleX = isPaddleLeft ? -field.paddleXPos : field.paddleXPos;
 
+			const hitboxWidth = PADDLE_WIDTH * 0.82;
+			const hitboxHeight = paddleHalfHeight * 1.2;
+
 			if (
-				ball.position.x <= paddleX + PADDLE_WIDTH &&
-				ball.position.x >= paddleX - PADDLE_WIDTH &&
-				ball.position.z >= paddle.position.z - paddleHalfHeight &&
-				ball.position.z <= paddle.position.z + paddleHalfHeight
+				ball.position.x <= paddleX + hitboxWidth &&
+				ball.position.x >= paddleX - hitboxWidth &&
+				ball.position.z >= paddle.position.z - hitboxHeight &&
+				ball.position.z <= paddle.position.z + hitboxHeight
 			) {
 				ballDirectionRef.current.x =
 					-ballDirectionRef.current.x * BALL_SPEED_INCREASE;
