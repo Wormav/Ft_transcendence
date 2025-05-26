@@ -187,6 +187,7 @@
 		"gameCustom": "Jeu personnalisé"
 	},
 	"tournaments": {
+		"matchError": "Match erreur",
 		"title": "Tournois",
 		"winnerMessage": "Félicitations à {winner} pour avoir remporté le tournoi !",
 		"createTournament": "Créer un tournoi",

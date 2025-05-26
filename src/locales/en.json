@@ -187,6 +187,7 @@
 		"gameCustom": "Custom Game"
 	},
 	"tournaments": {
+		"matchError": "Match error",
 		"title": "Tournaments",
 		"winnerMessage": "Congratulations to {winner} for winning the tournament!",
 		"createTournament": "Create a tournament",
