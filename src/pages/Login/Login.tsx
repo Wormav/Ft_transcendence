@@ -6,6 +6,7 @@ import globalStyle from "../../globalStyle";
 import { useTranslation } from "../../context/TranslationContext";
 import { customFetch } from "../../utils/customFetch";
 import { isDemoMode } from "../../config/demo";
+import { getPublicAsset } from "../../utils/assetHelper";
 
 export default function Login() {
 	const { t } = useTranslation();
@@ -110,7 +111,7 @@ export default function Login() {
 			<div className={LoginStyle.container}>
 				<div className={LoginStyle.card}>
 					<div className={LoginStyle.logo}>
-						<img src="/42_Logo.svg.png" alt="42 Logo" className="h-12 w-12" />
+						<img src={getPublicAsset("42_Logo.svg.png")} alt="42 Logo" className="h-12 w-12" />
 					</div>
 					<h2 className={LoginStyle.title}>Ft_transcendence</h2>
 					<div className="w-full flex flex-col items-center">
@@ -134,7 +135,7 @@ export default function Login() {
 		<div className={LoginStyle.container}>
 			<div className={LoginStyle.card}>
 				<div className={LoginStyle.logo}>
-					<img src="/42_Logo.svg.png" alt="42 Logo" className="h-12 w-12" />
+					<img src={getPublicAsset("42_Logo.svg.png")} alt="42 Logo" className="h-12 w-12" />
 				</div>
 				<h2 className={LoginStyle.title}>Ft_transcendence</h2>
 

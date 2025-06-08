@@ -9,6 +9,7 @@ import { useToast } from "../../context/ToastContext";
 import { customFetch } from "../../utils/customFetch";
 import { getJwtToken } from "../../utils/getJwtToken";
 import { useSettings } from "../../context/SettingsContext";
+import { getPublicAsset } from "../../utils/assetHelper";
 import { getSizeTextStyle } from "../../globalStyle";
 import { isDemoMode } from "../../config/demo";
 import type { AddFriendModalProps } from "../../types/AddFreindModalProps";
@@ -273,7 +274,7 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({
 													/>
 												) : (
 													<img
-														src="/default.png"
+														src={getPublicAsset("default.png")}
 														alt={user.username}
 														className={AddFriendModalStyles.userAvatarImg}
 													/>

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useSettings } from "../../context/SettingsContext";
 import { useTranslation } from "../../context/TranslationContext";
 import { getSizeTextStyle } from "../../globalStyle";
+import { getPublicAsset } from "../../utils/assetHelper";
 import NotFoundStyle from "./NotFoundStyle";
 
 export default function NotFound() {
@@ -12,7 +13,7 @@ export default function NotFound() {
 	return (
 		<div className={NotFoundStyle.container}>
 			<div className={NotFoundStyle.card}>
-				<img src="/42_Logo.svg.png" alt="404" className={NotFoundStyle.image} />
+				<img src={getPublicAsset("42_Logo.svg.png")} alt="404" className={NotFoundStyle.image} />
 				<h1 className={`${NotFoundStyle.title} ${getSizeTextStyle(size_text)}`}>
 					{t("notFound.title")}
 				</h1>

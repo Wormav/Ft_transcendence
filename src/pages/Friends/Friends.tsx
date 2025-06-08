@@ -8,6 +8,7 @@ import FriendsStyle from "./FriendsStyle";
 import { customFetch } from "../../utils/customFetch";
 import { getJwtToken } from "../../utils/getJwtToken";
 import { isDemoMode } from "../../config/demo";
+import { getPublicAsset } from "../../utils/assetHelper";
 import type { FriendProfile } from "../../types/FriendProfile";
 import { getSizeTextStyle } from "../../globalStyle";
 import { useSettings } from "../../context/SettingsContext";
@@ -340,7 +341,7 @@ const Friends = () => {
 													/>
 												) : (
 													<img
-														src="/default.png"
+														src={getPublicAsset("default.png")}
 														alt={friendDetails.username || "User"}
 														className={FriendsStyle.avatarImg}
 													/>
@@ -421,7 +422,7 @@ const Friends = () => {
 													/>
 												) : (
 													<img
-														src="/default.png"
+														src={getPublicAsset("default.png")}
 														alt="User"
 														className={FriendsStyle.avatarImg}
 													/>

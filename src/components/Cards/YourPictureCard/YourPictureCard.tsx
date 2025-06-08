@@ -4,6 +4,7 @@ import globalStyle from "../../../globalStyle";
 import { useTranslation } from "../../../context/TranslationContext";
 import { FaPen } from "react-icons/fa6";
 import { useUserContext } from "../../../context/UserContext";
+import { getPublicAsset } from "../../../utils/assetHelper";
 import { useState, useRef } from "react";
 import type { ChangeEvent } from "react";
 import { Modal } from "../../Modal/Modal";
@@ -19,7 +20,7 @@ const YourPictureCard: React.FC = () => {
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const avatarSrc =
-		user?.avatar && user.avatar !== "" ? user.avatar : "/default.png";
+		user?.avatar && user.avatar !== "" ? user.avatar : getPublicAsset("default.png");
 
 	const openModal = () => {
 		setIsModalOpen(true);

@@ -5,6 +5,7 @@ import { useTranslation } from "../../context/TranslationContext";
 import { useSettings } from "../../context/SettingsContext";
 import { getSizeTextStyle } from "../../globalStyle";
 import { useLogout } from "../../hooks/useLogout";
+import { getPublicAsset } from "../../utils/assetHelper";
 import { useState } from "react";
 
 const Menu: React.FC = () => {
@@ -23,7 +24,7 @@ const Menu: React.FC = () => {
 	return (
 		<div className={MenuStyles.menu}>
 			<div className={MenuStyles.logoContainer}>
-				<img src="/42_Logo.svg.png" alt="42 Logo" className={MenuStyles.logo} />
+				<img src={getPublicAsset("42_Logo.svg.png")} alt="42 Logo" className={MenuStyles.logo} />
 			</div>
 			<nav className={MenuStyles.navigation}>
 				<ul className={MenuStyles.navList}>

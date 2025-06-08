@@ -3,6 +3,7 @@ import globalStyle from "../../../globalStyle";
 import { useTranslation } from "../../../context/TranslationContext";
 import HomeStyle from "../../../pages/Home/HomeStyle";
 import { useUserContext } from "../../../context/UserContext";
+import { getPublicAsset } from "../../../utils/assetHelper";
 import type { ProfilHomeCardProps } from "../../../types/ProfilHomeCardProps";
 
 const ProfilHomeCard: React.FC<ProfilHomeCardProps> = ({
@@ -34,7 +35,7 @@ const ProfilHomeCard: React.FC<ProfilHomeCardProps> = ({
 						src={
 							profileToDisplay.avatar && profileToDisplay.avatar !== ""
 								? profileToDisplay.avatar
-								: "/default.png"
+								: getPublicAsset("default.png")
 						}
 						alt="Profile"
 						className={HomeStyle.img}
@@ -43,7 +44,7 @@ const ProfilHomeCard: React.FC<ProfilHomeCardProps> = ({
 				</>
 			) : (
 				<>
-					<img src="/default.png" alt="Profile" className={HomeStyle.img} />
+					<img src={getPublicAsset("default.png")} alt="Profile" className={HomeStyle.img} />
 					<span className={globalStyle.span}>Non connecté</span>
 				</>
 			)}

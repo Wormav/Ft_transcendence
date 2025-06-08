@@ -4,13 +4,14 @@ import type { FriendData } from "../types/FriendContextType";
 import type { MatchData } from "../types/GameContextType";
 import type { Tournament } from "../types/Tournament";
 import type { FriendProfile } from "../types/FriendProfile";
+import { getPublicAsset } from "./assetHelper";
 
 // Utilisateur démo principal
 export const DEMO_USER: UserData = {
 	uuid: "demo-user-123",
 	email: "demo@transcendence.com",
 	username: "DemoPlayer",
-	avatar: "/default.png",
+	avatar: getPublicAsset("default.png"),
 	color_items: "#3B82F6",
 	color_bg: "#1F2937",
 	size_text: 16,
@@ -24,7 +25,7 @@ export const DEMO_FRIENDS: FriendProfile[] = [
 		uuid: "friend-1",
 		username: "PlayerOne",
 		email: "player1@demo.com",
-		avatar: "/default.png",
+		avatar: getPublicAsset("default.png"),
 		status: "online",
 		last_seen: Date.now() - 60000, // 1 minute ago
 	},
@@ -32,7 +33,7 @@ export const DEMO_FRIENDS: FriendProfile[] = [
 		uuid: "friend-2",
 		username: "GameMaster",
 		email: "gamemaster@demo.com",
-		avatar: "/default.png",
+		avatar: getPublicAsset("default.png"),
 		status: "offline",
 		last_seen: Date.now() - 3600000, // 1 hour ago
 	},
@@ -40,7 +41,7 @@ export const DEMO_FRIENDS: FriendProfile[] = [
 		uuid: "friend-3",
 		username: "PongChamp",
 		email: "pongchamp@demo.com",
-		avatar: "/default.png",
+		avatar: getPublicAsset("default.png"),
 		status: "online",
 		last_seen: Date.now() - 30000, // 30 seconds ago
 	},

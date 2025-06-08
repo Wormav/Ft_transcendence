@@ -2,6 +2,7 @@ import NavBarStyles from "./NavBarStyles";
 import ButtonSettings from "../ButtonSettings/ButtonSettings";
 import ButtonProfil from "../ButtonProfil/ButtonProfil";
 import { useNavigate } from "react-router-dom";
+import { getPublicAsset } from "../../utils/assetHelper";
 import type { NavBarProps } from "../../types/NavBarProps";
 
 const NavBar: React.FC<NavBarProps> = ({ onMenuClick }) => {
@@ -31,7 +32,7 @@ const NavBar: React.FC<NavBarProps> = ({ onMenuClick }) => {
 				</div>
 				<div className={NavBarStyles.logoSection}>
 					<img
-						src="/42_Logo.svg.png"
+						src={getPublicAsset("42_Logo.svg.png")}
 						alt="42 Logo"
 						className={NavBarStyles.logo}
 					/>

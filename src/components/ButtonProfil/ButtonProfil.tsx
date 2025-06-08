@@ -1,11 +1,12 @@
 import ButtonProfilStyle from "./ButtonProfilStyle";
 import { useUserContext } from "../../context/UserContext";
+import { getPublicAsset } from "../../utils/assetHelper";
 import type { ButtonProfilProps } from "../../types/ButtonProfilProps";
 
 const ButtonProfil: React.FC<ButtonProfilProps> = ({ onClick }) => {
 	const { user } = useUserContext();
 	const avatarSrc =
-		user?.avatar && user.avatar !== "" ? user.avatar : "/default.png";
+		user?.avatar && user.avatar !== "" ? user.avatar : getPublicAsset("default.png");
 
 	return (
 		<button

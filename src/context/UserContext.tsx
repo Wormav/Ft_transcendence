@@ -3,6 +3,7 @@ import { customFetch } from "../utils/customFetch";
 import { getJwtToken } from "../utils/getJwtToken";
 import { isDemoMode } from "../config/demo";
 import { DEMO_USER } from "../utils/demoData";
+import { getPublicAsset } from "../utils/assetHelper";
 import type { UserContextType, UserData } from "../types/UserContextType";
 
 const UserContext = createContext<UserContextType>({
@@ -94,8 +95,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 				filteredUserData.avatar &&
 				filteredUserData.avatar.startsWith("https://lh3.googleusercontent.com/")
 			) {
-				await updateAvatar("/default.png");
-				filteredUserData.avatar = "/default.png";
+				await updateAvatar(getPublicAsset("default.png"));
+				filteredUserData.avatar = getPublicAsset("default.png");
 			}
 
 			setUser(filteredUserData);
@@ -202,7 +203,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 					const finalAvatar = avatar.startsWith(
 						"https://lh3.googleusercontent.com/",
 					)
-						? "/default.png"
+						? getPublicAsset("default.png")
 						: avatar;
 					setUser({ ...user, avatar: finalAvatar });
 				}
@@ -212,7 +213,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 			const finalAvatar = avatar.startsWith(
 				"https://lh3.googleusercontent.com/",
 			)
-				? "/default.png"
+				? getPublicAsset("default.png")
 				: avatar;
 
 			const token = getJwtToken();
