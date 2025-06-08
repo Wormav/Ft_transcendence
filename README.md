@@ -132,3 +132,4 @@ Made with ❤️ by the Ft_transcendence team
 - [Wormav](https://github.com/Wormav)
 - [aauberti](https://github.com/aauberti)
 - [EricBrvs](https://github.com/EricBrvs)
+- [MykleR](https://github.com/MykleR)
