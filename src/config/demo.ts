@@ -1,7 +1,8 @@
 // Configuration du mode démo
 export const DEMO_CONFIG = {
   // Active le mode démo (remplace tous les appels backend par des données fictives)
-  ENABLED: true,
+  // En production GitHub Pages, toujours activer le mode démo
+  ENABLED: import.meta.env.PROD || import.meta.env.VITE_DEMO_MODE === 'true',
 
   // URL de base pour le mode production (quand DEMO_MODE = false)
   BACKEND_URL: `http://localhost:${import.meta.env.VITE_BACKEND_PORT || 3001}`,

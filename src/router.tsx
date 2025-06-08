@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, createHashRouter } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Layout from "./components/layout/Layout.tsx";
 import Game from "./pages/Game/Game.tsx";
@@ -15,7 +15,8 @@ import Friends from "./pages/Friends/Friends.tsx";
 
 import NotFound from "./pages/NotFound/NotFound";
 
-const router = createBrowserRouter([
+// Configuration des routes
+const routerConfig = [
 	{
 		path: "/",
 		element: <Layout />,
@@ -86,6 +87,11 @@ const router = createBrowserRouter([
 		element: <Signup />,
 		children: [],
 	},
-]);
+];
+
+// Utiliser HashRouter pour GitHub Pages (production) ou BrowserRouter pour le développement
+const router = import.meta.env.PROD 
+	? createHashRouter(routerConfig)
+	: createBrowserRouter(routerConfig);
 
 export default router;

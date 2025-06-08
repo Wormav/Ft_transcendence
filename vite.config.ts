@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
 
 	return {
 		plugins: [react(), tailwindcss()],
-		base: process.env.NODE_ENV === 'production' ? '/42_Ft_transcendence/' : '/',
+		base: mode === 'production' || mode === 'demo' ? '/42_Ft_transcendence/' : '/',
 		build: {
 			outDir: 'dist',
 			assetsDir: 'assets',
