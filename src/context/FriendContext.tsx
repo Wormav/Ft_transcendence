@@ -1,6 +1,8 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { customFetch } from "../utils/customFetch";
 import { getJwtToken } from "../utils/getJwtToken";
+import { isDemoMode } from "../config/demo";
+import { DEMO_FRIEND_DATA } from "../utils/demoData";
 import type { FriendContextType, FriendData } from "../types/FriendContextType";
 
 const FriendContext = createContext<FriendContextType>({
@@ -34,6 +36,13 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 		setError(null);
 
 		try {
+			// En mode démo, utiliser directement les données démo
+			if (isDemoMode()) {
+				setFriendData(DEMO_FRIEND_DATA);
+				setLoading(false);
+				return;
+			}
+
 			const token = getJwtToken();
 
 			const response = await customFetch(
@@ -68,6 +77,24 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 	const addFriend = async (uuid: string): Promise<boolean> => {
 		setError(null);
 		try {
+			// En mode démo, simuler l'ajout d'ami
+			if (isDemoMode()) {
+				if (friendData) {
+					const newRequest = {
+						id: friendData.requests_sent.length + 1,
+						requester_uuid: "demo-user-123",
+						target_uuid: uuid,
+						status: "pending" as const,
+						created_at: Date.now(),
+					};
+					setFriendData({
+						...friendData,
+						requests_sent: [...friendData.requests_sent, newRequest],
+					});
+				}
+				return true;
+			}
+
 			const token = getJwtToken();
 
 			const response = await customFetch(
@@ -98,6 +125,30 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 	const acceptFriendRequest = async (uuid: string): Promise<boolean> => {
 		setError(null);
 		try {
+			// En mode démo, simuler l'acceptation de demande d'ami
+			if (isDemoMode()) {
+				if (friendData) {
+					// Déplacer la demande de requests_received vers friends
+					const requestToAccept = friendData.requests_received.find(
+						r => r.requester_uuid === uuid
+					);
+					if (requestToAccept) {
+						const newFriend = {
+							...requestToAccept,
+							status: "accepted" as const,
+						};
+						setFriendData({
+							...friendData,
+							friends: [...friendData.friends, newFriend],
+							requests_received: friendData.requests_received.filter(
+								r => r.requester_uuid !== uuid
+							),
+						});
+					}
+				}
+				return true;
+			}
+
 			const token = getJwtToken();
 
 			const response = await customFetch(
@@ -132,6 +183,19 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 	const declineFriendRequest = async (uuid: string): Promise<boolean> => {
 		setError(null);
 		try {
+			// En mode démo, simuler le refus de demande d'ami
+			if (isDemoMode()) {
+				if (friendData) {
+					setFriendData({
+						...friendData,
+						requests_received: friendData.requests_received.filter(
+							r => r.requester_uuid !== uuid
+						),
+					});
+				}
+				return true;
+			}
+
 			const token = getJwtToken();
 
 			const response = await customFetch(
@@ -166,6 +230,19 @@ export const FriendProvider: React.FC<{ children: React.ReactNode }> = ({
 	const removeFriend = async (uuid: string): Promise<boolean> => {
 		setError(null);
 		try {
+			// En mode démo, simuler la suppression d'ami
+			if (isDemoMode()) {
+				if (friendData) {
+					setFriendData({
+						...friendData,
+						friends: friendData.friends.filter(
+							f => f.requester_uuid !== uuid && f.target_uuid !== uuid
+						),
+					});
+				}
+				return true;
+			}
+
 			const token = getJwtToken();
 
 			const response = await customFetch(

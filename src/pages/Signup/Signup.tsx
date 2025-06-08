@@ -6,6 +6,9 @@ import globalStyle from "../../globalStyle";
 import { useTranslation } from "../../context/TranslationContext";
 import { customFetch } from "../../utils/customFetch";
 
+// Mode démo
+const DEMO_MODE = true;
+
 export default function Signup() {
 	const navigate = useNavigate();
 	const { t } = useTranslation();
@@ -43,6 +46,13 @@ export default function Signup() {
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+
+		if (DEMO_MODE) {
+			// En mode démo, rediriger vers login
+			navigate("/login");
+			return;
+		}
+
 		let isValid = true;
 
 		if (!validateEmail(email)) {

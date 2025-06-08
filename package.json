@@ -5,10 +5,13 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
+		"dev:demo": "vite --mode demo",
 		"host": "vite --host",
 		"build": "tsc -b && vite build",
-		"lint": "eslint .",
+		"build:demo": "tsc -b && vite build --mode demo",
 		"preview": "vite preview",
+		"preview:demo": "vite preview --mode demo",
+		"lint": "eslint .",
 		"format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\""
 	},
 	"dependencies": {

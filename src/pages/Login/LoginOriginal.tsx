@@ -5,7 +5,9 @@ import LoginStyle from "./LoginStyle";
 import globalStyle from "../../globalStyle";
 import { useTranslation } from "../../context/TranslationContext";
 import { customFetch } from "../../utils/customFetch";
-import { isDemoMode } from "../../config/demo";
+
+// Mode démo
+const DEMO_MODE = true;
 
 export default function Login() {
 	const { t } = useTranslation();
@@ -16,12 +18,12 @@ export default function Login() {
 
 	// Redirection automatique en mode démo
 	useEffect(() => {
-		if (isDemoMode()) {
+		if (DEMO_MODE) {
 			// Simuler une connexion automatique
 			document.cookie = `jwt=demo-token-123; path=/; secure; samesite=strict`;
 			setTimeout(() => {
 				window.location.href = "/";
-			}, 1500); // Délai plus long pour voir le message
+			}, 100);
 		}
 	}, []);
 
@@ -34,7 +36,7 @@ export default function Login() {
 		e.preventDefault();
 		setLoginError("");
 
-		if (isDemoMode()) {
+		if (DEMO_MODE) {
 			// Connexion automatique en mode démo
 			document.cookie = `jwt=demo-token-123; path=/; secure; samesite=strict`;
 			window.location.href = "/";
@@ -95,7 +97,7 @@ export default function Login() {
 	}, []);
 
 	const handleGoogleLogin = () => {
-		if (isDemoMode()) {
+		if (DEMO_MODE) {
 			// En mode démo, simuler une connexion Google
 			document.cookie = `jwt=demo-token-123; path=/; secure; samesite=strict`;
 			window.location.href = "/";
@@ -105,7 +107,7 @@ export default function Login() {
 	};
 
 	// En mode démo, afficher un message de chargement
-	if (isDemoMode()) {
+	if (DEMO_MODE) {
 		return (
 			<div className={LoginStyle.container}>
 				<div className={LoginStyle.card}>
@@ -121,9 +123,6 @@ export default function Login() {
 							Connexion automatique en cours...
 						</p>
 						<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-						<p className="text-center text-xs text-gray-500 mt-4">
-							Version démo - Aucun backend requis
-						</p>
 					</div>
 				</div>
 			</div>
@@ -139,6 +138,7 @@ export default function Login() {
 				<h2 className={LoginStyle.title}>Ft_transcendence</h2>
 
 				<div className="w-full">
+					{" "}
 					<div className="flex flex-col justify-center items-center">
 						<h3 className="text-center mb-4 text-primary">
 							{t("auth.login.title")}

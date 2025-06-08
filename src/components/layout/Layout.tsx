@@ -1,11 +1,13 @@
 import BurgerMenu from "../BugerMenu/BurgerMenu";
 import NavBar from "../NavBar/NavBar";
 import Menu from "../Menu/Menu";
+import DemoBanner from "../DemoBanner/DemoBanner";
 import LayoutStyles from "./LayoutStyles";
 import globalStyle, { getSizeTextStyle } from "../../globalStyle";
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { useSettings } from "../../context/SettingsContext";
+import { isDemoMode } from "../../config/demo";
 
 const Layout: React.FC = () => {
 	const [bugerOpen, setBugerOpen] = useState(false);
@@ -17,8 +19,11 @@ const Layout: React.FC = () => {
 
 	useEffect(() => {}, [size_text]);
 
+	const demoTopOffset = isDemoMode() ? "pt-12" : ""; // Décalage pour la bannière démo
+
 	return (
-		<div className={`layout ${LayoutStyles.container}`}>
+		<div className={`layout ${LayoutStyles.container} ${demoTopOffset}`}>
+			<DemoBanner />
 			<NavBar onMenuClick={handleOpenMenu} />
 			<main className={LayoutStyles.contentWrapper}>
 				<BurgerMenu isOpen={bugerOpen} onClose={() => setBugerOpen(false)} />

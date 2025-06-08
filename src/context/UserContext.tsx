@@ -1,6 +1,8 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { customFetch } from "../utils/customFetch";
 import { getJwtToken } from "../utils/getJwtToken";
+import { isDemoMode } from "../config/demo";
+import { DEMO_USER } from "../utils/demoData";
 import type { UserContextType, UserData } from "../types/UserContextType";
 
 const UserContext = createContext<UserContextType>({
@@ -34,6 +36,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 		setError(null);
 
 		try {
+			// En mode démo, utiliser directement l'utilisateur démo
+			if (isDemoMode()) {
+				setUser(DEMO_USER);
+				setLoading(false);
+				return;
+			}
+
 			const token = getJwtToken();
 
 			if (!token) {
@@ -113,6 +122,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const updateUsername = async (username: string): Promise<boolean> => {
 		try {
+			// En mode démo, simuler la mise à jour
+			if (isDemoMode()) {
+				if (user) {
+					setUser({ ...user, username });
+				}
+				return true;
+			}
+
 			const token = getJwtToken();
 
 			const response = await customFetch(
@@ -142,6 +159,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const updateEmail = async (email: string): Promise<boolean> => {
 		try {
+			// En mode démo, simuler la mise à jour
+			if (isDemoMode()) {
+				if (user) {
+					setUser({ ...user, email });
+				}
+				return true;
+			}
+
 			const token = getJwtToken();
 
 			const response = await customFetch(
@@ -171,6 +196,19 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const updateAvatar = async (avatar: string): Promise<boolean> => {
 		try {
+			// En mode démo, simuler la mise à jour
+			if (isDemoMode()) {
+				if (user) {
+					const finalAvatar = avatar.startsWith(
+						"https://lh3.googleusercontent.com/",
+					)
+						? "/default.png"
+						: avatar;
+					setUser({ ...user, avatar: finalAvatar });
+				}
+				return true;
+			}
+
 			const finalAvatar = avatar.startsWith(
 				"https://lh3.googleusercontent.com/",
 			)
@@ -206,6 +244,15 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const deleteAccount = async (): Promise<boolean> => {
 		try {
+			// En mode démo, simuler la suppression du compte
+			if (isDemoMode()) {
+				setUser(null);
+				if (typeof window !== "undefined") {
+					window.location.href = "/login";
+				}
+				return true;
+			}
+
 			const token = getJwtToken();
 
 			const response = await customFetch(

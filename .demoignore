@@ -1,0 +1,21 @@
+# Fichiers et dossiers à exclure pour la version démo
+
+# Backend (plus nécessaire en mode démo)
+backend/
+server/
+api/
+*.env.local
+*.env.production
+
+# Fichiers de développement
+src/pages/Login/LoginOriginal.tsx
+src/utils/backendApi.ts
+
+# Documentation backend
+docs/backend/
+API.md
+
+# Configuration serveur
+docker-compose.yml
+Dockerfile.backend
+nginx.conf
