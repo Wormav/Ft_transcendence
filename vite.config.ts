@@ -9,7 +9,11 @@ export default defineConfig(({ mode }) => {
 
 	return {
 		plugins: [react(), tailwindcss()],
-		base: "./",
+		base: process.env.NODE_ENV === 'production' ? '/42_Ft_transcendence/' : '/',
+		build: {
+			outDir: 'dist',
+			assetsDir: 'assets',
+		},
 		server: {
 			proxy: {
 				"/api": {
