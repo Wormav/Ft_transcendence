@@ -1,6 +1,8 @@
-import React, { createContext, useState, useContext, useCallback } from "react";
+import React, { createContext, useState, useContext, useCallback, useEffect } from "react";
 import { getJwtToken } from "../utils/getJwtToken";
 import { customFetch } from "../utils/customFetch";
+import { isDemoMode } from "../config/demo";
+import { DEMO_TOURNAMENTS } from "../utils/demoData";
 import type { Tournament } from "../types/Tournament";
 import {
 	type TournamentContextType,
@@ -26,12 +28,30 @@ export const TournamentProvider: React.FC<TournamentProviderProps> = ({
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 
+	// Initialiser automatiquement les tournois en mode démo
+	useEffect(() => {
+		if (isDemoMode()) {
+			console.log("[DEMO] Initialisation automatique des tournois de démo");
+			setTournaments(DEMO_TOURNAMENTS);
+		}
+	}, []);
+
 	const fetchUserTournaments = useCallback(
 		async (uuid: string): Promise<void> => {
 			setLoading(true);
 			setError(null);
 
 			try {
+				// En mode démo, utiliser les données de démo
+				if (isDemoMode()) {
+					console.log("[DEMO] Utilisation des tournois de démo");
+					// Simuler un délai de réseau
+					await new Promise(resolve => setTimeout(resolve, 300));
+					setTournaments(DEMO_TOURNAMENTS);
+					setLoading(false);
+					return;
+				}
+
 				const token = getJwtToken();
 
 				const response = await customFetch(

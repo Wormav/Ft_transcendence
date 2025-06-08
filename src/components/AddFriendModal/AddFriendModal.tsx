@@ -10,6 +10,7 @@ import { customFetch } from "../../utils/customFetch";
 import { getJwtToken } from "../../utils/getJwtToken";
 import { useSettings } from "../../context/SettingsContext";
 import { getSizeTextStyle } from "../../globalStyle";
+import { isDemoMode } from "../../config/demo";
 import type { AddFriendModalProps } from "../../types/AddFreindModalProps";
 import type { UserSearchResult } from "../../types/UserSearchResult";
 
@@ -39,6 +40,16 @@ const AddFriendModal: React.FC<AddFriendModalProps> = ({
 		try {
 			setLoading(true);
 			setError(null);
+
+			// En mode démo, afficher un message d'information au lieu d'une erreur
+			if (isDemoMode()) {
+				console.log("[DEMO] Recherche d'utilisateurs en mode démo");
+				// Simuler un délai
+				await new Promise(resolve => setTimeout(resolve, 500));
+				setError("🎭 Mode démo : Recherche d'utilisateurs simulée. Utilisez les utilisateurs préchargés.");
+				setLoading(false);
+				return;
+			}
 
 			const token = getJwtToken();
 

@@ -7,6 +7,8 @@ import { useUserContext } from "../../context/UserContext";
 import { getSizeTextStyle } from "../../globalStyle";
 import styles from "./TournamentBracketStyle";
 import { useToast } from "../../context/ToastContext";
+import { isDemoMode } from "../../config/demo";
+import { DEMO_TOURNAMENTS, DEMO_TOURNAMENT_MATCHES } from "../../utils/demoData";
 import type { Tournament, TournamentMatchData } from "../../types/Tournament";
 import type { MatchDetail } from "../../types/TournamentMatch";
 import { customFetch } from "../../utils/customFetch";
@@ -127,6 +129,39 @@ const TournamentBracket: React.FC = () => {
 			}
 
 			try {
+				// En mode démo, utiliser les données de démo
+				if (isDemoMode()) {
+					console.log("[DEMO] Chargement du tournoi de démo:", id);
+
+					// Simuler un délai de réseau
+					await new Promise(resolve => setTimeout(resolve, 300));
+
+					const tournamentData = DEMO_TOURNAMENTS.find(t => t.uuid === id);
+					if (!tournamentData) {
+						setError("Tournament not found in demo data");
+						setLoading(false);
+						return;
+					}
+
+					setTournament(tournamentData);
+
+					// Charger les détails des matchs de démo
+					if (tournamentData.match && tournamentData.match.length > 0) {
+						const detailsMap: Record<string, MatchDetail> = {};
+
+						tournamentData.match.forEach((match) => {
+							if (match.uuid && DEMO_TOURNAMENT_MATCHES[match.uuid]) {
+								detailsMap[match.uuid] = DEMO_TOURNAMENT_MATCHES[match.uuid];
+							}
+						});
+
+						setMatchDetails(detailsMap);
+					}
+
+					setLoading(false);
+					return;
+				}
+
 				const tournamentData = await getTournamentById(id);
 				setTournament(tournamentData);
 
@@ -251,7 +286,7 @@ const TournamentBracket: React.FC = () => {
 							try {
 								const token = getJwtToken();
 								await customFetch(
-									`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/game/match/${nextRoundMatch.uuid}`,
+									`/game/match/${nextRoundMatch.uuid}`,
 									{
 										method: "PUT",
 										headers: {
@@ -333,7 +368,7 @@ const TournamentBracket: React.FC = () => {
 							try {
 								const token = getJwtToken();
 								await customFetch(
-									`http://localhost:${import.meta.env.VITE_BACKEND_PORT}/game/match/${nextMatch.uuid}`,
+									`/game/match/${nextMatch.uuid}`,
 									{
 										method: "PUT",
 										headers: {

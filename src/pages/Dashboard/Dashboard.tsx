@@ -5,6 +5,8 @@ import { useTranslation } from "../../context/TranslationContext";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import { useGameContext } from "../../context/GameContext";
 import { useUserContext } from "../../context/UserContext";
+import { isDemoMode } from "../../config/demo";
+import { DEMO_MATCHES } from "../../utils/demoData";
 import LineChart from "./components/LineChart";
 import WinLossChart from "./components/WinLossChart";
 import type { GameData } from "../../types/Pong";
@@ -19,6 +21,19 @@ const Dashboard: React.FC = () => {
 
 	useEffect(() => {
 		const convertMatchesToGameData = () => {
+			// En mode démo, utiliser les données de démo
+			if (isDemoMode()) {
+				console.log("[DEMO] Utilisation des matchs de démo pour le dashboard");
+				return DEMO_MATCHES.map((match) => ({
+					id: match.uuid,
+					player_id: match.player,
+					date: match.endtime ? new Date(match.endtime).getTime() : Date.now(),
+					score_player1: match.score1,
+					score_player2: match.score2,
+					gameIA: match.guest === "Guest",
+				}));
+			}
+
 			if (!matches || matches.length === 0) return [];
 
 			const userMatches = user?.uuid

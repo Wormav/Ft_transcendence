@@ -19,10 +19,10 @@ const Layout: React.FC = () => {
 
 	useEffect(() => {}, [size_text]);
 
-	const demoTopOffset = isDemoMode() ? "pt-12" : ""; // Décalage pour la bannière démo
+	const demoBottomOffset = isDemoMode() ? "pb-12" : ""; // Décalage pour la bannière démo en bas
 
 	return (
-		<div className={`layout ${LayoutStyles.container} ${demoTopOffset}`}>
+		<div className={`layout ${LayoutStyles.container} ${demoBottomOffset}`}>
 			<DemoBanner />
 			<NavBar onMenuClick={handleOpenMenu} />
 			<main className={LayoutStyles.contentWrapper}>

@@ -7,6 +7,7 @@ import { useUserContext } from "../../context/UserContext";
 import FriendsStyle from "./FriendsStyle";
 import { customFetch } from "../../utils/customFetch";
 import { getJwtToken } from "../../utils/getJwtToken";
+import { isDemoMode } from "../../config/demo";
 import type { FriendProfile } from "../../types/FriendProfile";
 import { getSizeTextStyle } from "../../globalStyle";
 import { useSettings } from "../../context/SettingsContext";
@@ -99,6 +100,12 @@ const Friends = () => {
 			return;
 		}
 
+		// En mode démo, ne pas afficher d'erreurs
+		if (isDemoMode()) {
+			console.log("[DEMO] Détails utilisateur déjà disponibles en mode démo");
+			return;
+		}
+
 		setUserLoadingState((prev) => ({ ...prev, [uuid]: true }));
 
 		try {
@@ -138,7 +145,10 @@ const Friends = () => {
 			setRequestUsers((prev) => ({ ...prev, [uuid]: userWithStatus }));
 		} catch (error) {
 			console.error(`Error retrieving user details for ${uuid}:`, error);
-			showToast(t("notifications.userDataError"), "error");
+			// En mode démo, ne pas afficher les erreurs à l'utilisateur
+			if (!isDemoMode()) {
+				showToast(t("notifications.userDataError"), "error");
+			}
 		} finally {
 			setUserLoadingState((prev) => ({ ...prev, [uuid]: false }));
 		}
